@@ -3,10 +3,11 @@ public class Library {
 	
 	public static void answers(String request) {
 		
-		if (request.equals("Расскажи о себе") || request.equals("расскажи о себе")) {
-			System.out.println("Привет. Я твой новый чат бот. Пока что ничего не умею");
-		} else if(request.equals("Привет") || request.equals("привет")){
-			System.out.println("Рад тебя снова видеть");
+		if (request.equals("Р Р°СЃСЃРєР°Р¶Рё Рѕ СЃРµР±Рµ") || request.equals("СЂР°СЃСЃРєР°Р¶Рё Рѕ СЃРµР±Рµ")) {
+			System.out.println("РџСЂРёРІРµС‚. РЇ С‚РІРѕР№ РЅРѕРІС‹Р№ С‡Р°С‚ Р±РѕС‚. РўС‹ РѕР¶РµС€СЊ РЅРµРјРЅРѕРіРѕ РїРѕРіРѕРІРѕСЂРёС‚СЊ"
+					+ "СЃРѕ РјРЅРѕР№ РёР»Рё СЃРЅРѕРІР° СѓРІРёРґРµС‚СЊ СЌС‚Рѕ РІРѕРѕР±С‰РµРЅРёРµ РЅР°РїРёСЃР°РІ \"Р Р°СЃСЃРєР°Р¶Рё Рѕ СЃРµР±Рµ\"");
+		} else if(request.equals("РџСЂРёРІРµС‚") || request.equals("РїСЂРёРІРµС‚")){
+			System.out.println("Р Р°Рґ С‚РµР±СЏ СЃРЅРѕРІР° РІРёРґРµС‚СЊ");
 		}
 		
 	}
