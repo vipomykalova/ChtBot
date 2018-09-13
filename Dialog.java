@@ -1,5 +1,5 @@
 
-public class Library {
+public class Dialog {
 	
 	public static void answers(String request) {
 		
