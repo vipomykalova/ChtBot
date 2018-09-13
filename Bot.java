@@ -4,13 +4,13 @@ public class Bot {
 
 	public static void main(String[] args) {
 		
-		Library.printStartMessage();
+		Dialog.printStartMessage();
 		
 		while(true) {
 			Scanner in = new Scanner(System.in);
 			String request = in.nextLine();
 			
-			Library.answers(request);
+			Dialog.answers(request);
 		}
 
 
