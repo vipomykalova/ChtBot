@@ -1,20 +1,55 @@
+import java.util.Random;
 
 public class Dialog {
 	
-	public static void answers(String request) {
-		
-		if (request.equals("Р Р°СЃСЃРєР°Р¶Рё Рѕ СЃРµР±Рµ") || request.equals("СЂР°СЃСЃРєР°Р¶Рё Рѕ СЃРµР±Рµ")) {
-			printStartMessage();
-		} else if(request.equals("РџСЂРёРІРµС‚") || request.equals("РїСЂРёРІРµС‚")){
-			System.out.println("Р Р°Рґ С‚РµР±СЏ СЃРЅРѕРІР° РІРёРґРµС‚СЊ");
-		}
-		
+	public static String m_startMessage = "Привет :) Я твой новый чат-бот. "
+			+ "Поговорим? Чтобы вернуться к приветствию, "
+			+ "напиши \"О себе\".";
+	
+	public static String m_talkToMe = "Ну поговори со мной!";
+	
+	public static String[] m_typicalPhrasesAndQuestion = {
+	        "Сегодня неплохая погодка.",
+	        "Порой молчание может сказать больше, нежели уйма слов.",
+	        "Я вот люблю философствовать. Это моё хобби.",
+	        "Как поживаешь?",
+	        "Что нового?",
+	        "А ты любишь мороженое?",
+	        "Это ты меня сделал? Вот почему я такой глупый :(",
+	        "Вежливая и грамотная речь говорит о величии души.",
+	        "Ты такой красивый и умный человечек :)",
+	        "Многословие есть признак неупорядоченного ума.",
+	        "Слова могут ранить, но могут и исцелять, помни это.",
+	        "Какие планы на вечер?",
+	        "Грустно :(",
+	        "Я помогу тебе, чем смогу!",
+	        "Ну как скажешь.",
+	        "Окей",
+	        "Это круто!",
+	        "Мне кажется, ты что-то скрываешь от меня..."};
+	
+	public static String[] m_typicalAnswers = {
+	        "Вопрос непростой, мне нужно подумать",
+	        "Не знаю :(",
+	        "Спроси у кого-то другого.",
+	        "Почему ты пристал ко мне?",
+	        "Да!",
+	        "Нет!",
+	        "Может лучше поговорим о чём-то другом?",
+	        "Прости, но это очень личный вопрос.",
+	        "Не уверен, что тебе понравится ответ.",
+	        "Давай сохраним интригу?:)"};
+	
+	public static String sendAnswer() {
+		Random random;
+		random = new Random();
+		return m_typicalAnswers[random.nextInt(Dialog.m_typicalAnswers.length)];
 	}
-		
-	public static void printStartMessage() {
-		
-		System.out.println("РџСЂРёРІРµС‚. РЇ С‚РІРѕР№ РЅРѕРІС‹Р№ С‡Р°С‚ Р±РѕС‚. РўС‹ РѕР¶РµС€СЊ РЅРµРјРЅРѕРіРѕ РїРѕРіРѕРІРѕСЂРёС‚СЊ"
-				+ "СЃРѕ РјРЅРѕР№ РёР»Рё СЃРЅРѕРІР° СѓРІРёРґРµС‚СЊ СЌС‚Рѕ РІРѕРѕР±С‰РµРЅРёРµ РЅР°РїРёСЃР°РІ \"Р Р°СЃСЃРєР°Р¶Рё Рѕ СЃРµР±Рµ\"");
+	
+	public static String sendPhraseAndQuestion() {
+		Random random;
+		random = new Random();
+		return m_typicalPhrasesAndQuestion[random.nextInt(Dialog.m_typicalPhrasesAndQuestion.length)];
 	}
-
+	
 }

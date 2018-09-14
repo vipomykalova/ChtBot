@@ -4,16 +4,22 @@ public class Bot {
 
 	public static void main(String[] args) {
 		
-		Library.printStartMessage();
+		System.out.println(Dialog.m_startMessage);
+		Scanner in = new Scanner(System.in);
 		
 		while(true) {
-			Scanner in = new Scanner(System.in);
 			String request = in.nextLine();
 			
-			Library.answers(request);
+			if (request.trim().toLowerCase().equals("о себе")) {
+				System.out.println(Dialog.m_startMessage);
+			}
+			if (request.trim().equals("")) {
+				System.out.println(Dialog.m_talkToMe);
+			}
+		    if (request.trim().endsWith("?")) {
+				System.out.println(Dialog.sendAnswer());
+			} else System.out.println(Dialog.sendPhraseAndQuestion());
 		}
-
-
+		
 	}
-
 }
