@@ -10,13 +10,11 @@ public class Bot {
 		while(true) {
 			String request = in.nextLine();
 			
-			if (request.trim().toLowerCase().equals("Ó ÒÂ·Â")) {
+			if (request.trim().toLowerCase().equals("√Æ √±√•√°√•")) {
 				System.out.println(Dialog.m_startMessage);
-			}
-			if (request.trim().equals("")) {
-				System.out.println(Dialog.m_talkToMe);
-			}
-		    if (request.trim().endsWith("?")) {
+			} else if (request.trim().equals("")) {
+				System.out.println(Dialog.sendTalkToMe());
+			} else if (request.trim().endsWith("?")) {
 				System.out.println(Dialog.sendAnswer());
 			} else System.out.println(Dialog.sendPhraseAndQuestion());
 		}
