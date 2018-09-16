@@ -10,7 +10,7 @@ public class Bot {
 		while(true) {
 			String request = in.nextLine();
 			
-			if (request.trim().toLowerCase().equals("î ñåáå")) {
+			if (request.trim().toLowerCase().equals("о себе")) {
 				System.out.println(Dialog.m_startMessage);
 			} else if (request.trim().equals("")) {
 				System.out.println(Dialog.sendTalkToMe());
