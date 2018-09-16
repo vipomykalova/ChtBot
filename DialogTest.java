@@ -6,14 +6,14 @@ class DialogTest {
 
 	@Test
 	void startMessageTest() {
-		assertEquals(Dialog.sendStartMessage(), "Привет :) Я твой новый чат-бот. "
-				+ "Поговорим? Чтобы вернуться к приветствию, "
-				+ "напиши \"О себе\".");
+		assertEquals(Dialog.sendStartMessage(), "РџСЂРёРІРµС‚ :) РЇ С‚РІРѕР№ РЅРѕРІС‹Р№ С‡Р°С‚-Р±РѕС‚. "
+				+ "РџРѕРіРѕРІРѕСЂРёРј? Р§С‚РѕР±С‹ РІРµСЂРЅСѓС‚СЊСЃСЏ Рє РїСЂРёРІРµС‚СЃС‚РІРёСЋ, "
+				+ "РЅР°РїРёС€Рё \"Рћ СЃРµР±Рµ\".";
 	}
 	
 	@Test
 	void talkToMeTest() {
-		assertEquals(Dialog.sendTalkToMe(), "Ну поговори со мной!");
+		assertEquals(Dialog.sendTalkToMe(), "РќСѓ РїРѕРіРѕРІРѕСЂРё СЃРѕ РјРЅРѕР№!");
 	}
 
 }
