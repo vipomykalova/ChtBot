@@ -8,7 +8,7 @@ class DialogTest {
 	void startMessageTest() {
 		assertEquals(Dialog.sendStartMessage(), "Привет :) Я твой новый чат-бот. "
 				+ "Поговорим? Чтобы вернуться к приветствию, "
-				+ "напиши \"О себе\".";
+				+ "напиши \"О себе\".");
 	}
 	
 	@Test
