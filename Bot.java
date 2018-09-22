@@ -4,19 +4,29 @@ public class Bot {
 
 	public static void main(String[] args) {
 		
-		System.out.println(Dialog.m_startMessage);
+		Dialog curDialog = new Dialog();
+		System.out.println(curDialog.sendStartMessage());
 		Scanner in = new Scanner(System.in);
 		
 		while(true) {
 			String request = in.nextLine();
 			
 			if (request.trim().toLowerCase().equals("о себе")) {
-				System.out.println(Dialog.m_startMessage);
-			} else if (request.trim().equals("")) {
-				System.out.println(Dialog.sendTalkToMe());
-			} else if (request.trim().endsWith("?")) {
-				System.out.println(Dialog.sendAnswer());
-			} else System.out.println(Dialog.sendPhraseAndQuestion());
+				System.out.println(curDialog.sendStartMessage());
+				
+			} else if (request.trim().endsWith("да")) {
+				Game currentClient = new Game();
+				currentClient.GameLogic();
+				if (currentClient.result == true) {
+					System.out.println(curDialog.sendWinnerMessage());
+				}
+				else System.out.println(curDialog.sendLoserMessage());
+				System.out.println(curDialog.sendRepeatedStartMessage());
+				
+			} else if (request.trim().endsWith("нет")) {
+				System.out.println(curDialog.sendFarewellMessage());
+				
+			} else System.out.println(curDialog.sendStartMessage());
 		}
 		
 	}
