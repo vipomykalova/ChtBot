@@ -1,63 +1,38 @@
-import java.util.Random;
 
 public class Dialog {
+
 	
-	public static String m_startMessage = "Привет :) Я твой новый чат-бот. "
-			+ "Поговорим? Чтобы вернуться к приветствию, "
-			+ "напиши \"О себе\".";
+	private final String START_MESSAGE = "РџСЂРёРІРµС‚ :) РЇ Р±РѕС‚, РєРѕС‚РѕСЂС‹Р№ СѓРјРµРµС‚ "
+			+ "РёРіСЂР°С‚СЊ РІ \"Р’РёСЃРµР»РёС†Сѓ\". РџРѕРёРіСЂР°РµРј? РќР°РїРёС€Рё \"РґР°\" РёР»Рё \"РЅРµС‚\".";
 	
-	private static String m_talkToMe = "Ну поговори со мной!";
+	private final String WINNER_MESSAGE = "РџРѕР·РґСЂР°РІР»СЏСЋ, С‚С‹ РїРѕР±РµРґРёР»!";
 	
-	private static String[] m_typicalPhrasesAndQuestion = {
-	        "Сегодня неплохая погодка.",
-	        "Порой молчание может сказать больше, нежели уйма слов.",
-	        "Я вот люблю философствовать. Это моё хобби.",
-	        "Как поживаешь?",
-	        "Что нового?",
-	        "А ты любишь мороженое?",
-	        "Это ты меня сделал? Вот почему я такой глупый :(",
-	        "Вежливая и грамотная речь говорит о величии души.",
-	        "Ты такой красивый и умный человечек :)",
-	        "Многословие есть признак неупорядоченного ума.",
-	        "Слова могут ранить, но могут и исцелять, помни это.",
-	        "Какие планы на вечер?",
-	        "Грустно :(",
-	        "Я помогу тебе, чем смогу!",
-	        "Ну как скажешь.",
-	        "Окей",
-	        "Это круто!",
-	        "Мне кажется, ты что-то скрываешь от меня..."};
+	private final String LOSER_MESSAGE = "РЈРїСЃ, С‚С‹ РїСЂРѕРёРіСЂР°Р» :(";
 	
-	private static String[] m_typicalAnswers = {
-	        "Вопрос непростой, мне нужно подумать",
-	        "Не знаю :(",
-	        "Спроси у кого-то другого.",
-	        "Почему ты пристал ко мне?",
-	        "Да!",
-	        "Нет!",
-	        "Может лучше поговорим о чём-то другом?",
-	        "Прости, но это очень личный вопрос.",
-	        "Не уверен, что тебе понравится ответ.",
-	        "Давай сохраним интригу?:)"};
+	private final String REPEATED_MESSAGE = "РЎС‹РіСЂР°РµРј РµС‰Рµ?";
 	
-	public static String sendAnswer() {
-		Random random;
-		random = new Random();
-		return m_typicalAnswers[random.nextInt(Dialog.m_typicalAnswers.length)];
+	private final String FAREWELL_MESSAGE = "РћР±РёРґРЅРѕ! РќРѕ РµСЃР»Рё РІРґСЂСѓРі Р·Р°С…РѕС‡РµС€СЊ,"
+			+ " С‚Рѕ РїРёС€Рё РјРЅРµ :) РЇ Р±СѓРґСѓ Р¶РґР°С‚СЊ!";
+	
+	public String sendStartMessage() {
+		return START_MESSAGE;
 	}
 	
-	public static String sendPhraseAndQuestion() {
-		Random random;
-		random = new Random();
-		return m_typicalPhrasesAndQuestion[random.nextInt(Dialog.m_typicalPhrasesAndQuestion.length)];
+	public String sendWinnerMessage() {
+		return  WINNER_MESSAGE;
 	}
 	
-	public static String sendStartMessage() {
-		return m_startMessage;
+	public String sendLoserMessage() {
+		return  LOSER_MESSAGE;
 	}
 	
-	public static String sendTalkToMe() {
-		return m_talkToMe;
+	public String sendRepeatedStartMessage() {
+		return REPEATED_MESSAGE;
 	}
+	
+	public String sendFarewellMessage() {
+		return FAREWELL_MESSAGE;
+	}
+	
 	
 }
