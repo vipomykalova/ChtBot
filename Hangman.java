@@ -3,14 +3,14 @@ import java.util.Scanner;
 
 public class Hangman {
 	
-	public static boolean win;
+	public boolean win;
 	
-	public static void Game() {
+	public void Game() {
 		Scanner in = new Scanner(System.in);
 		String word = MakingTask.newTask();
 		char wordToArray[] = word.toCharArray();
 		char currentResult[] = new char[word.length()];
-		int lifes = LifeCounter.lifes;
+		LifeCounter life = new LifeCounter();
 		
 		for(int i = 0; i < word.length(); i++) {
 			currentResult[i] = '-';
@@ -19,8 +19,9 @@ public class Hangman {
 		PrintResult(word.length(), currentResult);
 		
 		while(true) {
-			if(lifes == 0) {
+			if(life.lifes == 0) {
 				win = false;
+				life.lifes = 10;
 				break;
 			}
 			
@@ -37,12 +38,14 @@ public class Hangman {
 			}
 			
 			if(isItRightLetter) {
-				lifes = LifeCounter.lifeCounter(true);
+				life.lifes = life.lifeCounter(true);
 				for(int i = 0; i < indexes.size(); i++) {
 					currentResult[indexes.get(i)] = wordToArray[indexes.get(i)];
 					wordToArray[indexes.get(i)] = '-';
 				}
-			} else lifes = LifeCounter.lifeCounter(false);
+			} else life.lifes = life.lifeCounter(false);
+			
+			System.out.println("У вас осталось жизней: " + life.lifes);
 			
 			PrintResult(word.length(), currentResult);
 			
@@ -54,13 +57,14 @@ public class Hangman {
 			
 			if(finish) {
 				win = true;
+				life.lifes = 10;
 				break;
 			}
 			
 		}
 	}
 	
-	private static void PrintResult(int n, char[] result) {
+	private void PrintResult(int n, char[] result) {
 		for(int i = 0; i < n; i++) {
 			System.out.print(result[i]);
 		}
