@@ -15,9 +15,9 @@ public class Bot {
 				System.out.println(curDialog.sendStartMessage());
 				
 			} else if (request.trim().endsWith("да")) {
-				Game currentClient = new Game();
-				currentClient.GameLogic();
-				if (currentClient.result == true) {
+				Hangman currentClient = new Hangman();
+				currentClient.Game();
+				if (currentClient.win == true) {
 					System.out.println(curDialog.sendWinnerMessage());
 				}
 				else System.out.println(curDialog.sendLoserMessage());
