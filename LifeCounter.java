@@ -1,11 +1,10 @@
 
 public class LifeCounter {
 	
-	public int lifes = 10;
+	public static int lifes = 10;
 	
-	public int lifeCounter(boolean resultOfStroke) {
-		if (resultOfStroke) return lifes;
-		else return lifes - 1;
+	public static int lifeCounter(boolean resultOfStroke) {
+		if (!resultOfStroke) lifes -= 1;
+		return lifes;
 	}
-
 }
