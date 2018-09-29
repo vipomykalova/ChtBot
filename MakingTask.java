@@ -6,7 +6,7 @@ public class MakingTask {
 	public static String newTask() {
 		
 		Random rnd = new Random();
-		int thisWord = rnd.nextInt(2);
+		int thisWord = rnd.nextInt(34010);
 		try(BufferedReader br = new BufferedReader(new FileReader("Archive.txt")))
 		{
 		    String s;
