@@ -1,12 +1,20 @@
 import java.util.ArrayList;
 import java.util.Scanner;
 
-public class Hangman {
+public class Hangman implements InputOutput{
 	
 	public boolean win;
 	
-	public void Game() {
+	public String Input() {
 		Scanner in = new Scanner(System.in);
+		return in.nextLine().trim();
+	}
+	
+	public void Output(String output) {
+		System.out.print(output);
+	}
+	
+	public void Game(){
 		String word = MakingTask.newTask();
 		char wordToArray[] = word.toCharArray();
 		char currentResult[] = new char[word.length()];
@@ -21,12 +29,13 @@ public class Hangman {
 		while(true) {
 			if(life.lifes == 0) {
 				win = false;
+				Output("Слово: " + word + "\n");
 				life.lifes = 10;
 				break;
 			}
 			
 			boolean finish = false;
-			String letter = in.nextLine();
+			String letter = Input();
 			
 			boolean isItRightLetter = false;
 			ArrayList<Integer> indexes = new ArrayList<Integer>();
@@ -45,7 +54,7 @@ public class Hangman {
 				}
 			} else life.lifes = life.lifeCounter(false);
 			
-			System.out.println("У вас осталось жизней: " + life.lifes);
+			Output("У вас осталось жизней: " + life.lifes + "\n");
 			
 			PrintResult(word.length(), currentResult);
 			
@@ -66,9 +75,9 @@ public class Hangman {
 	
 	private void PrintResult(int n, char[] result) {
 		for(int i = 0; i < n; i++) {
-			System.out.print(result[i]);
+			Output("" + result[i]);
 		}
-		System.out.print("\n");
+		Output("\n");
 	}
 
 }
