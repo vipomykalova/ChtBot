@@ -5,16 +5,16 @@ import org.junit.jupiter.api.Test;
 class DialogTest {
 
 	@Test
-	void startMessageTest() {
+	void moreMessageTest() {
 		Dialog curDialog = new Dialog();
-		assertEquals(curDialog.sendStartMessage(), "Привет :) Я бот, который умеет "
-				+ "играть в \"Виселицу\". Поиграем? Напиши \"да\" или \"нет\".");
+		assertEquals(curDialog.getString("еще"), "Сыграем еще?");
 	}
 	
 	@Test
-	void talkToMeTest() {
+	void startMessageTest() {
 		Dialog curDialog = new Dialog();
-		assertEquals(curDialog.sendWinnerMessage(), "Поздравляю, ты победил!");
+		assertEquals(curDialog.getString("привет"), "Привет :) Я бот, который умеет "
+				+ "играть в \"Виселицу\". Поиграем? Напиши \"да\" или \"нет\".");
 	}
 
 }
