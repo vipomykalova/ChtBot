@@ -5,7 +5,7 @@ public class Base {
 		Brain start = new Brain();
 
 		while(true) {
-			start.Update();
+			start.update();
 		}
 	}
 }
