@@ -1,20 +1,11 @@
 import java.util.ArrayList;
 import java.util.Scanner;
 
-public class Hangman implements InputOutput{
+public class Hangman extends InputOutput{
 	
 	public boolean win;
 	
-	public String Input() {
-		Scanner in = new Scanner(System.in);
-		return in.nextLine().trim();
-	}
-	
-	public void Output(String output) {
-		System.out.print(output);
-	}
-	
-	public void Game(){
+	public void game(){
 		String word = MakingTask.newTask();
 		char wordToArray[] = word.toCharArray();
 		char currentResult[] = new char[word.length()];
@@ -24,18 +15,18 @@ public class Hangman implements InputOutput{
 			currentResult[i] = '-';
 		}
 		
-		PrintResult(word.length(), currentResult);
+		printResult(word.length(), currentResult);
 		
 		while(true) {
 			if(life.lifes == 0) {
 				win = false;
-				Output("Слово: " + word + "\n");
+				output("Слово: " + word + "\n");
 				life.lifes = 10;
 				break;
 			}
 			
 			boolean finish = false;
-			String letter = Input();
+			String letter = input();
 			
 			boolean isItRightLetter = false;
 			ArrayList<Integer> indexes = new ArrayList<Integer>();
@@ -54,9 +45,9 @@ public class Hangman implements InputOutput{
 				}
 			} else life.lifes = life.lifeCounter(false);
 			
-			Output("У вас осталось жизней: " + life.lifes + "\n");
+			output("У вас осталось жизней: " + life.lifes + "\n");
 			
-			PrintResult(word.length(), currentResult);
+			printResult(word.length(), currentResult);
 			
 			int count = 0;
 			for(int i = 0; i < currentResult.length; i++) {
@@ -73,11 +64,11 @@ public class Hangman implements InputOutput{
 		}
 	}
 	
-	private void PrintResult(int n, char[] result) {
+	private void printResult(int n, char[] result) {
 		for(int i = 0; i < n; i++) {
-			Output("" + result[i]);
+			output("" + result[i]);
 		}
-		Output("\n");
+		output("\n");
 	}
 
 }
