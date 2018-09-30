@@ -1,65 +1,55 @@
-import java.util.Scanner;
 
-public class Brain implements InputOutput{
+public class Brain extends  InputOutput{
 	
 	FMS brain = new FMS();
 	String currentAnswer = "";
 	Dialog curDialog = new Dialog();
 	
 	Brain() {
-		brain.setState(() -> LetsPlay());
+		brain.setState(() -> letsPlay());
 	}
 	
-	public String Input() {
-		Scanner in = new Scanner(System.in);
-		return in.nextLine().trim();
+	public void letsPlay() {	
+		output(curDialog.getString("привет"));
+		currentAnswer = input();
+		if (currentAnswer.equals("нет")) brain.setState(() -> sendByeMessage());
+		if (currentAnswer.equals("да")) brain.setState(() -> getWord());
+		if (currentAnswer.equals("о себе")) brain.setState(() -> letsPlay());
 	}
 	
-	public void Output(String keyWord) {
-		System.out.println(curDialog.getString(keyWord));
-	}
-	
-	public void LetsPlay() {	
-		System.out.println(curDialog.getString("привет"));
-		currentAnswer = Input();
-		if (currentAnswer.equals("нет")) brain.setState(() -> WaitingForYou());
-		if (currentAnswer.equals("да")) brain.setState(() -> Word());
-		if (currentAnswer.equals("о себе")) brain.setState(() -> LetsPlay());
-	}
-	
-	public void Word() {
+	public void getWord() {
 		Hangman currentClient = new Hangman();
-		currentClient.Game();
+		currentClient.game();
 		
 		if (currentClient.win == true) {
-			Output("победа");
-			brain.setState(() -> DoYouWant());
+			output(curDialog.getString("победа"));
+			brain.setState(() -> doYouWant());
 		}
 		if (currentClient.win == false) {
-			Output("проигрыш");
-			brain.setState(() -> DoYouWant());
+			output(curDialog.getString("проигрыш"));
+			brain.setState(() -> doYouWant());
 		}
 	}
 	
-	public void DoYouWant() {
-		Output("еще");
-		currentAnswer = Input();
-		if (currentAnswer.equals("да")) brain.setState(() -> Word());
-		if (currentAnswer.equals("нет")) brain.setState(() -> WaitingForYou());
-		if (currentAnswer.equals("о себе")) brain.setState(() -> LetsPlay());
+	public void doYouWant() {
+		output(curDialog.getString("еще"));
+		currentAnswer = input();
+		if (currentAnswer.equals("да")) brain.setState(() -> getWord());
+		if (currentAnswer.equals("нет")) brain.setState(() -> sendByeMessage());
+		if (currentAnswer.equals("о себе")) brain.setState(() -> letsPlay());
 	}
 	
-	public void WaitSmth() {
-		currentAnswer = Input();
-		if (currentAnswer.equals("привет") || currentAnswer.equals("о себе")) brain.setState(() -> LetsPlay());
+	public void waitSmth() {
+		currentAnswer = input();
+		if (currentAnswer.equals("привет") || currentAnswer.equals("о себе")) brain.setState(() -> letsPlay());
 	}
 	
-	public void WaitingForYou() {
-		Output("пока");
-		brain.setState(() -> WaitSmth());
+	public void sendByeMessage() {
+		output(curDialog.getString("пока"));
+		brain.setState(() -> waitSmth());
 	}
 	
-	public void Update() {
+	public void update() {
 		brain.update();
 	}
 
