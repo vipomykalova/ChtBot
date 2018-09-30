@@ -1,8 +1,9 @@
 # ChtBot
 
-This is a simple chat bot, that can play in "the Hangman".
-For playing enter "да". You have a random word, try to gess what is it. You should enter one letter each.
-The functional supports only one player.
+Это консольный чат-бот, который умеет играть в "Виселицу". В основе построения диалога - конечный автомат. Слова для отгадывания
+берутся из архива существительных русского языка. Имеется запас жизней, каждый дается на одно слово. Если вы истратите все жизни, то, соответсвенно, проиграете.
 
-By Viktoria Pomykalova and Oxana Grivas
+Для работы бота необходимо запустить файл Base. Далее бот сам вам всё расскажет :)
+
+Авторы: Виктория Помыкалова и Оксана Гивас.
 
