@@ -1,7 +1,7 @@
 import java.io.*;
 import java.util.Random;
 
-public class MakingTask {
+public class TaskMaker {
 	
 	public static String newTask() {
 		
