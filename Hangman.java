@@ -1,11 +1,20 @@
 import java.util.ArrayList;
 import java.util.Scanner;
 
-public class Hangman extends InputOutput{
+public class Hangman implements InputOutput{
 	
 	public boolean win;
 	
-	public void game(){
+	public String Input() {
+		Scanner in = new Scanner(System.in);
+		return in.nextLine().trim();
+	}
+	
+	public void Output(String output) {
+		System.out.print(output);
+	}
+	
+	public void Game() {
 		String word = MakingTask.newTask();
 		char wordToArray[] = word.toCharArray();
 		char currentResult[] = new char[word.length()];
@@ -15,18 +24,15 @@ public class Hangman extends InputOutput{
 			currentResult[i] = '-';
 		}
 		
-		printResult(word.length(), currentResult);
+		PrintResult(word.length(), currentResult);
+		win = false;
 		
-		while(true) {
-			if(life.lifes == 0) {
-				win = false;
-				output("Слово: " + word + "\n");
-				life.lifes = 10;
-				break;
-			}
-			
+		while(life.IsHeAlive()) {
 			boolean finish = false;
-			String letter = input();
+			String letter = Input();
+			if(letter.isEmpty()) {
+				continue;
+			}
 			
 			boolean isItRightLetter = false;
 			ArrayList<Integer> indexes = new ArrayList<Integer>();
@@ -38,16 +44,16 @@ public class Hangman extends InputOutput{
 			}
 			
 			if(isItRightLetter) {
-				life.lifes = life.lifeCounter(true);
+				life.lives = life.lifeCounter(true);
 				for(int i = 0; i < indexes.size(); i++) {
 					currentResult[indexes.get(i)] = wordToArray[indexes.get(i)];
 					wordToArray[indexes.get(i)] = '-';
 				}
-			} else life.lifes = life.lifeCounter(false);
+			} else life.lives = life.lifeCounter(false);
 			
-			output("У вас осталось жизней: " + life.lifes + "\n");
+			Output("У вас осталось жизней: " + life.lives + "\n");
 			
-			printResult(word.length(), currentResult);
+			PrintResult(word.length(), currentResult);
 			
 			int count = 0;
 			for(int i = 0; i < currentResult.length; i++) {
@@ -57,18 +63,18 @@ public class Hangman extends InputOutput{
 			
 			if(finish) {
 				win = true;
-				life.lifes = 10;
+				life.lives = 10;
 				break;
 			}
 			
 		}
 	}
 	
-	private void printResult(int n, char[] result) {
+	private void PrintResult(int n, char[] result) {
 		for(int i = 0; i < n; i++) {
-			output("" + result[i]);
+			Output("" + result[i]);
 		}
-		output("\n");
+		Output("\n");
 	}
 
 }
