@@ -14,9 +14,19 @@ public class Brain extends  InputOutput{
 		currentAnswer = input();
 		if (currentAnswer.equals("нет")) brain.setState(() -> sendByeMessage());
 		if (currentAnswer.equals("да")) brain.setState(() -> getWord());
-		if (currentAnswer.equals("о себе")) brain.setState(() -> letsPlay());
+		if (currentAnswer.equals("о себе")) brain.setState(this::letsPlay);
 	}
 	
+	public ActiveState letsPlay1() {	
+		output(curDialog.getString("привет"));
+		currentAnswer = input();
+		if (currentAnswer.equals("нет")) return this::sendByeMessage;
+		if (currentAnswer.equals("да")) return this::getWord;
+		if (currentAnswer.equals("о себе")) return this::letsPlay;
+		return this::letsPlay1;
+		//throw new IllegalStateException();
+	}
+
 	public void getWord() {
 		Hangman currentClient = new Hangman();
 		currentClient.game();
