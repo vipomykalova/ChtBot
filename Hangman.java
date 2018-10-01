@@ -26,9 +26,10 @@ public class Hangman implements InputOutput{
 		
 		PrintResult(word.length(), currentResult);
 		win = false;
+		boolean finish = false;
 		
 		while(life.IsHeAlive()) {
-			boolean finish = false;
+			
 			String letter = Input();
 			if(letter.isEmpty()) {
 				continue;
@@ -70,7 +71,10 @@ public class Hangman implements InputOutput{
 			}
 			
 		}
-		Output("Верное слово: " + word);
+		
+		if(!finish) {
+			Output("Верное слово: " + word);
+		}
 	}
 	
 	private void PrintResult(int n, char[] result) {
