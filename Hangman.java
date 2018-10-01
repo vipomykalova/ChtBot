@@ -70,6 +70,7 @@ public class Hangman implements InputOutput{
 			}
 			
 		}
+		Output("Верное слово: " + word);
 	}
 	
 	private void PrintResult(int n, char[] result) {
