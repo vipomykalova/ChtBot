@@ -7,7 +7,7 @@ public class TaskMaker {
 		
 		Random rnd = new Random();
 		int thisWord = rnd.nextInt(34010);
-		try(BufferedReader br = new BufferedReader(new FileReader("Archive.txt")))
+		try(BufferedReader br = new BufferedReader(new FileReader("src/Archive.txt")))
 		{
 		    String s;
 		    int count = 0;
