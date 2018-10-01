@@ -3,24 +3,28 @@ import java.util.Random;
 
 public class MakingTask {
 	
-	public static String newTask() {
+	public Map<int,String> wordsDict() {
+		Map<int,String> dictionary = new HashMap<int,String>();
 		
-		Random rnd = new Random();
-		int thisWord = rnd.nextInt(34010);
 		try(BufferedReader br = new BufferedReader(new FileReader("Archive.txt")))
 		{
 		    String s;
 		    int count = 0;
 		    while((s = br.readLine()) != null) {
-		    	if(count == thisWord)
-		    		return s;
+		    	dictionary.put(count, s);
 		        count ++;
 		    }
 		}
 		catch(IOException ex) {
-			return null;
+			System.out.println(ex.getMessage());;
 		}
-		return null; 
+	}
+	
+	public static String newTask() {
+		Map<int,String> dictionary = wordsDict();
+		Random rnd = new Random();
+		int thisWord = rnd.nextInt(dictionary.size());
+		return dictionary.get(thisWord);
 	}
 	
 }
