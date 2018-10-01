@@ -53,7 +53,9 @@ public class Hangman implements InputOutput{
 			
 			Output("У вас осталось жизней: " + life.lives + "\n");
 			
-			PrintResult(word.length(), currentResult);
+			if(life.lives > 0) {
+				PrintResult(word.length(), currentResult);
+			}
 			
 			int count = 0;
 			for(int i = 0; i < currentResult.length; i++) {
