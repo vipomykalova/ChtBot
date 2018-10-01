@@ -6,7 +6,7 @@ public class Hangman extends InputOutput{
 	public boolean win;
 	
 	public void game(){
-		String word = MakingTask.newTask();
+		String word = TaskMaker.newTask();
 		char wordToArray[] = word.toCharArray();
 		char currentResult[] = new char[word.length()];
 		LifeCounter life = new LifeCounter();
