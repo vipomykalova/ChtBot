@@ -3,8 +3,7 @@
 interface ActiveState {
 	public void doWork();
 }
-
-public class FMS {
+ public class FMS {
 	ActiveState activeState;
 	
 	
@@ -17,5 +16,4 @@ public class FMS {
 			activeState.doWork();
 		}
 	}
-
-}
+ }
