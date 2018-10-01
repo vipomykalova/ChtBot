@@ -1,7 +1,7 @@
 import java.util.ArrayList;
 import java.util.Scanner;
 
-public class Hangman extends InputOutput{
+public class Hangman{
 	
 	public boolean win;
 	
@@ -20,7 +20,7 @@ public class Hangman extends InputOutput{
 		boolean finish = false;
 		
 		while(life.IsHeAlive()) {
-			String letter = input();
+			String letter = InOut.INSTANCE.input();
 			if(letter.isEmpty()) {
 				continue;
 			}
@@ -43,7 +43,7 @@ public class Hangman extends InputOutput{
 				}
 			} else life.lives = life.lifeCounter(false);
 			
-			output("У вас осталось жизней: " + life.lives + "\n");
+			InOut.INSTANCE.output("У вас осталось жизней: " + life.lives + "\n");
 			
 			if (life.lives > 0) {
 				printResult(word.length(), currentResult);
@@ -62,15 +62,15 @@ public class Hangman extends InputOutput{
 			}
 		}
 		if (!finish) {
-			output("Верное слово: "+ word + "\n");
+			InOut.INSTANCE.output("Верное слово: "+ word + "\n");
 		}
 	}
 	
 	private void printResult(int n, char[] result) {
 		for(int i = 0; i < n; i++) {
-			output("" + result[i]);
+			InOut.INSTANCE.output("" + result[i]);
 		}
-		output("\n");
+		InOut.INSTANCE.output("\n");
 	}
 
 }
