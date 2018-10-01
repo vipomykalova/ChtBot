@@ -1,10 +1,14 @@
 
 public class LifeCounter {
 	
-	public int lifes = 10;
+	public int lives = 10;
 	
 	public int lifeCounter(boolean resultOfStroke) {
-		if (!resultOfStroke) lifes -= 1;
-		return lifes;
+		if (!resultOfStroke) lives -= 1;
+		return lives;
+	}
+	
+	public boolean IsHeAlive() {
+		return (lives != 0);
 	}
 }
