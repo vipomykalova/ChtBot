@@ -10,6 +10,7 @@
 /ActiveState.class
 /InputOutputInterface.class
 /Base.class
-/InputOutput.class
+/InOut.class
 /TaskMaker.class
 /bin/
+/.idea/

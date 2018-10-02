@@ -1,26 +1,30 @@
 import java.io.*;
 import java.util.Random;
+import java.util.ArrayList;
 
 public class TaskMaker {
-	
-	public static String newTask() {
-		
-		Random rnd = new Random();
-		int thisWord = rnd.nextInt(34010);
+
+	private static ArrayList<String> words = new ArrayList<String>();
+
+	public static void allWords() {
 		try(BufferedReader br = new BufferedReader(new FileReader("src/Archive.txt")))
 		{
-		    String s;
-		    int count = 0;
-		    while((s = br.readLine()) != null) {
-		    	if(count == thisWord)
-		    		return s;
-		        count ++;
-		    }
+			String word;
+			while((word = br.readLine()) != null) {
+				words.add(word);
+			}
 		}
 		catch(IOException ex) {
-			return null;
+			InOut.INSTANCE.output(ex.getMessage());
 		}
-		return null; 
+	}
+	
+	public static String newTask() {
+		if(words.size() == 0)
+			allWords();
+		Random rnd = new Random();
+		int thisWord = rnd.nextInt(words.size());
+		return words.get(thisWord);
 	}
 	
 }

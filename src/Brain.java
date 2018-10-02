@@ -1,27 +1,30 @@
 
-public class Brain {
+public class Brain extends InOut {
 	
 	FMS brain = new FMS();
 	String currentAnswer = "";
+	Dialog curDialog = new Dialog();
 	
 	Brain() {
-		brain.setState(this::letsPlay);
+		brain.setState(() -> letsPlay());
 	}
 	
 	public void letsPlay() {	
-		InOut.INSTANCE.output(Dialog.INSTANCE.getString("привет"));
-		currentAnswer = InOut.INSTANCE.input();
-		switch(currentAnswer) {
-		case "нет":
-			brain.setState(this::sendByeMessage);
-			break;
-		case "да":
-			brain.setState(this::getWord);
-			break;
-		case "о себе":
-			brain.setState(this::letsPlay);
-			break;
-		}
+		output(curDialog.getString("привет"));
+		currentAnswer = input();
+		if (currentAnswer.equals("нет")) brain.setState(() -> sendByeMessage());
+		if (currentAnswer.equals("да")) brain.setState(() -> getWord());
+		if (currentAnswer.equals("о себе")) brain.setState(this::letsPlay);
+	}
+	
+	public ActiveState letsPlay1() {	
+		output(curDialog.getString("привет"));
+		currentAnswer = input();
+		if (currentAnswer.equals("нет")) return this::sendByeMessage;
+		if (currentAnswer.equals("да")) return this::getWord;
+		if (currentAnswer.equals("о себе")) return this::letsPlay;
+		return this::letsPlay1;
+		//throw new IllegalStateException();
 	}
 
 	public void getWord() {
@@ -29,41 +32,31 @@ public class Brain {
 		currentClient.game();
 		
 		if (currentClient.win == true) {
-			InOut.INSTANCE.output(Dialog.INSTANCE.getString("победа"));
+			output(curDialog.getString("победа"));
+			brain.setState(() -> doYouWant());
 		}
 		if (currentClient.win == false) {
-			InOut.INSTANCE.output(Dialog.INSTANCE.getString("проигрыш"));
-		}	
-		brain.setState(this::doYouWant);
+			output(curDialog.getString("проигрыш"));
+			brain.setState(() -> doYouWant());
+		}
 	}
 	
 	public void doYouWant() {
-		InOut.INSTANCE.output(Dialog.INSTANCE.getString("еще"));
-		currentAnswer = InOut.INSTANCE.input();
-		switch(currentAnswer) {
-		case "нет":
-			brain.setState(this::sendByeMessage);
-			break;
-		case "да":
-			brain.setState(this::getWord);
-			break;
-		case "о себе":
-			brain.setState(this::letsPlay);
-			break;
-		}
+		output(curDialog.getString("еще"));
+		currentAnswer = input();
+		if (currentAnswer.equals("да")) brain.setState(() -> getWord());
+		if (currentAnswer.equals("нет")) brain.setState(() -> sendByeMessage());
+		if (currentAnswer.equals("о себе")) brain.setState(() -> letsPlay());
 	}
 	
 	public void waitSmth() {
-		currentAnswer = InOut.INSTANCE.input();
-		if (!currentAnswer.isEmpty()) {
-			brain.setState(this::letsPlay);
-		}
-		else throw new IllegalStateException();
+		currentAnswer = input();
+		if (currentAnswer.equals("привет") || currentAnswer.equals("о себе")) brain.setState(() -> letsPlay());
 	}
 	
 	public void sendByeMessage() {
-		InOut.INSTANCE.output(Dialog.INSTANCE.getString("пока"));
-		brain.setState(this::waitSmth);
+		output(curDialog.getString("пока"));
+		brain.setState(() -> waitSmth());
 	}
 	
 	public void update() {
