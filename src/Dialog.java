@@ -2,6 +2,8 @@
 import java.util.ListResourceBundle;
 
 public class Dialog extends ListResourceBundle{
+
+	public static final Dialog INSTANCE = new Dialog();
 	
 	static final Object[][] contents = {
 			{"привет", "Привет :) Я бот, который умеет "
