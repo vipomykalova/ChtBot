@@ -20,7 +20,7 @@ public class Hangman {
 		win = false;
 		boolean finish = false;
 		
-		while(life.IsHeAlive() || finish) {
+		while(life.IsHeAlive() && !finish) {
 			String letter = InOut.INSTANCE.input();
 
 			if(letter.isEmpty()) {
