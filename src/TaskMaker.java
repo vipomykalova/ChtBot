@@ -4,33 +4,40 @@ import java.util.ArrayList;
 
 public class TaskMaker {
 
-	private static ArrayList<String> words = new ArrayList<String>();
-
-	public static void allWords() {
-		String archive;
-		if(Brain.currentGame.equals("hangman")) archive = "src/ArchiveHangman.txt";
-		else{
-			archive = "smth from new logic";
+	public static ArrayList<String> allTasks(String curArchive) {
+		
+		ArrayList<String> tasks = new ArrayList<String>();
+		String archive = "";
+		
+		if (curArchive.equals("виселица")) {
+			archive = "src/ArchiveHangman.txt"; 
+		}
+		if (curArchive.equals("правда")) {
+			archive = "src/ArchiveTruth.txt";
+		}
+		if (curArchive.equals("действие")) {
+			archive = "src/ArchiveDare.txt";
 		}
 
 		try(BufferedReader br = new BufferedReader(new FileReader(archive)))
 		{
-			String word;
-			while((word = br.readLine()) != null) {
-				words.add(word);
+			String task;
+			while((task = br.readLine()) != null) {
+				tasks.add(task);
 			}
 		}
 		catch(IOException ex) {
 			InOut.INSTANCE.output(ex.getMessage());
 		}
+		
+		return tasks;
 	}
 	
-	public static String newTask() {
-		if(words.size() == 0)
-			allWords();
+	public static String newTask(String curArchive) {
+		ArrayList<String> tasks = allTasks(curArchive);
 		Random rnd = new Random();
-		int thisWord = rnd.nextInt(words.size());
-		return words.get(thisWord);
+		int thisTask = rnd.nextInt(tasks.size());
+		return tasks.get(thisTask);
 	}
 	
 }
