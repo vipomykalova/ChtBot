@@ -44,6 +44,7 @@ public class Hangman {
 				if(currentResult[i] != '-') count++;
 			}
 			if(count == currentResult.length) finish = true;
+			
 		}
 
 		if (!finish) {
