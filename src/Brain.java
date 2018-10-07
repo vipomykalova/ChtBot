@@ -28,10 +28,10 @@ public class Brain {
 		Hangman currentClient = new Hangman();
 		currentClient.game();
 
-		if (currentClient.win == true) {
+		if (currentClient.win) {
 			InOut.INSTANCE.output(Dialog.INSTANCE.getString("победа"));
 		}
-		if (currentClient.win == false) {
+		if (!currentClient.win) {
 			InOut.INSTANCE.output(Dialog.INSTANCE.getString("проигрыш"));
 		}
 		brain.setState(this::doYouWant);
