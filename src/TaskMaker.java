@@ -7,7 +7,13 @@ public class TaskMaker {
 	private static ArrayList<String> words = new ArrayList<String>();
 
 	public static void allWords() {
-		try(BufferedReader br = new BufferedReader(new FileReader("src/Archive.txt")))
+		String archive;
+		if(Brain.currentGame.equals("hangman")) archive = "src/ArchiveHangman.txt";
+		else{
+			archive = "smth from new logic";
+		}
+
+		try(BufferedReader br = new BufferedReader(new FileReader(archive)))
 		{
 			String word;
 			while((word = br.readLine()) != null) {
