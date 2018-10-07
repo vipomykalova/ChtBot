@@ -7,7 +7,7 @@ public class Hangman {
 	public boolean win;
 	
 	public void game(){
-		String word = TaskMaker.newTask();
+		String word = TaskMaker.newTask("виселица");
 		Map<Character, ArrayList<Integer>> wordsLetters = wordToDict(word);
 		char currentResult[] = new char[word.length()];
 		LifeCounter life = new LifeCounter();
