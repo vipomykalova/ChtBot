@@ -7,17 +7,8 @@ public class TaskMaker {
 	public static ArrayList<String> allTasks(String curArchive) {
 		
 		ArrayList<String> tasks = new ArrayList<String>();
-		String archive = "";
 		
-		if (curArchive.equals("виселица")) {
-			archive = "src/ArchiveHangman.txt"; 
-		}
-		if (curArchive.equals("правда")) {
-			archive = "src/ArchiveTruth.txt";
-		}
-		if (curArchive.equals("действие")) {
-			archive = "src/ArchiveDare.txt";
-		}
+		String archive = "src/Archive" + curArchive + ".txt";
 
 		try(BufferedReader br = new BufferedReader(new FileReader(archive)))
 		{
