@@ -1,21 +1,17 @@
 
 @FunctionalInterface
 interface ActiveState {
-	public void doWork();
+	public String doWork(String input);
 }
 
 public class FMS {
 	ActiveState activeState;
 	
-	
 	public void setState(ActiveState act) {
 		activeState = act;
 	}
 	
-	public void update() {
-		if (activeState != null) {
-			activeState.doWork();
-		}
+	public String update(String input) {
+		return activeState.doWork(input);
 	}
-
 }
