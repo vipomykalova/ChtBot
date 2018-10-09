@@ -9,6 +9,7 @@ public class TruthOrDare {
 	public StatesGame currentStateGame;
 	public HashMap<String, String> nameArchive;
 	public String[] gamers;
+	Random rnd = new Random();
 	
 	TruthOrDare() {
 		nameArchive = new HashMap<>();
@@ -26,7 +27,6 @@ public class TruthOrDare {
 		case Stop:
 			return null;
 		}
-		
 		return null;
 	}
 	
@@ -41,7 +41,6 @@ public class TruthOrDare {
 	}
 
 	public String askPlayer() {
-		Random rnd = new Random();
 		String currentGamer = gamers[rnd.nextInt(gamers.length)];
 		return currentGamer + ", правда или действие? :)" + "\n";
 	}
