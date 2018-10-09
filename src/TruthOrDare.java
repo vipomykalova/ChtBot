@@ -6,10 +6,11 @@ public class TruthOrDare {
 	public enum StatesGame {
 		Correct, Incorrect, Stop
 	}
+	
+	Random rnd = new Random();
 	public StatesGame currentStateGame;
 	public HashMap<String, String> nameArchive;
 	public String[] gamers;
-	Random rnd = new Random();
 	
 	TruthOrDare() {
 		nameArchive = new HashMap<>();
