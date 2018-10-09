@@ -3,55 +3,40 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class Hangman {
-	
-	public boolean win;
-	
-	public void game(){
-		String word = TaskMaker.newTask("виселица");
-		Map<Character, ArrayList<Integer>> wordsLetters = wordToDict(word);
-		char currentResult[] = new char[word.length()];
-		LifeCounter life = new LifeCounter();
-		
-		for(int i = 0; i < word.length(); i++) {
-			currentResult[i] = '-';
+
+	private enum StatesGame {
+		Win, Fail, Game
+	}
+	public StatesGame currentStateGame;
+	private String word = TaskMaker.newTask("Hangman");
+	private Map<Character, ArrayList<Integer>> wordsLetters = wordToDict(word);
+	private char resultArray[] = new char[word.length()];
+	private LifeCounter life = new LifeCounter();
+
+	private String currentResult(String letter) {
+		if(wordsLetters.containsKey(letter.charAt(0))) {
+			life.lives = life.lifeCounter(true);
+
+			for(int i = 0; i < wordsLetters.get(letter.charAt(0)).size(); i++) {
+				resultArray[wordsLetters.get(letter.charAt(0)).get(i)] = letter.charAt(0);
+			}
+		} else life.lives = life.lifeCounter(false);
+
+		int count = 0;
+		for(int i = 0; i < resultArray.length; i++) {
+			if(resultArray[i] != '-') count++;
 		}
-		
-		printResult(word.length(), currentResult);
-		win = false;
-		boolean finish = false;
-		
-		while(life.IsHeAlive() && !finish) {
-			String letter = InOut.INSTANCE.input();
-
-			if(letter.isEmpty()) {
-				InOut.INSTANCE.output("Попробуй еще! Я верю в тебя ;) \n");
-			} else if(wordsLetters.containsKey(letter.charAt(0))) {
-				life.lives = life.lifeCounter(true);
-
-				for(int i = 0; i < wordsLetters.get(letter.charAt(0)).size(); i++) {
-					currentResult[wordsLetters.get(letter.charAt(0)).get(i)] = letter.charAt(0);
-				}
-			} else life.lives = life.lifeCounter(false);
-
-			InOut.INSTANCE.output("У вас осталось жизней: " + life.lives + "\n");
-
-			if(life.lives > 0) {
-				printResult(word.length(), currentResult);
-			}
-
-			int count = 0;
-			for(int i = 0; i < currentResult.length; i++) {
-				if(currentResult[i] != '-') count++;
-			}
-			if(count == currentResult.length) finish = true;
-			
+		if(count == resultArray.length) {
+			currentStateGame = StatesGame.Win;
+			return "Молодец!";
 		}
 
-		if (!finish) {
-			InOut.INSTANCE.output("Верное слово: "+ word + "\n");
+		if(life.lives > 0) {
+			currentStateGame = StatesGame.Game;
+			return "У вас осталось жизней " + life.lives + "\n" + currentWord();
 		} else {
-			win = true;
-			life.lives = 10;
+			currentStateGame = StatesGame.Fail;
+			return "Ты проиграл :( \n" + "Загаданное слово: " + word + "\n";
 		}
 	}
 
@@ -68,12 +53,20 @@ public class Hangman {
 		}
 		return dict;
 	}
-	
-	private void printResult(int n, char[] result) {
-		for(int i = 0; i < n; i++) {
-			InOut.INSTANCE.output("" + result[i]);
+
+	public String setWord() {
+		for(int i = 0; i < word.length(); i++) {
+			resultArray[i] = '-';
 		}
-		InOut.INSTANCE.output("\n");
+		return currentWord();
 	}
 
+	private String currentWord() {
+		String result = "";
+
+		for(int i = 0; i < word.length(); i++){
+			result += resultArray[i];
+		}
+		return result;
+	}
 }
