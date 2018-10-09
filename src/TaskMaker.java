@@ -6,6 +6,8 @@ public class TaskMaker {
 
 	public static ArrayList<String> allTasks(String curArchive) {
 		
+		InOutConsole console = new InOutConsole();
+		
 		ArrayList<String> tasks = new ArrayList<String>();
 		
 		String archive = "src/Archive" + curArchive + ".txt";
@@ -18,7 +20,7 @@ public class TaskMaker {
 			}
 		}
 		catch(IOException ex) {
-			InOut.INSTANCE.output(ex.getMessage());
+			console.output(ex.getMessage());
 		}
 		
 		return tasks;
