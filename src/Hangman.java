@@ -4,16 +4,21 @@ import java.util.Map;
 
 public class Hangman {
 
-	private enum StatesGame {
-		Win, Fail, Game
+	public enum StatesGame {
+		Win, Fail, Game, Stop
 	}
 	public StatesGame currentStateGame;
-	private String word = TaskMaker.newTask("Hangman");
-	private Map<Character, ArrayList<Integer>> wordsLetters = wordToDict(word);
-	private char resultArray[] = new char[word.length()];
-	private LifeCounter life = new LifeCounter();
+	public String word = TaskMaker.newTask("Hangman");
+	public Map<Character, ArrayList<Integer>> wordsLetters = wordToDict(word);
+	public char resultArray[] = new char[word.length()];
+	public LifeCounter life = new LifeCounter();
 
-	private String currentResult(String letter) {
+	public String currentResult(String letter) {
+		if(letter.equals("стоп")) {
+			currentStateGame = StatesGame.Stop;
+			return null;
+		}
+		
 		if(wordsLetters.containsKey(letter.charAt(0))) {
 			life.lives = life.lifeCounter(true);
 
@@ -29,19 +34,21 @@ public class Hangman {
 		}
 		if(count == resultArray.length) {
 			currentStateGame = StatesGame.Win;
-			return "Молодец!";
+			life.lives = 10;
+			return word + "\n" + "Молодец! Сыграем еще?" + "\n";
 		}
 
 		if(life.lives > 0) {
 			currentStateGame = StatesGame.Game;
-			return "У вас осталось жизней " + life.lives + "\n" + currentWord();
+			return "У вас осталось жизней " + life.lives + "\n" + currentWord() + "\n";
 		} else {
 			currentStateGame = StatesGame.Fail;
-			return "Ты проиграл :( \n" + "Загаданное слово: " + word + "\n";
+			life.lives = 10;
+			return "Ты проиграл :( \n" + "Загаданное слово: " + word + "\n" + "Сыграем еще?" + "\n";
 		}
 	}
 
-	private Map<Character, ArrayList<Integer>> wordToDict(String word) {
+	public Map<Character, ArrayList<Integer>> wordToDict(String word) {
 		Map<Character, ArrayList<Integer>> dict = new HashMap<Character, ArrayList<Integer>>();
 
 		for(int i = 0; i < word.length(); i++) {
@@ -59,10 +66,10 @@ public class Hangman {
 		for(int i = 0; i < word.length(); i++) {
 			resultArray[i] = '-';
 		}
-		return currentWord();
+		return currentWord() + "\n";
 	}
 
-	private String currentWord() {
+	public String currentWord() {
 		String result = "";
 
 		for(int i = 0; i < word.length(); i++){
