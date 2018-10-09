@@ -5,9 +5,10 @@ import java.util.Map;
 public class Hangman {
 	
 	public boolean win;
+	final String nameArchive = "ArchiveHangman";
 	
 	public void game(){
-		String word = TaskMaker.newTask("виселица");
+		String word = TaskMaker.newTask(nameArchive);
 		Map<Character, ArrayList<Integer>> wordsLetters = wordToDict(word);
 		char currentResult[] = new char[word.length()];
 		LifeCounter life = new LifeCounter();
