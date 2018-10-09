@@ -2,7 +2,6 @@
 public class Brain {
 	
 	FMS fsm = new FMS();
-	String currentAnswer = "";
 	Hangman currentHangman;
 	TruthOrDare currentTruthOrDare;
 
@@ -12,7 +11,7 @@ public class Brain {
 	
 	public String startMessage(String input) {
 		fsm.setState(this::gameSelection);
-		return Dialog.INSTANCE.getString("привет");
+		return Dialog.INSTANCE.getString("приветствие");
 	}
 	
 	public String gameSelection(String input) {
@@ -25,7 +24,7 @@ public class Brain {
 			return Dialog.INSTANCE.getString("начало");	
 		case "о себе":
 			fsm.setState(this::gameSelection);
-			return Dialog.INSTANCE.getString("привет");
+			return Dialog.INSTANCE.getString("приветствие");
 		}
 		fsm.setState(this::gameSelection);
 		return Dialog.INSTANCE.getString("некорректный ввод");
@@ -52,7 +51,7 @@ public class Brain {
 			return result;
 		case Stop:
 		    fsm.setState(this::startMessage);
-		    return Dialog.INSTANCE.getString("пока"); 
+		    return Dialog.INSTANCE.getString("прощание"); 
 		}	
 		return null;
 	}
@@ -64,10 +63,10 @@ public class Brain {
 			return Dialog.INSTANCE.getString("начало");	
 		case "нет":
 			fsm.setState(this::startMessage);
-			return Dialog.INSTANCE.getString("пока");
+			return Dialog.INSTANCE.getString("прощание");
 		case "о себе":
 			fsm.setState(this::gameSelection);
-			return Dialog.INSTANCE.getString("привет");		
+			return Dialog.INSTANCE.getString("приветствие");		
 		}
 		fsm.setState(this::wantMore);
 		return Dialog.INSTANCE.getString("некорректный ввод");
@@ -89,7 +88,7 @@ public class Brain {
 		currentTruthOrDare.checkState(input);
 		if (currentTruthOrDare.currentStateGame == TruthOrDare.StatesGame.Stop) {
 			fsm.setState(this::startMessage);
-			return Dialog.INSTANCE.getString("пока");
+			return Dialog.INSTANCE.getString("прощание");
 		}
 		fsm.setState(this::truthOrDareGame);
 		return currentTruthOrDare.askPlayer();
@@ -107,12 +106,12 @@ public class Brain {
 			return Dialog.INSTANCE.getString("некорректный ввод");
 		case Stop:
 			fsm.setState(this::startMessage);
-			return Dialog.INSTANCE.getString("пока");
+			return Dialog.INSTANCE.getString("прощание");
 		}	
 		return null;
 	}
 	
-	public String update(String input) {
+	public String reply(String input) {
 		return fsm.update(input);
 	}
 
