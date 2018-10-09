@@ -3,47 +3,42 @@ import java.util.Map;
 import java.util.Random;
 
 public class TruthOrDare {
-	
+
+	private enum StatesGame {
+		Correct, Incorrect, Stop
+	}
+	public StatesGame currentStateGame;
 	private HashMap<String, String> nameArchive;
+	String[] gamers;
 	
 	TruthOrDare() {
 		nameArchive = new HashMap<>();
-		nameArchive.put("правда", "ArchiveTruth");
-		nameArchive.put("действие", "ArchiveDare");
+		nameArchive.put("правда", "Truth");
+		nameArchive.put("действие", "Dare");
 	}
-	
-	public boolean endOfGame;
-	
-	public void game() {
-		
-		endOfGame = false;
-		Random rnd = new Random();
-		String currentGamer = "";
-		String task = "";
-		String answer = "";
-		
-		InOut.INSTANCE.output(Dialog.INSTANCE.getString("игроки"));
-		String[] gamers = InOut.INSTANCE.input().split(",");
-					
-		while (!endOfGame) {
-			currentGamer = gamers[rnd.nextInt(gamers.length)];
-			InOut.INSTANCE.output(currentGamer + ", правда или действие? :)" + "\n");
-			answer = InOut.INSTANCE.input();
-			if (answer.equals("стоп")) {
-				endOfGame = true;
-			}
-			else {
-				if (!answer.equals("правда") && !answer.equals("действие")) {
-					InOut.INSTANCE.output("Что, прости? :)" + "\n");
-					answer = InOut.INSTANCE.input();
-				}
-				task = TaskMaker.newTask(nameArchive.get(answer));
-				InOut.INSTANCE.output(task + "\n");
-				while(InOut.INSTANCE.input().isEmpty()) {
-					
-				}
-			}
+
+	public String taskforPlayer(String answer){
+		if(answer.equals("стоп")) {
+			currentStateGame = StatesGame.Stop;
+			return "";
 		}
+		if (!answer.equals("правда") && !answer.equals("действие")) {
+			currentStateGame = StatesGame.Incorrect;
+			return "";
+		} else {
+			currentStateGame = StatesGame.Correct;
+			return TaskMaker.newTask(nameArchive.get(answer));
+		}
+	}
+
+	public String askPlayer() {
+		Random rnd = new Random();
+		String currentGamer = gamers[rnd.nextInt(gamers.length)];
+		return currentGamer + ", правда или действие? :)";
+	}
+
+	public void parseNames(String names) {
+		gamers = names.split(",");
 	}
 
 }
