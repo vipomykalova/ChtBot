@@ -4,13 +4,15 @@ import java.util.ArrayList;
 
 public class TaskMaker {
 
-	public static ArrayList<String> allTasks(String curArchive) {
-		
+	private static ArrayList<String> tasks = new ArrayList<String>();
+	private static String currentArchive;
+
+	public static void allTasks(String curArchive) {
+
 		InOutConsole console = new InOutConsole();
-		
-		ArrayList<String> tasks = new ArrayList<String>();
-		
+
 		String archive = "src/Archive" + curArchive + ".txt";
+		tasks.clear();
 
 		try(BufferedReader br = new BufferedReader(new FileReader(archive)))
 		{
@@ -22,15 +24,16 @@ public class TaskMaker {
 		catch(IOException ex) {
 			console.output(ex.getMessage());
 		}
-		
-		return tasks;
 	}
-	
+
 	public static String newTask(String curArchive) {
-		ArrayList<String> tasks = allTasks(curArchive);
+		if(!curArchive.equals(currentArchive)) {
+			allTasks(curArchive);
+			currentArchive = curArchive;
+		}
 		Random rnd = new Random();
 		int thisTask = rnd.nextInt(tasks.size());
 		return tasks.get(thisTask);
 	}
-	
+
 }
