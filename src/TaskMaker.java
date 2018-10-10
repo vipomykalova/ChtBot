@@ -9,8 +9,6 @@ public class TaskMaker {
 
 	public static void allTasks(String curArchive) {
 
-		InOutConsole console = new InOutConsole();
-
 		String archive = "src/Archive" + curArchive + ".txt";
 		tasks.clear();
 
@@ -22,7 +20,7 @@ public class TaskMaker {
 			}
 		}
 		catch(IOException ex) {
-			console.output(ex.getMessage());
+			System.exit(1);
 		}
 	}
 
