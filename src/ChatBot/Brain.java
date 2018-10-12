@@ -1,3 +1,5 @@
+package ChatBot;
+
 import Hangman.Hangman;
 import TruthOrDare.TruthOrDare;
 

@@ -1,3 +1,5 @@
+package ChatBot;
+
 import java.util.Scanner;
 
 public class InOutConsole implements InputOutput{
