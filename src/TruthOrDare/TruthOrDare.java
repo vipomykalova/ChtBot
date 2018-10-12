@@ -1,3 +1,5 @@
+package TruthOrDare;
+
 import java.util.HashMap;
 import java.util.Random;
 
@@ -12,7 +14,7 @@ public class TruthOrDare {
 	public HashMap<String, String> nameArchive;
 	public String[] gamers;
 	
-	TruthOrDare() {
+	public TruthOrDare() {
 		nameArchive = new HashMap<>();
 		nameArchive.put("правда", "Truth");
 		nameArchive.put("действие", "Dare");

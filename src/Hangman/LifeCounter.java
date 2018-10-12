@@ -1,3 +1,4 @@
+package Hangman;
 
 public class LifeCounter {
 	
