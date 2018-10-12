@@ -1,7 +1,9 @@
 package TruthOrDare;
-
 import java.util.HashMap;
 import java.util.Random;
+
+import ChatBot.Dialog;
+import ChatBot.TaskMaker;
 
 public class TruthOrDare {
 
@@ -14,7 +16,7 @@ public class TruthOrDare {
 	public HashMap<String, String> nameArchive;
 	public String[] gamers;
 	
-	TruthOrDare() {
+	public TruthOrDare() {
 		nameArchive = new HashMap<>();
 		nameArchive.put("правда", "Truth");
 		nameArchive.put("действие", "Dare");

@@ -1,9 +1,10 @@
 package Hangman;
-
-import TruthOrDare;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
+
+import ChatBot.Dialog;
+import ChatBot.TaskMaker;
 
 public class Hangman {
 
@@ -43,7 +44,7 @@ public class Hangman {
 
 		if(life.lives > 0) {
 			currentStateGame = StatesGame.Game;
-			return Dialog.INSTANCE.getString("жизни")
+			return Dialog.INSTANCE.getString("жизни") + + life.lives + "\n" + currentWord() + "\n";
 		} else {
 			currentStateGame = StatesGame.Fail;
 			life.lives = 10;
