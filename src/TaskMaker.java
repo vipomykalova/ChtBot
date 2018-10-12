@@ -9,7 +9,7 @@ public class TaskMaker {
 
 	public static void allTasks(String curArchive) {
 
-		String archive = "src/Archive" + curArchive + ".txt";
+		String archive = "src/Archives/Archive" + curArchive + ".txt";
 		tasks.clear();
 
 		try(BufferedReader br = new BufferedReader(new FileReader(archive)))
