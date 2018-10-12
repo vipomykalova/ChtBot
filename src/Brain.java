@@ -1,3 +1,5 @@
+import Hangman.Hangman;
+import TruthOrDare.TruthOrDare;
 
 public class Brain {
 	
