@@ -14,7 +14,7 @@ public class TruthOrDare {
 	public HashMap<String, String> nameArchive;
 	public String[] gamers;
 	
-	public TruthOrDare() {
+	TruthOrDare() {
 		nameArchive = new HashMap<>();
 		nameArchive.put("правда", "Truth");
 		nameArchive.put("действие", "Dare");
@@ -45,7 +45,7 @@ public class TruthOrDare {
 
 	public String askPlayer() {
 		String currentGamer = gamers[rnd.nextInt(gamers.length)];
-		return currentGamer + ", правда или действие? :)" + "\n";
+		return currentGamer + Dialog.INSTANCE.getString("что из");
 	}
 
 	public void parseNames(String names) {

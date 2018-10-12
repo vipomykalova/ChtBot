@@ -1,5 +1,6 @@
 package Hangman;
 
+import TruthOrDare;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
@@ -37,16 +38,17 @@ public class Hangman {
 		if(count == resultArray.length) {
 			currentStateGame = StatesGame.Win;
 			life.lives = 10;
-			return word + "\n" + "Молодец! Сыграем еще?" + "\n";
+			return word + "\n" + Dialog.INSTANCE.getString("победа") ;
 		}
 
 		if(life.lives > 0) {
 			currentStateGame = StatesGame.Game;
-			return "У вас осталось жизней " + life.lives + "\n" + currentWord() + "\n";
+			return Dialog.INSTANCE.getString("жизни")
 		} else {
 			currentStateGame = StatesGame.Fail;
 			life.lives = 10;
-			return "Ты проиграл :( \n" + "Загаданное слово: " + word + "\n" + "Сыграем еще?" + "\n";
+			return Dialog.INSTANCE.getString("проигрыш") +
+					Dialog.INSTANCE.getString("слово") + word + "\n" + Dialog.INSTANCE.getString("еще");
 		}
 	}
 
