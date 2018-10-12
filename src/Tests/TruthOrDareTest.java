@@ -1,20 +1,26 @@
-package Tests;
+package Tests; 
 
-import static org.junit.jupiter.api.Assertions.*;
+//import static junit.framework.Assert.assertEquals; 
+//import static junit.framework.Assert.assertNull; 
+import static org.junit.jupiter.api.Assertions.*; 
 import org.junit.jupiter.api.Test;
-import TruthOrDare.TruthOrDare;
 
-class TruthOrDareTest {
+import ChatBot.Dialog;
+import TruthOrDare.TruthOrDare; 
 
-    @Test
-    void parseNameTest() {
-        TruthOrDare game = new TruthOrDare();
-        String[] names = {"Оксана", "Вика"};
-        String[] result = game.parseNames("Оксана,Вика");
-        assertEquals(result[0], names[0]);
-        assertEquals(result[1], names[1]);
-    }
+class TruthOrDareTest { 
 
-    @Test
-    void
+	@Test 
+	void askPlayerTest() { 
+		TruthOrDare game = new TruthOrDare(); 
+		game.gamers = new String[]{"Вика"}; 
+		assertEquals(game.askPlayer(), game.gamers[0] + Dialog.INSTANCE.getString("что из")); 
+	} 
+
+	@Test 
+	void taskForPlayerTest() { 
+		TruthOrDare game = new TruthOrDare(); 
+		assertNull(game.taskForPlayer("стоп")); 
+		assertNull(game.taskForPlayer("nothing")); 
+	} 
 }
