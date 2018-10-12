@@ -9,7 +9,7 @@ public class Brain {
 	Hangman currentHangman;
 	TruthOrDare currentTruthOrDare;
 
-	Brain() {
+	public Brain() {
 		fsm.setState(this::startMessage);
 	}
 	
