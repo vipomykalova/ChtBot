@@ -43,7 +43,7 @@ public class TruthOrDare {
 
 	public String askPlayer() {
 		String currentGamer = gamers[rnd.nextInt(gamers.length)];
-		return currentGamer + ", правда или действие? :)" + "\n";
+		return currentGamer + Dialog.INSTANCE.getString("что из");
 	}
 
 	public void parseNames(String names) {
