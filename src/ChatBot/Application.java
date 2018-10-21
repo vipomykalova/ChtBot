@@ -18,8 +18,7 @@ public class Application {
 				console.output(response);
 			}
 			catch (ArrayIndexOutOfBoundsException exp){
-				console.output("Некорректный ввод. Примеры: \"Вика:виселица\","
-						+ " \"1:правда или действие\" \n");
+				console.output(Dialog.INSTANCE.getString("пример ввода"));
 			}
 		}
 	}
