@@ -2,7 +2,7 @@ package ChatBot;
 
 public class Brain {
 	
-	public FMS fsm = new FMS();
+	public FSM fsm = new FSM();
 	Hangman currentHangman;
 	TruthOrDare currentTruthOrDare;
 
