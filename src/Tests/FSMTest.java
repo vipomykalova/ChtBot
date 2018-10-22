@@ -6,7 +6,7 @@ import org.junit.jupiter.api.Test;
 import ChatBot.Brain;
 import ChatBot.Dialog;
 
-public class FMSTest {
+public class FSMTest {
 	
 	@Test
 	void startMessageTest () {

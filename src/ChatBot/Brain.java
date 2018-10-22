@@ -5,7 +5,7 @@ import TruthOrDare.TruthOrDare;
 
 public class Brain {
 	
-	FMS fsm = new FMS();
+	FSM fsm = new FSM();
 	Hangman currentHangman;
 	TruthOrDare currentTruthOrDare;
 

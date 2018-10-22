@@ -5,7 +5,7 @@ interface ActiveState {
 	public String doWork(String input);
 }
 
-public class FMS {
+public class FSM {
 	ActiveState activeState;
 	
 	public void setState(ActiveState act) {
