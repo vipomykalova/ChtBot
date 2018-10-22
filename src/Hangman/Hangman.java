@@ -1,12 +1,19 @@
 package Hangman;
 import java.util.ArrayList;
+
 import java.util.HashMap;
 import java.util.Map;
 
 import ChatBot.Dialog;
 import ChatBot.TaskMaker;
+import ChatBot.Brain;
 
 public class Hangman {
+	Brain currentSesion;
+	
+	public Hangman(Brain brain) {
+	    currentSesion = brain;
+	}
 
 	public enum StatesGame {
 		Win, Fail, Game, Stop
@@ -81,5 +88,40 @@ public class Hangman {
 			result += resultArray[i];
 		}
 		return result;
+	}
+	
+	public String wantMore(String input) {
+		switch(input) {
+		case "да":
+			currentSesion.fsm.setState(currentSesion::hangmanWordGeneration);
+			return Dialog.INSTANCE.getString("начало");	
+		case "нет":
+			currentSesion.fsm.setState(currentSesion::startMessage);
+			return Dialog.INSTANCE.getString("прощание");
+		case "о себе":
+			currentSesion.fsm.setState(currentSesion::gameSelection);
+			return Dialog.INSTANCE.getString("приветствие");		
+		}
+		currentSesion.fsm.setState(this::wantMore);
+		return Dialog.INSTANCE.getString("некорректный ввод");
+	}
+	
+	public String hangmanGame(String input) {    
+		String result = this.currentResult(input);
+		switch(this.currentStateGame) {
+		case Win:
+			currentSesion.fsm.setState(this::wantMore);
+			return result;
+		case Fail:
+			currentSesion.fsm.setState(this::wantMore);
+			return result;
+		case Game:
+			currentSesion.fsm.setState(this::hangmanGame);
+			return result;
+		case Stop:
+			currentSesion.fsm.setState(currentSesion::startMessage);
+		    return Dialog.INSTANCE.getString("прощание"); 
+		}	
+		return null;
 	}
 }

@@ -6,7 +6,7 @@ interface ActiveState {
 }
 
 public class FSM {
-	ActiveState activeState;
+	public ActiveState activeState;
 	
 	public void setState(ActiveState act) {
 		activeState = act;
@@ -15,4 +15,5 @@ public class FSM {
 	public String update(String input) {
 		return activeState.doWork(input);
 	}
+	
 }

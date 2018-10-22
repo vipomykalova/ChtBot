@@ -5,9 +5,9 @@ import TruthOrDare.TruthOrDare;
 
 public class Brain {
 	
-	FSM fsm = new FSM();
+	public FSM fsm = new FSM();
 	Hangman currentHangman;
-	TruthOrDare currentTruthOrDare;
+    TruthOrDare currentTruthOrDare;
 
 	public Brain() {
 		fsm.setState(this::startMessage);
@@ -35,45 +35,9 @@ public class Brain {
 	}
 	
 	public String hangmanWordGeneration(String input) {
-		currentHangman = new Hangman();
-		fsm.setState(this::hangmanGame);
+		currentHangman = new Hangman(this);
+		fsm.setState(currentHangman::hangmanGame);
 		return currentHangman.setWord();
-	}
-	
-	public String hangmanGame(String input) {    
-		String result = currentHangman.currentResult(input);
-		
-		switch(currentHangman.currentStateGame) {
-		case Win:
-			fsm.setState(this::wantMore);
-			return result;
-		case Fail:
-			fsm.setState(this::wantMore);
-			return result;
-		case Game:
-			fsm.setState(this::hangmanGame);
-			return result;
-		case Stop:
-		    fsm.setState(this::startMessage);
-		    return Dialog.INSTANCE.getString("прощание"); 
-		}	
-		return null;
-	}
-	
-	public String wantMore(String input) {
-		switch(input) {
-		case "да":
-			fsm.setState(this::hangmanWordGeneration);
-			return Dialog.INSTANCE.getString("начало");	
-		case "нет":
-			fsm.setState(this::startMessage);
-			return Dialog.INSTANCE.getString("прощание");
-		case "о себе":
-			fsm.setState(this::gameSelection);
-			return Dialog.INSTANCE.getString("приветствие");		
-		}
-		fsm.setState(this::wantMore);
-		return Dialog.INSTANCE.getString("некорректный ввод");
 	}
 	
 	public String truthOrDareGetNames(String input) {
