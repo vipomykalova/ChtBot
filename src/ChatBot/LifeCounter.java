@@ -1,4 +1,4 @@
-package Hangman;
+package ChatBot;
 
 public class LifeCounter {
 	

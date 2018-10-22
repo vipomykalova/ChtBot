@@ -1,15 +1,12 @@
 package ChatBot;
 
-import Hangman.Hangman;
-import TruthOrDare.TruthOrDare;
-
 public class Brain {
 	
-	public FSM fsm = new FSM();
+	public FMS fsm = new FMS();
 	Hangman currentHangman;
-    TruthOrDare currentTruthOrDare;
+	TruthOrDare currentTruthOrDare;
 
-	public Brain() {
+	Brain() {
 		fsm.setState(this::startMessage);
 	}
 	
@@ -46,37 +43,10 @@ public class Brain {
 	}
 	
 	public String truthOrDareParseNames(String input) {
-		currentTruthOrDare = new TruthOrDare();
+		currentTruthOrDare = new TruthOrDare(this);
 		currentTruthOrDare.parseNames(input);
-		fsm.setState(this::truthOrDareGame);
+		fsm.setState(currentTruthOrDare::truthOrDareGame);
 		return currentTruthOrDare.askPlayer();
-	}
-	
-	public String truthOrDareAskPlayer(String input) {
-		currentTruthOrDare.checkState(input);
-		if (currentTruthOrDare.currentStateGame == TruthOrDare.StatesGame.Stop) {
-			fsm.setState(this::startMessage);
-			return Dialog.INSTANCE.getString("прощание");
-		}
-		fsm.setState(this::truthOrDareGame);
-		return currentTruthOrDare.askPlayer();
-	}
-	
-	public String truthOrDareGame(String input) {
-		String result = currentTruthOrDare.taskForPlayer(input);
-		
-		switch(currentTruthOrDare.currentStateGame) {
-		case Correct:
-			fsm.setState(this::truthOrDareAskPlayer);
-			return result;
-		case Incorrect:
-			fsm.setState(this::truthOrDareGame);
-			return Dialog.INSTANCE.getString("некорректный ввод");
-		case Stop:
-			fsm.setState(this::startMessage);
-			return Dialog.INSTANCE.getString("прощание");
-		}	
-		return null;
 	}
 	
 	public String reply(String input) {

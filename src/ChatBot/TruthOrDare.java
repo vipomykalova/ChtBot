@@ -1,25 +1,24 @@
-package TruthOrDare;
+package ChatBot;
 import java.util.HashMap;
 import java.util.Random;
-
-import ChatBot.Dialog;
-import ChatBot.TaskMaker;
 
 public class TruthOrDare {
 
 	public enum StatesGame {
 		Correct, Incorrect, Stop
 	}
-	
+
+	private Brain currentUser;
 	Random rnd = new Random();
 	public StatesGame currentStateGame;
 	public HashMap<String, String> nameArchive;
 	public String[] gamers;
 	
-	public TruthOrDare() {
+	public TruthOrDare(Brain brain) {
 		nameArchive = new HashMap<>();
 		nameArchive.put("правда", "Truth");
 		nameArchive.put("действие", "Dare");
+		currentUser = brain;
 	}
 
 	public String taskForPlayer(String answer){
@@ -52,6 +51,33 @@ public class TruthOrDare {
 
 	public void parseNames(String names) {
 		gamers = names.split(",");
+	}
+
+	public String truthOrDareAskPlayer(String input) {
+		this.checkState(input);
+		if (this.currentStateGame == TruthOrDare.StatesGame.Stop) {
+			currentUser.fsm.setState(currentUser::startMessage);
+			return Dialog.INSTANCE.getString("прощание");
+		}
+		currentUser.fsm.setState(this::truthOrDareGame);
+		return this.askPlayer();
+	}
+
+	public String truthOrDareGame(String input) {
+		String result = this.taskForPlayer(input);
+
+		switch(this.currentStateGame) {
+			case Correct:
+				currentUser.fsm.setState(this::truthOrDareAskPlayer);
+				return result;
+			case Incorrect:
+				currentUser.fsm.setState(this::truthOrDareGame);
+				return Dialog.INSTANCE.getString("некорректный ввод");
+			case Stop:
+				currentUser.fsm.setState(currentUser::startMessage);
+				return Dialog.INSTANCE.getString("прощание");
+		}
+		return null;
 	}
 
 }

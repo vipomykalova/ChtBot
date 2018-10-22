@@ -1,18 +1,14 @@
-package Hangman;
+package ChatBot;
 import java.util.ArrayList;
-
 import java.util.HashMap;
 import java.util.Map;
 
-import ChatBot.Dialog;
-import ChatBot.TaskMaker;
-import ChatBot.Brain;
-
 public class Hangman {
-	Brain currentSesion;
-	
+
+	private Brain currentUser;
+
 	public Hangman(Brain brain) {
-	    currentSesion = brain;
+		currentUser = brain;
 	}
 
 	public enum StatesGame {
@@ -51,7 +47,7 @@ public class Hangman {
 
 		if(life.lives > 0) {
 			currentStateGame = StatesGame.Game;
-			return Dialog.INSTANCE.getString("жизни") + + life.lives + "\n" + currentWord() + "\n";
+			return Dialog.INSTANCE.getString("жизни") + life.lives + "\n" + currentWord() + "\n";
 		} else {
 			currentStateGame = StatesGame.Fail;
 			life.lives = 10;
@@ -89,39 +85,40 @@ public class Hangman {
 		}
 		return result;
 	}
-	
+
+	public String hangmanGame(String input) {
+		String result = this.currentResult(input);
+
+		switch(this.currentStateGame) {
+			case Win:
+				currentUser.fsm.setState(this::wantMore);
+				return result;
+			case Fail:
+				currentUser.fsm.setState(this::wantMore);
+				return result;
+			case Game:
+				currentUser.fsm.setState(this::hangmanGame);
+				return result;
+			case Stop:
+				currentUser.fsm.setState(currentUser::startMessage);
+				return Dialog.INSTANCE.getString("прощание");
+		}
+		return null;
+	}
+
 	public String wantMore(String input) {
 		switch(input) {
-		case "да":
-			currentSesion.fsm.setState(currentSesion::hangmanWordGeneration);
-			return Dialog.INSTANCE.getString("начало");	
-		case "нет":
-			currentSesion.fsm.setState(currentSesion::startMessage);
-			return Dialog.INSTANCE.getString("прощание");
-		case "о себе":
-			currentSesion.fsm.setState(currentSesion::gameSelection);
-			return Dialog.INSTANCE.getString("приветствие");		
+			case "да":
+				currentUser.fsm.setState(currentUser::hangmanWordGeneration);
+				return Dialog.INSTANCE.getString("начало");
+			case "нет":
+				currentUser.fsm.setState(currentUser::startMessage);
+				return Dialog.INSTANCE.getString("прощание");
+			case "о себе":
+				currentUser.fsm.setState(currentUser::gameSelection);
+				return Dialog.INSTANCE.getString("приветствие");
 		}
-		currentSesion.fsm.setState(this::wantMore);
+		currentUser.fsm.setState(this::wantMore);
 		return Dialog.INSTANCE.getString("некорректный ввод");
-	}
-	
-	public String hangmanGame(String input) {    
-		String result = this.currentResult(input);
-		switch(this.currentStateGame) {
-		case Win:
-			currentSesion.fsm.setState(this::wantMore);
-			return result;
-		case Fail:
-			currentSesion.fsm.setState(this::wantMore);
-			return result;
-		case Game:
-			currentSesion.fsm.setState(this::hangmanGame);
-			return result;
-		case Stop:
-			currentSesion.fsm.setState(currentSesion::startMessage);
-		    return Dialog.INSTANCE.getString("прощание"); 
-		}	
-		return null;
 	}
 }
