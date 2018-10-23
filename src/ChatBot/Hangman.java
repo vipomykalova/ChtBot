@@ -16,7 +16,7 @@ public class Hangman {
 	}
 	public StatesGame currentStateGame;
 	public String word = TaskMaker.newTask("Hangman");
-	public Map<Character, ArrayList<Integer>> wordsLetters = wordToDict(word);
+	public Map<Character, ArrayList<Integer>> wordsLetters;
 	public char resultArray[] = new char[word.length()];
 	public LifeCounter life = new LifeCounter();
 
@@ -42,7 +42,7 @@ public class Hangman {
 		if(count == resultArray.length) {
 			currentStateGame = StatesGame.Win;
 			life.lives = 10;
-			return word + "\n" + Dialog.INSTANCE.getString("победа") ;
+			return word + "\n" + Dialog.INSTANCE.getString("победа");
 		}
 
 		if(life.lives > 0) {
@@ -71,6 +71,7 @@ public class Hangman {
 	}
 
 	public String setWord() {
+		wordsLetters = wordToDict(word);
 		for(int i = 0; i < word.length(); i++) {
 			resultArray[i] = '-';
 		}
