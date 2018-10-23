@@ -5,6 +5,7 @@ import org.junit.jupiter.api.Test;
 
 import ChatBot.Brain;
 import ChatBot.Dialog;
+import ChatBot.Hangman;
 
 public class FSMTest {
 	
@@ -43,7 +44,8 @@ public class FSMTest {
 	void wantMoreTest() {
 		// тестим то, что после отказа в вопросе хочу ли я сыграть, автомат перейдет к стартовому сообщению
 		Brain brain = new Brain();
-		String result = brain.wantMore("нет");
+		Hangman hangman = new Hangman(brain);
+		String result = hangman.wantMore("нет");
 		assertEquals(Dialog.INSTANCE.getString("приветствие"), brain.reply("я передумал, хочу играть"));
 	}
 	
