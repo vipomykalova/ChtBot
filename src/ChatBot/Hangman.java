@@ -114,6 +114,7 @@ public class Hangman {
 	}
 
 	public String wantMore(String input) {
+		input = input.toLowerCase();
 		if (input.startsWith("да")) {
 			currentUser.fsm.setState(currentUser::hangmanWordGeneration);
 			return Dialog.INSTANCE.getString("начало");
