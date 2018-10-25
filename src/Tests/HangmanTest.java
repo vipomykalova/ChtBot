@@ -21,8 +21,8 @@ public class HangmanTest {
 		String correctResult = game.currentResult("п");
 		correctResult = game.currentResult("р");
 		correctResult = game.currentResult("в");
-		assertEquals(game.currentResult("о"), game.word + "\n" +
-		             Dialog.INSTANCE.getString("победа"));
+		assertEquals(game.currentResult("о"), Dialog.INSTANCE.getString("слово") + game.word + "\n" +
+				   Dialog.INSTANCE.getString("победа"));
 	} 
 	
 	@Test
