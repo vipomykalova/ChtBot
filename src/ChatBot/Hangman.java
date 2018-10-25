@@ -21,7 +21,9 @@ public class Hangman {
 	public LifeCounter life = new LifeCounter();
 
 	public String currentResult(String letter) {
-		if(letter.equals("стоп")) {
+		letter = letter.toLowerCase();
+		
+		if(letter.startsWith("стоп")) {
 			currentStateGame = StatesGame.Stop;
 			return null;
 		}
@@ -39,20 +41,24 @@ public class Hangman {
 			if(resultArray[i] != '-') count++;
 
 		}
+		
 		if(count == resultArray.length) {
 			currentStateGame = StatesGame.Win;
 			life.lives = 10;
-			return word + "\n" + Dialog.INSTANCE.getString("победа");
+			return Dialog.INSTANCE.getString("слово") + word + "\n" +
+				   Dialog.INSTANCE.getString("победа");
 		}
 
 		if(life.lives > 0) {
 			currentStateGame = StatesGame.Game;
-			return Dialog.INSTANCE.getString("жизни") + life.lives + "\n" + currentWord() + "\n";
+			return Dialog.INSTANCE.getString("жизни") + life.lives + "\n" +
+				   currentWord() + "\n";
 		} else {
 			currentStateGame = StatesGame.Fail;
 			life.lives = 10;
 			return Dialog.INSTANCE.getString("проигрыш") +
-					Dialog.INSTANCE.getString("слово") + word + "\n" + Dialog.INSTANCE.getString("еще");
+				   Dialog.INSTANCE.getString("слово") + word + "\n" +
+			       Dialog.INSTANCE.getString("еще");
 		}
 	}
 
@@ -108,18 +114,21 @@ public class Hangman {
 	}
 
 	public String wantMore(String input) {
-		switch(input) {
-			case "да":
-				currentUser.fsm.setState(currentUser::hangmanWordGeneration);
-				return Dialog.INSTANCE.getString("начало");
-			case "нет":
-				currentUser.fsm.setState(currentUser::startMessage);
-				return Dialog.INSTANCE.getString("прощание");
-			case "о себе":
-				currentUser.fsm.setState(currentUser::gameSelection);
-				return Dialog.INSTANCE.getString("приветствие");
+		if (input.startsWith("да")) {
+			currentUser.fsm.setState(currentUser::hangmanWordGeneration);
+			return Dialog.INSTANCE.getString("начало");
 		}
-		currentUser.fsm.setState(this::wantMore);
-		return Dialog.INSTANCE.getString("некорректный ввод");
+		else if (input.startsWith("нет")) {
+			currentUser.fsm.setState(currentUser::startMessage);
+			return Dialog.INSTANCE.getString("прощание");
+		}
+		else if (input.startsWith("о себе")) {
+			currentUser.fsm.setState(currentUser::gameSelection);
+			return Dialog.INSTANCE.getString("приветствие");
+		}
+		else {
+			currentUser.fsm.setState(this::wantMore);
+			return Dialog.INSTANCE.getString("некорректный ввод");
+		}
 	}
 }
