@@ -16,19 +16,22 @@ public class Brain {
 	}
 	
 	public String gameSelection(String input) {
-		switch(input) {
-		case "виселица":
+		if (input.startsWith("виселица")) {
 			fsm.setState(this::hangmanWordGeneration);
 			return Dialog.INSTANCE.getString("начало");
-		case "правда или действие":
+		}
+		else if (input.startsWith("правда или действие")) {
 			fsm.setState(this::truthOrDareGetNames);
 			return Dialog.INSTANCE.getString("начало");	
-		case "о себе":
+		}
+		else if (input.startsWith("о себе")) {
 			fsm.setState(this::gameSelection);
 			return Dialog.INSTANCE.getString("приветствие");
 		}
-		fsm.setState(this::gameSelection);
-		return Dialog.INSTANCE.getString("некорректный ввод");
+		else {
+			fsm.setState(this::gameSelection);
+			return Dialog.INSTANCE.getString("некорректный ввод");
+		}
 	}
 	
 	public String hangmanWordGeneration(String input) {
