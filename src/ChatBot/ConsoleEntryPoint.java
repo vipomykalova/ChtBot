@@ -3,7 +3,7 @@ package ChatBot;
 import java.util.HashMap;
 import java.util.Map;
 
-public class Application {
+public class ConsoleEntryPoint {
 
 	public static void main(String[] args) {
 		Map<String, Brain> players = new HashMap<String, Brain>();
