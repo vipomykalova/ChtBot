@@ -25,7 +25,12 @@ public class TruthOrDare {
 		checkState(answer);
 		switch(currentStateGame) {
 		case Correct:
-			return TaskMaker.newTask(nameArchive.get(answer)) + "\n";
+			if (answer.contains("правда")) {
+				return TaskMaker.newTask(nameArchive.get("правда")) + "\n";
+			}
+			else {
+				return TaskMaker.newTask(nameArchive.get("действие")) + "\n";
+			}
 		case Incorrect:
 			return null;
 		case Stop:
@@ -35,9 +40,9 @@ public class TruthOrDare {
 	}
 	
 	public void checkState(String answer) {
-		if (answer.equals("стоп")) {
+		if (answer.startsWith("стоп")) {
 			currentStateGame = StatesGame.Stop;
-		} else if (answer.equals("правда") || answer.equals("действие")) {
+		} else if (answer.startsWith("правда") || answer.startsWith("действие")) {
 			currentStateGame = StatesGame.Correct;
 		} else {
 			currentStateGame = StatesGame.Incorrect;
