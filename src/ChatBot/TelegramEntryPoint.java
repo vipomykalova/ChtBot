@@ -27,6 +27,7 @@ public class TelegramEntryPoint extends TelegramLongPollingBot{
 	private static String BOTS_TOKEN = System.getenv("BOTSTOKEN");
 	private static String BOTS_NAME = System.getenv("BOTSNAME");
 	private static Map<Long, Brain> users = new HashMap<Long, Brain>();
+	private static Message message;
 	
 	public static void main(String[] args) {
 		ApiContextInitializer.init();
@@ -68,10 +69,10 @@ public class TelegramEntryPoint extends TelegramLongPollingBot{
  
 	@Override
 	public void onUpdateReceived(Update update) {
-		Message message = update.getMessage();
+		message = update.getMessage();
 		users.putIfAbsent(message.getChatId(), new Brain());
 		if (message != null && message.hasText()) {
-			sendMsg(message, users.get(message.getChatId()).reply(message.getText()));
+			sendMsg(message, users.get(message.getChatId()).reply(message.getText().toLowerCase()));
 		}
 	}
  
@@ -98,28 +99,49 @@ public class TelegramEntryPoint extends TelegramLongPollingBot{
 	private List<String> setButtonsList(String text) {
 		List<String> buttons = new ArrayList<>();
 		if (text.equals(Dialog.INSTANCE.getString("приветствие"))) {
-			buttons.add(EmojiParser.parseToUnicode("правда или действие :underage:"));
-			buttons.add(EmojiParser.parseToUnicode("виселица :detective:"));
-			buttons.add(EmojiParser.parseToUnicode("о себе :flushed:"));
+			addButton(buttons, "правда или действие :underage:");
+			addButton(buttons, "виселица :detective:");
+			addButton(buttons, "о себе :flushed:");
 		}
 		else if (text.equals(Dialog.INSTANCE.getString("начало"))) {
-			buttons.add(EmojiParser.parseToUnicode("ДА:fire:"));
+			addButton(buttons, "ДА:fire:");
 		}
 		else if (text.endsWith(Dialog.INSTANCE.getString("еще")) ||
 				 text.endsWith(Dialog.INSTANCE.getString("победа"))) {
-			buttons.add(EmojiParser.parseToUnicode("ДА:fire:"));
-			buttons.add(EmojiParser.parseToUnicode("НЕТ:hankey:"));
-			buttons.add(EmojiParser.parseToUnicode("о себе :flushed:"));
+			addButton(buttons, "ДА:fire:");
+			addButton(buttons, "НЕТ:hankey:");
 		}
 		else if (text.endsWith(Dialog.INSTANCE.getString("что из"))) {
-			buttons.add(EmojiParser.parseToUnicode("правда :zipper_mouth:"));
-			buttons.add(EmojiParser.parseToUnicode("действие :tongue:"));
-			buttons.add(EmojiParser.parseToUnicode("стоп :no_entry:"));
+			addButton(buttons, "правда :zipper_mouth:");
+			addButton(buttons, "действие :tongue:");
+			addButton(buttons, "о себе :flushed:");
+			addButton(buttons, "стоп :no_entry:");
 		}
 		else if (text.startsWith(Dialog.INSTANCE.getString("жизни")) ||
 				 text.startsWith("-")) {
-			buttons.add(EmojiParser.parseToUnicode("стоп :no_entry:"));
+			addButton(buttons, "о себе :flushed:");
+			addButton(buttons, "стоп :no_entry:");
+		}
+		else if (!message.getText().startsWith("действие или действие") &&
+				(message.getText().startsWith("правда") || message.getText().startsWith("действие"))) {
+			addButton(buttons, "OK :v:");
+		}
+		else if (text.equals(Dialog.INSTANCE.getString("расскажи"))) {
+			if (users.get(message.getChatId()).currentGame.equals("правда или действие")) {
+				addButton(buttons, "правда :zipper_mouth:");
+				addButton(buttons, "действие :tongue:");
+				addButton(buttons, "о себе :flushed:");
+				addButton(buttons, "стоп :no_entry:");
+			}
+			else {
+				addButton(buttons, "о себе :flushed:");
+				addButton(buttons, "стоп :no_entry:");
+			}
 		}
 		return buttons;
+	}
+
+	private void addButton(List<String> buttons, String text) {
+		buttons.add(EmojiParser.parseToUnicode(text));
 	}
 }
