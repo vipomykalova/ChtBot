@@ -10,7 +10,11 @@ public class Dialog extends ListResourceBundle{
 	static final Object[][] contents = {
 			{"приветствие", EmojiParser.parseToUnicode("Привет :blush: Я бот, который умеет "
 					+ "играть в \"Виселицу\" и в \"Правду или действие\"."
+					+ " Если хочешь еще раз увидеть это сообщение, напиши \"о себе\"."
 					+ " Во что хочешь поиграть?:sparkles: \n")},
+			{"расскажи", EmojiParser.parseToUnicode("Я бот, который умеет "
+					+ "играть в \"Виселицу\" и в \"Правду или действие\"."
+					+ " Если хочешь еще раз увидеть это сообщение, напиши \"о себе\". :sparkles: \n")},
 			{"прощание", EmojiParser.parseToUnicode("Обидно! Но если вдруг захочешь, то пиши мне"
 					+ " :blush: Я буду ждать!:sparkles: \n")},
 			{"игроки", EmojiParser.parseToUnicode(":sparkles:Введи имена игроков (Напр.: Вика,Катя,Дима) \n")},
