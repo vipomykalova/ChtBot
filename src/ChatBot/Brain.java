@@ -1,7 +1,8 @@
 package ChatBot;
 
 public class Brain {
-	
+
+	public String currentGame;
 	public FSM fsm = new FSM();
 	Hangman currentHangman;
 	TruthOrDare currentTruthOrDare;
@@ -18,10 +19,12 @@ public class Brain {
 	public String gameSelection(String input) {
 		if (input.startsWith("виселица")) {
 			fsm.setState(this::hangmanWordGeneration);
+			currentGame = "виселица";
 			return Dialog.INSTANCE.getString("начало");
 		}
 		else if (input.startsWith("правда или действие")) {
 			fsm.setState(this::truthOrDareGetNames);
+			currentGame = "правда или действие";
 			return Dialog.INSTANCE.getString("начало");	
 		}
 		else if (input.startsWith("о себе")) {

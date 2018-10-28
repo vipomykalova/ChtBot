@@ -12,7 +12,7 @@ public class Hangman {
 	}
 
 	public enum StatesGame {
-		Win, Fail, Game, Stop
+		Win, Fail, Game, About, Stop
 	}
 	public StatesGame currentStateGame;
 	public String word = TaskMaker.newTask("Hangman");
@@ -25,7 +25,12 @@ public class Hangman {
 		
 		if(letter.startsWith("стоп")) {
 			currentStateGame = StatesGame.Stop;
-			return null;
+			return Dialog.INSTANCE.getString("прощание");
+		}
+
+		if(letter.startsWith("о себе")) {
+			currentStateGame = StatesGame.About;
+			return Dialog.INSTANCE.getString("расскажи");
 		}
 		
 		if(wordsLetters.containsKey(letter.charAt(0))) {
@@ -106,9 +111,12 @@ public class Hangman {
 			case Game:
 				currentUser.fsm.setState(this::hangmanGame);
 				return result;
+			case About:
+				currentUser.fsm.setState(this::hangmanGame);
+				return result;
 			case Stop:
 				currentUser.fsm.setState(currentUser::startMessage);
-				return Dialog.INSTANCE.getString("прощание");
+				return result;
 		}
 		return null;
 	}
