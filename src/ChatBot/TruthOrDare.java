@@ -5,7 +5,7 @@ import java.util.Random;
 public class TruthOrDare {
 
 	public enum StatesGame {
-		Correct, Incorrect, Stop
+		Correct, Incorrect, About, Stop
 	}
 
 	private Brain currentUser;
@@ -27,11 +27,12 @@ public class TruthOrDare {
 		case Correct:
 			if (answer.contains("правда")) {
 				return TaskMaker.newTask(nameArchive.get("правда")) + "\n";
-			}
-			else {
+			} else {
 				return TaskMaker.newTask(nameArchive.get("действие")) + "\n";
 			}
 		case Incorrect:
+			return null;
+		case About:
 			return null;
 		case Stop:
 			return null;
@@ -44,6 +45,8 @@ public class TruthOrDare {
 			currentStateGame = StatesGame.Stop;
 		} else if (answer.startsWith("правда") || answer.startsWith("действие")) {
 			currentStateGame = StatesGame.Correct;
+		} else if (answer.startsWith("о себе")) {
+			currentStateGame = StatesGame.About;
 		} else {
 			currentStateGame = StatesGame.Incorrect;
 		}
@@ -78,6 +81,9 @@ public class TruthOrDare {
 			case Incorrect:
 				currentUser.fsm.setState(this::truthOrDareGame);
 				return Dialog.INSTANCE.getString("некорректный ввод");
+			case About:
+				currentUser.fsm.setState(this::truthOrDareGame);
+				return Dialog.INSTANCE.getString("расскажи");
 			case Stop:
 				currentUser.fsm.setState(currentUser::startMessage);
 				return Dialog.INSTANCE.getString("прощание");
