@@ -15,12 +15,12 @@ public class HangmanTest {
 		Brain brain = new Brain();
 		Hangman game = new Hangman(brain); 
 		game.word = "право"; 
-	    String wordForUser = game.setWord(); 
+	    game.setWord(); 
 		assertEquals(game.currentResult("а"), Dialog.INSTANCE.getString("жизни") +
 				     game.life.lives + "\n" + game.currentWord() + "\n");
-		String correctResult = game.currentResult("п");
-		correctResult = game.currentResult("р");
-		correctResult = game.currentResult("в");
+		game.currentResult("п");
+		game.currentResult("р");
+		game.currentResult("в");
 		assertEquals(game.currentResult("о"), Dialog.INSTANCE.getString("слово") + game.word + "\n" +
 				   Dialog.INSTANCE.getString("победа"));
 	} 
@@ -31,7 +31,7 @@ public class HangmanTest {
 		Brain brain = new Brain();
 		Hangman game = new Hangman(brain); 
 		game.word = "право"; 
-	    String wordForUser = game.setWord(); 
+	    game.setWord(); 
 	    assertEquals(game.currentResult("к"), Dialog.INSTANCE.getString("жизни") +
 	    		     game.life.lives + "\n" + game.currentWord() + "\n");
 	    String incorrectResult;
@@ -48,7 +48,7 @@ public class HangmanTest {
 		//тестим ввод "стоп" от пользоввателя -> завершение игры
 		Brain brain = new Brain();
 		Hangman game = new Hangman(brain); 
-		String userInput = game.currentResult("стоп");
+		game.currentResult("стоп");
 		assertEquals(game.currentStateGame, Hangman.StatesGame.Stop);
 	}
 }
