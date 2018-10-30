@@ -14,7 +14,7 @@ public class ConsoleEntryPoint {
 				String userInput = console.input();
 				String[] input = userInput.split(":");
 				players.putIfAbsent(input[0], new Brain());
-				String response = players.get(input[0]).reply(input[1]);
+				String response = players.get(input[0]).reply(input[1]).keySet().toArray()[0].toString();
 				console.output(response);
 			}
 			catch (ArrayIndexOutOfBoundsException exp){
