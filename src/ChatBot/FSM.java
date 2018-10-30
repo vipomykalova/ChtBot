@@ -1,8 +1,11 @@
 package ChatBot;
 
+import java.util.List;
+import java.util.Map;
+
 @FunctionalInterface
 interface ActiveState {
-	public String doWork(String input);
+	public Map<String, List<String>> doWork(String input);
 }
 
 public class FSM {
@@ -12,7 +15,7 @@ public class FSM {
 		activeState = act;
 	}
 	
-	public String update(String input) {
+	public Map<String, List<String>> update(String input) {
 		return activeState.doWork(input);
 	}
 	

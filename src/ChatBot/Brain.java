@@ -1,61 +1,96 @@
 package ChatBot;
 
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
 public class Brain {
 
 	public String currentGame;
 	public FSM fsm = new FSM();
-	Hangman currentHangman;
-	TruthOrDare currentTruthOrDare;
+	private Hangman currentHangman;
+	private TruthOrDare currentTruthOrDare;
+	private Map<String, List<String>> mapOfData = new HashMap<>();
 
 	public Brain() {
 		fsm.setState(this::startMessage);
 	}
 	
-	public String startMessage(String input) {
+	public Map<String, List<String>> startMessage(String input) {
 		fsm.setState(this::gameSelection);
-		return Dialog.INSTANCE.getString("приветствие");
+		mapOfData.clear();
+		List<String> curListButtons = Arrays.asList("правда или действие :underage:",
+				                                    "виселица :detective:",
+				                                    "о себе :flushed:"); 
+		mapOfData.put(Dialog.INSTANCE.getString("приветствие"), curListButtons);
+		return mapOfData;
 	}
 	
-	public String gameSelection(String input) {
+	public Map<String, List<String>> gameSelection(String input) {
+		mapOfData.clear();
+		List<String> curListButtons;
 		if (input.startsWith("виселица")) {
 			fsm.setState(this::hangmanWordGeneration);
 			currentGame = "виселица";
-			return Dialog.INSTANCE.getString("начало");
+			curListButtons = Arrays.asList("ДА:fire:");
+			mapOfData.put(Dialog.INSTANCE.getString("начало"), curListButtons);
 		}
 		else if (input.startsWith("правда или действие")) {
 			fsm.setState(this::truthOrDareGetNames);
 			currentGame = "правда или действие";
-			return Dialog.INSTANCE.getString("начало");	
+			curListButtons = Arrays.asList("ДА:fire:");
+			mapOfData.put(Dialog.INSTANCE.getString("начало"), curListButtons);
 		}
 		else if (input.startsWith("о себе")) {
 			fsm.setState(this::gameSelection);
-			return Dialog.INSTANCE.getString("приветствие");
+			curListButtons = Arrays.asList("правда или действие :underage:",
+					                       "виселица :detective:",
+					                       "о себе :flushed:"); 
+			mapOfData.put(Dialog.INSTANCE.getString("приветствие"), curListButtons);
 		}
 		else {
 			fsm.setState(this::gameSelection);
-			return Dialog.INSTANCE.getString("некорректный ввод");
+			curListButtons = Arrays.asList("правда или действие :underage:",
+					                       "виселица :detective:",
+					                       "о себе :flushed:"); 
+			mapOfData.put(Dialog.INSTANCE.getString("некорректный ввод"), curListButtons);
 		}
+		return mapOfData;
 	}
 	
-	public String hangmanWordGeneration(String input) {
+	public Map<String, List<String>> hangmanWordGeneration(String input) {
+		mapOfData.clear();
 		currentHangman = new Hangman(this);
 		fsm.setState(currentHangman::hangmanGame);
-		return currentHangman.setWord();
+		List<String> curListButtons = Arrays.asList("о себе :flushed:",
+				                                    "стоп :no_entry:");
+		mapOfData.put(currentHangman.setWord(), curListButtons);
+		return mapOfData;
 	}
 	
-	public String truthOrDareGetNames(String input) {
+	public Map<String, List<String>> truthOrDareGetNames(String input) {
+		mapOfData.clear();
 		fsm.setState(this::truthOrDareParseNames);
-		return Dialog.INSTANCE.getString("игроки");
+		List<String> curListButtons = Arrays.asList();
+		mapOfData.put(Dialog.INSTANCE.getString("игроки"), curListButtons);
+		return mapOfData;
 	}
 	
-	public String truthOrDareParseNames(String input) {
+	public Map<String, List<String>> truthOrDareParseNames(String input) {
+		mapOfData.clear();
 		currentTruthOrDare = new TruthOrDare(this);
 		currentTruthOrDare.parseNames(input);
 		fsm.setState(currentTruthOrDare::truthOrDareGame);
-		return currentTruthOrDare.askPlayer();
+		List<String> curListButtons = Arrays.asList("правда :zipper_mouth:",
+				                                    "действие :tongue:",
+				                                    "о себе :flushed:",
+				                                    "стоп :no_entry:"); 
+		mapOfData.put(currentTruthOrDare.askPlayer(), curListButtons);
+		return mapOfData;
 	}
 	
-	public String reply(String input) {
+	public Map<String, List<String>> reply(String input) {
 		return fsm.update(input);
 	}
 

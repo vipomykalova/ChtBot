@@ -1,28 +1,31 @@
 package ChatBot;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 public class Hangman {
 
 	private Brain currentUser;
+	private TaskMaker taskMaker = new TaskMaker();
+	public LifeCounter life;
 
 	public Hangman(Brain brain) {
 		currentUser = brain;
+		life = new LifeCounter();
 	}
 
 	public enum StatesGame {
 		Win, Fail, Game, About, Stop
 	}
+	
 	public StatesGame currentStateGame;
-	public String word = TaskMaker.newTask("Hangman");
-	public Map<Character, ArrayList<Integer>> wordsLetters;
-	public char resultArray[] = new char[word.length()];
-	public LifeCounter life = new LifeCounter();
+	public String word = taskMaker.newTask("Hangman");
+	private Map<Character, ArrayList<Integer>> wordsLetters;
+	private char resultArray[] = new char[word.length()];
 
-	public String currentResult(String letter) {
-		letter = letter.toLowerCase();
-		
+	public String currentResult(String letter) {	
 		if(letter.startsWith("стоп")) {
 			currentStateGame = StatesGame.Stop;
 			return Dialog.INSTANCE.getString("прощание");
@@ -35,7 +38,6 @@ public class Hangman {
 		
 		if(wordsLetters.containsKey(letter.charAt(0))) {
 			life.lives = life.lifeCounter(true);
-
 			for(int i = 0; i < wordsLetters.get(letter.charAt(0)).size(); i++) {
 				resultArray[wordsLetters.get(letter.charAt(0)).get(i)] = letter.charAt(0);
 			}
@@ -44,7 +46,6 @@ public class Hangman {
 		int count = 0;
 		for(int i = 0; i < resultArray.length; i++) {
 			if(resultArray[i] != '-') count++;
-
 		}
 		
 		if(count == resultArray.length) {
@@ -69,7 +70,6 @@ public class Hangman {
 
 	public Map<Character, ArrayList<Integer>> wordToDict(String word) {
 		Map<Character, ArrayList<Integer>> dict = new HashMap<Character, ArrayList<Integer>>();
-
 		for(int i = 0; i < word.length(); i++) {
 			ArrayList<Integer> indexes = new ArrayList<Integer>();
 			for(int j = i; j < word.length(); j++) {
@@ -91,53 +91,77 @@ public class Hangman {
 
 	public String currentWord() {
 		String result = "";
-
 		for(int i = 0; i < word.length(); i++){
 			result += resultArray[i];
 		}
 		return result;
 	}
 
-	public String hangmanGame(String input) {
+	public Map<String, List<String>> hangmanGame(String input) {
 		String result = this.currentResult(input);
-
-		switch(this.currentStateGame) {
-			case Win:
-				currentUser.fsm.setState(this::wantMore);
-				return result;
-			case Fail:
-				currentUser.fsm.setState(this::wantMore);
-				return result;
-			case Game:
-				currentUser.fsm.setState(this::hangmanGame);
-				return result;
-			case About:
-				currentUser.fsm.setState(this::hangmanGame);
-				return result;
-			case Stop:
-				currentUser.fsm.setState(currentUser::startMessage);
-				return result;
+		Map<String, List<String>> curMap = new HashMap<>();
+		List<String> curListButtons;
+		if (this.currentStateGame == Hangman.StatesGame.Win) {
+			currentUser.fsm.setState(this::wantMore);
+			curListButtons = Arrays.asList("ДА:fire:",
+					                       "НЕТ:hankey:",
+					                       "о себе :flushed:"); 
+            curMap.put(result, curListButtons);
 		}
-		return null;
+		else if (this.currentStateGame == Hangman.StatesGame.Fail) {
+			currentUser.fsm.setState(this::wantMore);
+			curListButtons = Arrays.asList("ДА:fire:",
+					                       "НЕТ:hankey:",
+					                       "о себе :flushed:"); 
+            curMap.put(result, curListButtons);
+		}
+		else if (this.currentStateGame == Hangman.StatesGame.Game) {
+			currentUser.fsm.setState(this::hangmanGame);
+			curListButtons = Arrays.asList("о себе :flushed:",
+                                           "стоп :no_entry:"); 
+            curMap.put(result, curListButtons);
+		}
+		else if (this.currentStateGame == Hangman.StatesGame.About) {
+			currentUser.fsm.setState(this::hangmanGame);
+			curListButtons = Arrays.asList("о себе :flushed:",
+                                           "стоп :no_entry:"); 
+            curMap.put(result, curListButtons);
+		}
+		else {
+			currentUser.fsm.setState(currentUser::startMessage);
+			curListButtons = Arrays.asList(":hand:"); 
+            curMap.put(result, curListButtons);
+		}
+		return curMap;
 	}
 
-	public String wantMore(String input) {
-		input = input.toLowerCase();
+	public Map<String, List<String>> wantMore(String input) {
+		Map<String, List<String>> curMap = new HashMap<>();
+		List<String> curListButtons;
 		if (input.startsWith("да")) {
 			currentUser.fsm.setState(currentUser::hangmanWordGeneration);
-			return Dialog.INSTANCE.getString("начало");
+			curListButtons = Arrays.asList("ДА:fire:");
+			curMap.put(Dialog.INSTANCE.getString("начало"), curListButtons);
 		}
 		else if (input.startsWith("нет")) {
 			currentUser.fsm.setState(currentUser::startMessage);
-			return Dialog.INSTANCE.getString("прощание");
+			curListButtons = Arrays.asList(":hand:");
+			curMap.put(Dialog.INSTANCE.getString("прощание"), curListButtons);
 		}
 		else if (input.startsWith("о себе")) {
-			currentUser.fsm.setState(currentUser::gameSelection);
-			return Dialog.INSTANCE.getString("приветствие");
+			currentUser.fsm.setState(this::wantMore);
+			curListButtons = Arrays.asList("ДА:fire:",
+                                           "НЕТ:hankey:",
+                                           "о себе :flushed:"); 
+            curMap.put(Dialog.INSTANCE.getString("расскажи"), curListButtons);
 		}
 		else {
 			currentUser.fsm.setState(this::wantMore);
-			return Dialog.INSTANCE.getString("некорректный ввод");
+			curListButtons = Arrays.asList("ДА:fire:",
+                                           "НЕТ:hankey:",
+                                           "о себе :flushed:"); 
+            curMap.put(Dialog.INSTANCE.getString("некорректный ввод"), curListButtons);
 		}
+		return curMap;
 	}
 }
