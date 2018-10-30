@@ -2,38 +2,43 @@ package ChatBot;
 
 import java.io.*;
 import java.util.Random;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.ArrayList;
+import java.util.Map;
 
 public class TaskMaker {
-
-	private static ArrayList<String> tasks = new ArrayList<String>();
-	private static String currentArchive;
-
-	public static void allTasks(String curArchive) {
-
-		String archive = "src/Archives/Archive" + curArchive + ".txt";
-		tasks.clear();
-
-		try(BufferedReader br = new BufferedReader(new FileReader(archive)))
+	
+	private Map<String, ArrayList<String>> archives;
+	
+	public TaskMaker() {
+		archives = new ConcurrentHashMap<String, ArrayList<String>>();
+		archives.put("Hangman", makeListTasks(new ArrayList<String>(), "src/Archives/ArchiveHangman.txt"));
+		archives.put("Dare", makeListTasks(new ArrayList<String>(), "src/Archives/ArchiveDare.txt"));
+		archives.put("Truth", makeListTasks(new ArrayList<String>(), "src/Archives/ArchiveTruth.txt"));
+		
+	}
+	
+	private ArrayList<String> makeListTasks (ArrayList<String> listArchive, String nameArchive) {
+		try(BufferedReader br = new BufferedReader(new FileReader(nameArchive)))
 		{
 			String task;
 			while((task = br.readLine()) != null) {
-				tasks.add(task);
+				listArchive.add(task);
 			}
 		}
 		catch(IOException ex) {
 			System.exit(1);
 		}
+		
+		return listArchive;
 	}
 
-	public static String newTask(String curArchive) {
-		if(!curArchive.equals(currentArchive)) {
-			allTasks(curArchive);
-			currentArchive = curArchive;
-		}
+	public String newTask(String curArchive) {
 		Random rnd = new Random();
-		int thisTask = rnd.nextInt(tasks.size());
-		return tasks.get(thisTask);
+		archives.putIfAbsent(curArchive, makeListTasks(new ArrayList<String>(),
+				             "src/Archives/Archive" + curArchive + ".txt"));
+		int thisTask = rnd.nextInt(archives.get(curArchive).size());
+		return archives.get(curArchive).get(thisTask);
 	}
 
 }
