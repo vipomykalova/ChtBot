@@ -69,23 +69,22 @@ public class TelegramEntryPoint extends TelegramLongPollingBot{
 	@Override
 	public void onUpdateReceived(Update update) {
 		Message message = update.getMessage();
-		users.putIfAbsent(message.getChatId(), new Brain());
-		locks.putIfAbsent(message.getChatId(), new Object());
-		synchronized (locks.get(message.getChatId())) 
+		synchronized (locks.computeIfAbsent(message.getChatId(), k -> new Object())) 
 		{
 			if (message != null && message.hasText()) {
-				sendMsg(message, users.get(message.getChatId()).reply(message.getText().toLowerCase()));
+				sendMsg(message, users.computeIfAbsent(message.getChatId(),
+						k -> new Brain()).reply(message.getText().toLowerCase()));
 			}
 		}
 	}
  
-	private void sendMsg(Message message, Map<String, List<String>> replyBot) {
-		List<String> buttons = replyBot.get(replyBot.keySet().toArray()[0].toString());
+	private void sendMsg(Message message, BotAnswer replyBot) {
+		List<String> buttons = replyBot.buttons;
 		ReplyKeyboardRemove keyboardMurkup = new ReplyKeyboardRemove();
 		SendMessage sendMessage = new SendMessage();
 		sendMessage.enableMarkdown(true);
 		sendMessage.setChatId(message.getChatId().toString());
-		sendMessage.setText(replyBot.keySet().toArray()[0].toString());
+		sendMessage.setText(replyBot.answer);
 		try {
 			if (!buttons.isEmpty()) {
 				setButtons(sendMessage, buttons);
