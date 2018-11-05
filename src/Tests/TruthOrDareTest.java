@@ -17,7 +17,7 @@ class TruthOrDareTest {
 		TruthOrDare game = new TruthOrDare(brain); 
 		game.gamers = new String[]{"Вика"}; 
 		assertEquals(game.askPlayer(), game.gamers[0] + Dialog.INSTANCE.getString("что из"));
-		assertEquals(game.truthOrDareAskPlayer("стоп").keySet().toArray()[0].toString(),
+		assertEquals(game.truthOrDareAskPlayer("стоп").answer,
 				     Dialog.INSTANCE.getString("прощание"));
 	} 
 	

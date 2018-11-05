@@ -66,57 +66,55 @@ public class TruthOrDare {
 		gamers = names.split(",");
 	}
 
-	public Map<String, List<String>> truthOrDareAskPlayer(String input) {
+	public BotAnswer truthOrDareAskPlayer(String input) {
 		this.checkState(input);
-		Map<String, List<String>> curMap = new HashMap<>();
-		List<String> curListButtons;
+		BotAnswer botAnswer = new BotAnswer();
 		if (this.currentStateGame == TruthOrDare.StatesGame.Stop) {
 			currentUser.fsm.setState(currentUser::startMessage);
-			curListButtons = Arrays.asList(":hand:"); 
-			curMap.put(Dialog.INSTANCE.getString("прощание"), curListButtons);
-			return curMap;
+			botAnswer.buttons = Arrays.asList(":hand:"); 
+			botAnswer.answer = Dialog.INSTANCE.getString("прощание");
+			return botAnswer;
 		}
 		currentUser.fsm.setState(this::truthOrDareGame);
-		curListButtons = Arrays.asList("правда :zipper_mouth:",
-				                       "действие :tongue:",
-				                       "о себе :flushed:",
-				                       "стоп :no_entry:");
-		curMap.put(this.askPlayer(), curListButtons);
-		return curMap;
+		botAnswer.buttons = Arrays.asList("правда :zipper_mouth:",
+				                          "действие :tongue:",
+				                          "о себе :flushed:",
+				                          "стоп :no_entry:");
+		botAnswer.answer = this.askPlayer();
+		return botAnswer;
 	}
 
-	public Map<String, List<String>> truthOrDareGame(String input) {
+	public BotAnswer truthOrDareGame(String input) {
 		String result = this.taskForPlayer(input);
-		Map<String, List<String>> curMap = new HashMap<>();
-		List<String> curListButtons;
+		BotAnswer botAnswer = new BotAnswer();
 		if (this.currentStateGame == TruthOrDare.StatesGame.Correct) {
 			currentUser.fsm.setState(this::truthOrDareAskPlayer);	
-			curListButtons = Arrays.asList("OK :v:"); 
-			curMap.put(result, curListButtons);
+			botAnswer.buttons = Arrays.asList("OK :v:"); 
+			botAnswer.answer = result;
 		}
 		else if (this.currentStateGame == TruthOrDare.StatesGame.Incorrect) {
 			currentUser.fsm.setState(this::truthOrDareGame);
-			curListButtons = Arrays.asList("правда :zipper_mouth:",
-                                           "действие :tongue:",
-                                           "о себе :flushed:",
-                                           "стоп :no_entry:");
-			curMap.put(result, curListButtons);
+			botAnswer.buttons = Arrays.asList("правда :zipper_mouth:",
+                                              "действие :tongue:",
+                                              "о себе :flushed:",
+                                              "стоп :no_entry:");
+			botAnswer.answer = result;
 		}
 		else if (this.currentStateGame == TruthOrDare.StatesGame.About) {
 			currentUser.fsm.setState(this::truthOrDareGame);
-			curListButtons = Arrays.asList("правда :zipper_mouth:",
-                                           "действие :tongue:",
-                                           "о себе :flushed:",
-                                           "стоп :no_entry:");
-            curMap.put(result, curListButtons);
+			botAnswer.buttons = Arrays.asList("правда :zipper_mouth:",
+                                              "действие :tongue:",
+                                              "о себе :flushed:",
+                                              "стоп :no_entry:");
+			botAnswer.answer = result;
 		}
 		else {
 			currentUser.fsm.setState(currentUser::startMessage);
-			curListButtons = Arrays.asList(":hand:"); 
-			curMap.put(result, curListButtons);
+			botAnswer.buttons = Arrays.asList(":hand:"); 
+			botAnswer.answer = result;
 		}
 		
-		return curMap;
+		return botAnswer;
 	}
 
 }

@@ -97,71 +97,69 @@ public class Hangman {
 		return result;
 	}
 
-	public Map<String, List<String>> hangmanGame(String input) {
+	public BotAnswer hangmanGame(String input) {
 		String result = this.currentResult(input);
-		Map<String, List<String>> curMap = new HashMap<>();
-		List<String> curListButtons;
+		BotAnswer botAnswer = new BotAnswer();
 		if (this.currentStateGame == Hangman.StatesGame.Win) {
 			currentUser.fsm.setState(this::wantMore);
-			curListButtons = Arrays.asList("ДА:fire:",
-					                       "НЕТ:hankey:",
-					                       "о себе :flushed:"); 
-            curMap.put(result, curListButtons);
+			botAnswer.buttons = Arrays.asList("ДА:fire:",
+					                          "НЕТ:hankey:",
+					                          "о себе :flushed:"); 
+			botAnswer.answer = result;
 		}
 		else if (this.currentStateGame == Hangman.StatesGame.Fail) {
 			currentUser.fsm.setState(this::wantMore);
-			curListButtons = Arrays.asList("ДА:fire:",
-					                       "НЕТ:hankey:",
-					                       "о себе :flushed:"); 
-            curMap.put(result, curListButtons);
+			botAnswer.buttons = Arrays.asList("ДА:fire:",
+					                          "НЕТ:hankey:",
+					                          "о себе :flushed:"); 
+			botAnswer.answer = result;
 		}
 		else if (this.currentStateGame == Hangman.StatesGame.Game) {
 			currentUser.fsm.setState(this::hangmanGame);
-			curListButtons = Arrays.asList("о себе :flushed:",
-                                           "стоп :no_entry:"); 
-            curMap.put(result, curListButtons);
+			botAnswer.buttons = Arrays.asList("о себе :flushed:",
+                                              "стоп :no_entry:"); 
+			botAnswer.answer = result;
 		}
 		else if (this.currentStateGame == Hangman.StatesGame.About) {
 			currentUser.fsm.setState(this::hangmanGame);
-			curListButtons = Arrays.asList("о себе :flushed:",
-                                           "стоп :no_entry:"); 
-            curMap.put(result, curListButtons);
+			botAnswer.buttons = Arrays.asList("о себе :flushed:",
+                                              "стоп :no_entry:"); 
+			botAnswer.answer = result;
 		}
 		else {
 			currentUser.fsm.setState(currentUser::startMessage);
-			curListButtons = Arrays.asList(":hand:"); 
-            curMap.put(result, curListButtons);
+			botAnswer.buttons = Arrays.asList(":hand:"); 
+			botAnswer.answer = result;
 		}
-		return curMap;
+		return botAnswer;
 	}
 
-	public Map<String, List<String>> wantMore(String input) {
-		Map<String, List<String>> curMap = new HashMap<>();
-		List<String> curListButtons;
+	public BotAnswer wantMore(String input) {
+		BotAnswer botAnswer = new BotAnswer();
 		if (input.startsWith("да")) {
 			currentUser.fsm.setState(currentUser::hangmanWordGeneration);
-			curListButtons = Arrays.asList("ДА:fire:");
-			curMap.put(Dialog.INSTANCE.getString("начало"), curListButtons);
+			botAnswer.buttons = Arrays.asList("ДА:fire:");
+			botAnswer.answer = Dialog.INSTANCE.getString("начало");
 		}
 		else if (input.startsWith("нет")) {
 			currentUser.fsm.setState(currentUser::startMessage);
-			curListButtons = Arrays.asList(":hand:");
-			curMap.put(Dialog.INSTANCE.getString("прощание"), curListButtons);
+			botAnswer.buttons = Arrays.asList(":hand:");
+			botAnswer.answer = Dialog.INSTANCE.getString("прощание");
 		}
 		else if (input.startsWith("о себе")) {
 			currentUser.fsm.setState(this::wantMore);
-			curListButtons = Arrays.asList("ДА:fire:",
-                                           "НЕТ:hankey:",
-                                           "о себе :flushed:"); 
-            curMap.put(Dialog.INSTANCE.getString("расскажи"), curListButtons);
+			botAnswer.buttons = Arrays.asList("ДА:fire:",
+                                              "НЕТ:hankey:",
+                                              "о себе :flushed:"); 
+			botAnswer.answer = Dialog.INSTANCE.getString("расскажи");
 		}
 		else {
 			currentUser.fsm.setState(this::wantMore);
-			curListButtons = Arrays.asList("ДА:fire:",
-                                           "НЕТ:hankey:",
-                                           "о себе :flushed:"); 
-            curMap.put(Dialog.INSTANCE.getString("некорректный ввод"), curListButtons);
+			botAnswer.buttons = Arrays.asList("ДА:fire:",
+                                              "НЕТ:hankey:",
+                                              "о себе :flushed:"); 
+			botAnswer.answer = Dialog.INSTANCE.getString("некорректный ввод");
 		}
-		return curMap;
+		return botAnswer;
 	}
 }
