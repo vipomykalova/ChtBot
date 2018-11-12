@@ -7,7 +7,6 @@
 	</classpathentry>
 	<classpathentry kind="src" path="src"/>
 	<classpathentry exported="true" kind="con" path="org.eclipse.jdt.junit.JUNIT_CONTAINER/5"/>
-	<classpathentry exported="true" kind="lib" path="C:/Users/7984116/git/ChtBot/lib/telegrambots-abilities-4.1-jar-with-dependencies.jar"/>
 	<classpathentry exported="true" kind="lib" path="lib/telegrambots-4.1-jar-with-dependencies.jar"/>
 	<classpathentry exported="true" kind="lib" path="lib/telegrambots-abilities-4.1-jar-with-dependencies.jar"/>
 	<classpathentry exported="true" kind="lib" path="lib/telegrambots-chat-session-bot-4.1-jar-with-dependencies.jar"/>
