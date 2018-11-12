@@ -78,13 +78,13 @@ public class TelegramEntryPoint extends TelegramLongPollingBot{
 		}
 	}
  
-	private void sendMsg(Message message, BotAnswer replyBot) {
-		List<String> buttons = replyBot.buttons;
+	private void sendMsg(Message message, BotAnswer botReply) {
+		List<String> buttons = botReply.buttons;
 		ReplyKeyboardRemove keyboardMurkup = new ReplyKeyboardRemove();
 		SendMessage sendMessage = new SendMessage();
 		sendMessage.enableMarkdown(true);
 		sendMessage.setChatId(message.getChatId().toString());
-		sendMessage.setText(replyBot.answer);
+		sendMessage.setText(botReply.answer);
 		try {
 			if (!buttons.isEmpty()) {
 				setButtons(sendMessage, buttons);
