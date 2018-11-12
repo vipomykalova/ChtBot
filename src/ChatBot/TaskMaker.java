@@ -12,13 +12,13 @@ public class TaskMaker {
 	
 	public TaskMaker() {
 		archives = new ConcurrentHashMap<String, ArrayList<String>>();
-		archives.put("Hangman", makeListTasks(new ArrayList<String>(), "src/Archives/ArchiveHangman.txt"));
-		archives.put("Dare", makeListTasks(new ArrayList<String>(), "src/Archives/ArchiveDare.txt"));
-		archives.put("Truth", makeListTasks(new ArrayList<String>(), "src/Archives/ArchiveTruth.txt"));
+		archives.put("Hangman", makeTaskList(new ArrayList<String>(), "src/Archives/ArchiveHangman.txt"));
+		archives.put("Dare", makeTaskList(new ArrayList<String>(), "src/Archives/ArchiveDare.txt"));
+		archives.put("Truth", makeTaskList(new ArrayList<String>(), "src/Archives/ArchiveTruth.txt"));
 		
 	}
 	
-	private ArrayList<String> makeListTasks (ArrayList<String> listArchive, String nameArchive) {
+	private ArrayList<String> makeTaskList (ArrayList<String> listArchive, String nameArchive) {
 		try(BufferedReader br = new BufferedReader(new FileReader(nameArchive)))
 		{
 			String task;
@@ -35,7 +35,7 @@ public class TaskMaker {
 
 	public String newTask(String curArchive) {
 		Random rnd = new Random();
-		archives.putIfAbsent(curArchive, makeListTasks(new ArrayList<String>(),
+		archives.computeIfAbsent(curArchive, k -> makeTaskList(new ArrayList<String>(),
 				             "src/Archives/Archive" + curArchive + ".txt"));
 		int thisTask = rnd.nextInt(archives.get(curArchive).size());
 		return archives.get(curArchive).get(thisTask);
