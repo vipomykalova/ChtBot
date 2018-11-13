@@ -8,7 +8,7 @@ import java.util.Map;
 
 public class TaskMaker {
 	
-	private Map<String, ArrayList<String>> archives;
+	private static Map<String, ArrayList<String>> archives;
 	
 	public TaskMaker() {
 		archives = new ConcurrentHashMap<String, ArrayList<String>>();
