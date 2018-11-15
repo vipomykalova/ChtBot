@@ -16,7 +16,7 @@ public class Hangman {
 	}
 
 	public enum StatesGame {
-		Win, Fail, Game, About, Stop
+		Win, Fail, Game, About, Stop, Statistics
 	}
 	
 	public StatesGame currentStateGame;
@@ -28,6 +28,11 @@ public class Hangman {
 		if(letter.startsWith("стоп")) {
 			currentStateGame = StatesGame.Stop;
 			return Dialog.INSTANCE.getString("прощание");
+		}
+		
+		if(letter.startsWith("статистика")) {
+			currentStateGame = StatesGame.Statistics;
+			return GetStatistics.getStatistics();
 		}
 
 		if(letter.startsWith("о себе")) {
@@ -50,6 +55,8 @@ public class Hangman {
 		if(count == resultArray.length) {
 			currentStateGame = StatesGame.Win;
 			life.lives = 10;
+			currentUser.statistics.wins = currentUser.statistics.wins + 1;
+			GetStatistics.refreshUserStatistics(currentUser.statistics);
 			return Dialog.INSTANCE.getString("слово") + word + "\n" +
 				   Dialog.INSTANCE.getString("победа");
 		}
@@ -61,6 +68,8 @@ public class Hangman {
 		} else {
 			currentStateGame = StatesGame.Fail;
 			life.lives = 10;
+			currentUser.statistics.fails = currentUser.statistics.fails + 1;
+			GetStatistics.refreshUserStatistics(currentUser.statistics);
 			return Dialog.INSTANCE.getString("проигрыш") +
 				   Dialog.INSTANCE.getString("слово") + word + "\n" +
 			       Dialog.INSTANCE.getString("еще");
@@ -103,6 +112,7 @@ public class Hangman {
 			currentUser.fsm.setState(this::wantMore);
 			botAnswer.buttons = Arrays.asList("ДА:fire:",
 					                          "НЕТ:hankey:",
+					                          "статистика :heavy_check_mark:",
 					                          "о себе :flushed:"); 
 			botAnswer.answer = result;
 		}
@@ -110,18 +120,28 @@ public class Hangman {
 			currentUser.fsm.setState(this::wantMore);
 			botAnswer.buttons = Arrays.asList("ДА:fire:",
 					                          "НЕТ:hankey:",
+					                          "статистика :heavy_check_mark:",
 					                          "о себе :flushed:"); 
+			botAnswer.answer = result;
+		}
+		else if (this.currentStateGame == Hangman.StatesGame.Statistics) {
+			currentUser.fsm.setState(this::hangmanGame);
+			botAnswer.buttons = Arrays.asList("о себе :flushed:",
+					                          "статистика :heavy_check_mark:",
+                                              "стоп :no_entry:"); 
 			botAnswer.answer = result;
 		}
 		else if (this.currentStateGame == Hangman.StatesGame.Game) {
 			currentUser.fsm.setState(this::hangmanGame);
 			botAnswer.buttons = Arrays.asList("о себе :flushed:",
+					                          "статистика :heavy_check_mark:",
                                               "стоп :no_entry:"); 
 			botAnswer.answer = result;
 		}
 		else if (this.currentStateGame == Hangman.StatesGame.About) {
 			currentUser.fsm.setState(this::hangmanGame);
 			botAnswer.buttons = Arrays.asList("о себе :flushed:",
+					                          "статистика :heavy_check_mark:",
                                               "стоп :no_entry:"); 
 			botAnswer.answer = result;
 		}
@@ -145,10 +165,19 @@ public class Hangman {
 			botAnswer.buttons = Arrays.asList(":hand:");
 			botAnswer.answer = Dialog.INSTANCE.getString("прощание");
 		}
+		else if (input.startsWith("статистика")) {
+			currentUser.fsm.setState(this::wantMore);
+			botAnswer.buttons = Arrays.asList("ДА:fire:",
+                                              "НЕТ:hankey:",
+                                              "статистика :heavy_check_mark:",
+                                              "о себе :flushed:");
+			botAnswer.answer = GetStatistics.getStatistics();
+		}
 		else if (input.startsWith("о себе")) {
 			currentUser.fsm.setState(this::wantMore);
 			botAnswer.buttons = Arrays.asList("ДА:fire:",
                                               "НЕТ:hankey:",
+                                              "статистика :heavy_check_mark:",
                                               "о себе :flushed:"); 
 			botAnswer.answer = Dialog.INSTANCE.getString("расскажи");
 		}
@@ -156,6 +185,7 @@ public class Hangman {
 			currentUser.fsm.setState(this::wantMore);
 			botAnswer.buttons = Arrays.asList("ДА:fire:",
                                               "НЕТ:hankey:",
+                                              "статистика :heavy_check_mark:",
                                               "о себе :flushed:"); 
 			botAnswer.answer = Dialog.INSTANCE.getString("некорректный ввод");
 		}
