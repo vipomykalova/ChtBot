@@ -27,6 +27,7 @@ public class TelegramEntryPoint extends TelegramLongPollingBot{
 	private String BOTS_NAME = System.getenv("BOTSNAME");
 	private Map<Long, Brain> users = new ConcurrentHashMap<Long, Brain>();
 	private Map<Long, Object> locks = new ConcurrentHashMap<Long, Object>();
+	public static Map<Brain, String> usernames = new ConcurrentHashMap<Brain, String>();
 	
 	public static void main(String[] args) {
 		ApiContextInitializer.init();
@@ -74,7 +75,19 @@ public class TelegramEntryPoint extends TelegramLongPollingBot{
 			if (message != null && message.hasText()) {
 				sendMsg(message, users.computeIfAbsent(message.getChatId(),
 						k -> new Brain()).reply(message.getText().toLowerCase()));
+				refreshUsernames(message);
 			}
+		}
+	}
+	
+	private void refreshUsernames(Message currentMessage) {
+		if (currentMessage.getFrom().getUserName() != null) {
+			usernames.computeIfAbsent(users.get(currentMessage.getChatId()),
+					k -> "@" + currentMessage.getFrom().getUserName());
+		}
+		else {
+			usernames.computeIfAbsent(users.get(currentMessage.getChatId()),
+					k -> currentMessage.getFrom().getFirstName());
 		}
 	}
  
