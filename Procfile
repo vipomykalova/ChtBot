@@ -1,1 +1,0 @@
-web: java /src/ChatBot/TelegramEntryPoint.java
