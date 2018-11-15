@@ -8,8 +8,13 @@ public class Brain {
 	public FSM fsm = new FSM();
 	private Hangman currentHangman;
 	private TruthOrDare currentTruthOrDare;
+	public Statistics statistics;
 
 	public Brain() {
+		statistics = new Statistics();
+		statistics.wins = 0;
+		statistics.fails = 0;
+		statistics.currentUser = this;
 		fsm.setState(this::startMessage);
 	}
 	
@@ -59,6 +64,7 @@ public class Brain {
 		BotAnswer botAnswer = new BotAnswer();
 		fsm.setState(currentHangman::hangmanGame);
 		botAnswer.buttons = Arrays.asList("о себе :flushed:",
+				                          "статистика :heavy_check_mark:",
 				                          "стоп :no_entry:");
 		botAnswer.answer = currentHangman.setWord();
 		return botAnswer;
