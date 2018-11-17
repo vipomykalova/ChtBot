@@ -65,7 +65,7 @@
             <assembleDirectory>target</assembleDirectory>
             <programs>
                 <program>
-                    <mainClass>main.java.Main</mainClass>
+                    <mainClass>main.java.TelegramEntryPoint</mainClass>
                     <name>worker</name>
                 </program>
             </programs>
@@ -85,7 +85,7 @@
                     <archive>
                         <manifest>
                             <addClasspath>true</addClasspath>
-                            <mainClass>main.java.Main</mainClass>
+                            <mainClass>main.java.TelegramEntryPoint</mainClass>
                             <classpathPrefix>lib/</classpathPrefix>
                         </manifest>
                     </archive>
