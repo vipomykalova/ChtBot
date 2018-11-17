@@ -1,12 +1,12 @@
-package Tests; 
+package test.java;
  
 import static org.junit.jupiter.api.Assertions.*;
 
 import org.junit.jupiter.api.Test;
 
-import ChatBot.Dialog;
-import ChatBot.TruthOrDare;
-import ChatBot.Brain;
+import main.java.Dialog;
+import main.java.TruthOrDare;
+import main.java.Brain;
 
 class TruthOrDareTest { 
 

@@ -1,4 +1,4 @@
-package ChatBot;
+package main.java;
 
 import java.util.ListResourceBundle;
 import com.vdurmont.emoji.EmojiParser;

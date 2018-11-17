@@ -1,11 +1,11 @@
-package Tests;
+package test.java;
 
 import static org.junit.jupiter.api.Assertions.*;
 import org.junit.jupiter.api.Test;
 
-import ChatBot.Brain;
-import ChatBot.Dialog;
-import ChatBot.Hangman;
+import main.java.Brain;
+import main.java.Dialog;
+import main.java.Hangman;
 
 public class FSMTest {
 	

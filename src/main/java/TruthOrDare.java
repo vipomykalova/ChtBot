@@ -1,4 +1,4 @@
-package ChatBot;
+package main.java;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Random;

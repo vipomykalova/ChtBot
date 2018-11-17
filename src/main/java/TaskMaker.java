@@ -1,4 +1,4 @@
-package ChatBot;
+package main.java;
 
 import java.io.*;
 import java.util.Random;
@@ -12,9 +12,9 @@ public class TaskMaker {
 	
 	public TaskMaker() {
 		archives = new ConcurrentHashMap<String, ArrayList<String>>();
-		archives.put("Hangman", makeTaskList(new ArrayList<String>(), "src/Archives/ArchiveHangman.txt"));
-		archives.put("Dare", makeTaskList(new ArrayList<String>(), "src/Archives/ArchiveDare.txt"));
-		archives.put("Truth", makeTaskList(new ArrayList<String>(), "src/Archives/ArchiveTruth.txt"));
+		archives.put("Hangman", makeTaskList(new ArrayList<String>(), "src/main/java/Archives/ArchiveHangman.txt"));
+		archives.put("Dare", makeTaskList(new ArrayList<String>(), "src/main/java/Archives/ArchiveDare.txt"));
+		archives.put("Truth", makeTaskList(new ArrayList<String>(), "src/main/java/Archives/ArchiveTruth.txt"));
 		
 	}
 	
@@ -36,7 +36,7 @@ public class TaskMaker {
 	public String newTask(String curArchive) {
 		Random rnd = new Random();
 		archives.computeIfAbsent(curArchive, k -> makeTaskList(new ArrayList<String>(),
-				             "src/Archives/Archive" + curArchive + ".txt"));
+				             "src/main/java/Archives/Archive" + curArchive + ".txt"));
 		int thisTask = rnd.nextInt(archives.get(curArchive).size());
 		return archives.get(curArchive).get(thisTask);
 	}

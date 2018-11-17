@@ -1,4 +1,4 @@
-package ChatBot;
+package main.java;
 
 public class Statistics {
 	
