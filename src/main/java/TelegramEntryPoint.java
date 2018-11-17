@@ -16,39 +16,42 @@ import org.telegram.telegrambots.meta.api.objects.replykeyboard.ReplyKeyboardMar
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.ReplyKeyboardRemove;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.KeyboardButton;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.KeyboardRow;
+import org.telegram.telegrambots.bots.DefaultBotOptions;
 import org.telegram.telegrambots.bots.TelegramLongPollingBot;
 import com.vdurmont.emoji.EmojiParser;
 
 import main.java.Brain;
 
 public class TelegramEntryPoint extends TelegramLongPollingBot{
-	
-	private String BOTS_TOKEN = System.getenv("BOTSTOKEN");
-	private String BOTS_NAME = System.getenv("BOTSNAME");
+
+	private String BOTS_TOKEN;
+	private String BOTS_NAME;
 	private Map<Long, Brain> users = new ConcurrentHashMap<Long, Brain>();
 	private Map<Long, Object> locks = new ConcurrentHashMap<Long, Object>();
 	public static Map<Brain, String> usernames = new ConcurrentHashMap<Brain, String>();
-	
-	public static void main(String[] args) {
-		ApiContextInitializer.init();
-		TelegramBotsApi telegramBotsApi = new TelegramBotsApi();
-		try {
-			telegramBotsApi.registerBot(new TelegramEntryPoint());
-		} catch (TelegramApiException e) {
-			e.printStackTrace();
-		}
+
+	TelegramEntryPoint(DefaultBotOptions botOptions) {
+        super(botOptions);
+        try {
+            BOTS_NAME = System.getenv("BOTS_NAME");
+            BOTS_TOKEN = System.getenv("BOTS_TOKEN");
+        }
+        catch (NumberFormatException e) {
+            System.out.println("Please set bot credentials!");
+            System.exit(0);
+        }
 	}
- 
+
 	@Override
 	public String getBotUsername() {
 		return BOTS_NAME;
 	}
- 
+
 	@Override
 	public String getBotToken() {
 		return BOTS_TOKEN;
 	}
-	
+
 	public synchronized void setButtons(SendMessage sendMessage, List<String> labels) {
         ReplyKeyboardMarkup replyKeyboardMarkup = new ReplyKeyboardMarkup();
         sendMessage.setReplyMarkup(replyKeyboardMarkup);
@@ -57,20 +60,20 @@ public class TelegramEntryPoint extends TelegramLongPollingBot{
         replyKeyboardMarkup.setOneTimeKeyboard(true);
 
         List<KeyboardRow> keyboard = new ArrayList<>();
-        
+
         for (int i = 0; i < labels.size(); i++) {
         	KeyboardRow keyboardRow = new KeyboardRow();
             keyboardRow.add(new KeyboardButton(parseButton(labels.get(i))));
             keyboard.add(keyboardRow);
-            
+
         }
         replyKeyboardMarkup.setKeyboard(keyboard);
     }
- 
+
 	@Override
 	public void onUpdateReceived(Update update) {
 		Message message = update.getMessage();
-		synchronized (locks.computeIfAbsent(message.getChatId(), k -> new Object())) 
+		synchronized (locks.computeIfAbsent(message.getChatId(), k -> new Object()))
 		{
 			if (message != null && message.hasText()) {
 				sendMsg(message, users.computeIfAbsent(message.getChatId(),
@@ -79,7 +82,7 @@ public class TelegramEntryPoint extends TelegramLongPollingBot{
 			}
 		}
 	}
-	
+
 	private void refreshUsernames(Message currentMessage) {
 		if (currentMessage.getFrom().getUserName() != null) {
 			usernames.computeIfAbsent(users.get(currentMessage.getChatId()),
@@ -90,7 +93,7 @@ public class TelegramEntryPoint extends TelegramLongPollingBot{
 					k -> currentMessage.getFrom().getFirstName());
 		}
 	}
- 
+
 	private void sendMsg(Message message, BotAnswer botReply) {
 		List<String> buttons = botReply.buttons;
 		ReplyKeyboardRemove keyboardMurkup = new ReplyKeyboardRemove();
