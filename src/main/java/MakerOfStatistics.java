@@ -7,7 +7,7 @@ import java.util.stream.Collectors;
 
 import com.vdurmont.emoji.EmojiParser;
 
-public class GetStatistics {
+public class MakerOfStatistics {
 	
 	public static Map<Brain, String> usersStatistics = new HashMap<Brain, String>();
 	public static Map<Brain, Integer> usersWins = new HashMap<Brain, Integer>();

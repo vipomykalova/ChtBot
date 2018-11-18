@@ -32,7 +32,7 @@ public class Hangman {
 		
 		if(letter.startsWith("статистика")) {
 			currentStateGame = StatesGame.Statistics;
-			return GetStatistics.getStatistics();
+			return MakerOfStatistics.getStatistics();
 		}
 
 		if(letter.startsWith("о себе")) {
@@ -56,7 +56,7 @@ public class Hangman {
 			currentStateGame = StatesGame.Win;
 			life.lives = 10;
 			currentUser.statistics.wins = currentUser.statistics.wins + 1;
-			GetStatistics.refreshUserStatistics(currentUser.statistics);
+			MakerOfStatistics.refreshUserStatistics(currentUser.statistics);
 			return Dialog.INSTANCE.getString("слово") + word + "\n" +
 				   Dialog.INSTANCE.getString("победа");
 		}
@@ -69,7 +69,7 @@ public class Hangman {
 			currentStateGame = StatesGame.Fail;
 			life.lives = 10;
 			currentUser.statistics.fails = currentUser.statistics.fails + 1;
-			GetStatistics.refreshUserStatistics(currentUser.statistics);
+			MakerOfStatistics.refreshUserStatistics(currentUser.statistics);
 			return Dialog.INSTANCE.getString("проигрыш") +
 				   Dialog.INSTANCE.getString("слово") + word + "\n" +
 			       Dialog.INSTANCE.getString("еще");
@@ -171,7 +171,7 @@ public class Hangman {
                                               "НЕТ:hankey:",
                                               "статистика :heavy_check_mark:",
                                               "о себе :flushed:");
-			botAnswer.answer = GetStatistics.getStatistics();
+			botAnswer.answer = MakerOfStatistics.getStatistics();
 		}
 		else if (input.startsWith("о себе")) {
 			currentUser.fsm.setState(this::wantMore);
