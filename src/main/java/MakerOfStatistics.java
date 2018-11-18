@@ -16,8 +16,8 @@ public class MakerOfStatistics {
 		
 		String name = TelegramEntryPoint.usernames.get(currentStatistics.currentUser);
 		
-		String result = name + " :white_check_mark::" + currentStatistics.wins +
-				" :negative_squared_cross_mark::" + currentStatistics.fails;
+		String result = name + " :heavy_plus_sign::" + currentStatistics.wins +
+				" :heavy_minus_sign::" + currentStatistics.fails;
 		
 		return EmojiParser.parseToUnicode(result);
 	}
