@@ -1,12 +1,12 @@
-package test.java;
+package src.test.java;
  
 import static org.junit.jupiter.api.Assertions.*;
 
 import org.junit.jupiter.api.Test;
 
-import main.java.Dialog;
-import main.java.TruthOrDare;
-import main.java.Brain;
+import src.main.java.Dialog;
+import src.main.java.TruthOrDare;
+import src.main.java.Brain;
 
 class TruthOrDareTest { 
 

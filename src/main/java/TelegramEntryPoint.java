@@ -1,4 +1,4 @@
-package main.java;
+package src.main.java;
 
 import java.util.ArrayList;
 
@@ -19,7 +19,7 @@ import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.Keyboard
 import org.telegram.telegrambots.bots.TelegramLongPollingBot;
 import com.vdurmont.emoji.EmojiParser;
 
-import main.java.Brain;
+import src.main.java.Brain;
 
 public class TelegramEntryPoint extends TelegramLongPollingBot{
 	

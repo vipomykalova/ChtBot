@@ -1,11 +1,11 @@
-package test.java; 
+package src.test.java; 
 
 import static org.junit.jupiter.api.Assertions.*; 
 import org.junit.jupiter.api.Test;
 
-import main.java.Dialog;
-import main.java.Hangman;
-import main.java.Brain;
+import src.main.java.Dialog;
+import src.main.java.Hangman;
+import src.main.java.Brain;
 
 public class HangmanTest { 
 
