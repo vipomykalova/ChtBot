@@ -20,7 +20,7 @@ public class MakerOfStatistics {
 						 user.fails + "\n";
 			}
 		}
-		return result.equals("") ? "Никто еще не играл, увы.." : EmojiParser.parseToUnicode(result);
+		return result.equals("") ? "Никто еще не играл, увы..\n" : EmojiParser.parseToUnicode(result);
 	}
 
 }
