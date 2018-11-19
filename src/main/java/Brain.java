@@ -9,12 +9,12 @@ public class Brain {
 	private Hangman currentHangman;
 	private TruthOrDare currentTruthOrDare;
 	public Statistics statistics;
+	public String username;
 
 	public Brain() {
 		statistics = new Statistics();
 		statistics.wins = 0;
 		statistics.fails = 0;
-		statistics.currentUser = this;
 		fsm.setState(this::startMessage);
 	}
 	

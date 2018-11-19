@@ -25,9 +25,7 @@ public class TelegramEntryPoint extends TelegramLongPollingBot{
 	
 	private String BOTS_TOKEN = System.getenv("BOTSTOKEN");
 	private String BOTS_NAME = System.getenv("BOTSNAME");
-	private Map<Long, Brain> users = new ConcurrentHashMap<Long, Brain>();
 	private Map<Long, Object> locks = new ConcurrentHashMap<Long, Object>();
-	public static Map<Brain, String> usernames = new ConcurrentHashMap<Brain, String>();
 	
 	public static void main(String[] args) {
 		ApiContextInitializer.init();
@@ -73,7 +71,7 @@ public class TelegramEntryPoint extends TelegramLongPollingBot{
 		synchronized (locks.computeIfAbsent(message.getChatId(), k -> new Object())) 
 		{
 			if (message != null && message.hasText()) {
-				sendMsg(message, users.computeIfAbsent(message.getChatId(),
+				sendMsg(message, UserRepository.users.computeIfAbsent(message.getChatId(),
 						k -> new Brain()).reply(message.getText().toLowerCase()));
 				refreshUsernames(message);
 			}
@@ -82,12 +80,12 @@ public class TelegramEntryPoint extends TelegramLongPollingBot{
 	
 	private void refreshUsernames(Message currentMessage) {
 		if (currentMessage.getFrom().getUserName() != null) {
-			usernames.computeIfAbsent(users.get(currentMessage.getChatId()),
-					k -> "@" + currentMessage.getFrom().getUserName());
+			UserRepository.users.get(currentMessage.getChatId()).username =
+					"@" + currentMessage.getFrom().getUserName();
 		}
 		else {
-			usernames.computeIfAbsent(users.get(currentMessage.getChatId()),
-					k -> currentMessage.getFrom().getFirstName());
+			UserRepository.users.get(currentMessage.getChatId()).username =
+					currentMessage.getFrom().getFirstName();
 		}
 	}
  

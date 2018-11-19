@@ -1,4 +1,5 @@
 package src.main.java;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.Map;
@@ -9,9 +10,6 @@ import com.vdurmont.emoji.EmojiParser;
 
 public class MakerOfStatistics {
 	
-	public static Map<Brain, String> usersStatistics = new HashMap<Brain, String>();
-	public static Map<Brain, Integer> usersWins = new HashMap<Brain, Integer>();
-	
 	public static String generateUserStatistic(Statistics currentStatistics) {
 		
 		String name = TelegramEntryPoint.usernames.get(currentStatistics.currentUser);
@@ -21,17 +19,12 @@ public class MakerOfStatistics {
 		
 		return EmojiParser.parseToUnicode(result);
 	}
-	
-	public static void refreshUserStatistics(Statistics currentStatistics) {
-		String userStatisticsInString = generateUserStatistic(currentStatistics);
-		usersStatistics.put(currentStatistics.currentUser, userStatisticsInString);
-		usersWins.put(currentStatistics.currentUser, currentStatistics.wins);
-	}
+
 	
 	public static String getStatistics() {	
 		String result = "";
-		if (usersStatistics.isEmpty()) {
-			result = "Никто еще не опробовал нашу супер игру :disappointed:";
+		for (Brain user: UserRepository.users.values().stream().sorted(Comparator.comparing(Statistics::wins).reversed())) {
+			
 		}
 		else {
 			Map<Brain, Integer> usersWinsSortedMap = usersWins.entrySet().stream()

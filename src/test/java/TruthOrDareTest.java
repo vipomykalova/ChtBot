@@ -1,7 +1,6 @@
 package src.test.java;
  
 import static org.junit.jupiter.api.Assertions.*;
-
 import org.junit.jupiter.api.Test;
 
 import src.main.java.Dialog;
