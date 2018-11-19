@@ -2,21 +2,25 @@ package src.main.java;
 
 import java.util.Arrays;
 
-public class Brain {
+public class Brain implements Comparable<Brain>{
 
-	public String currentGame;
-	public FSM fsm = new FSM();
 	private Hangman currentHangman;
 	private TruthOrDare currentTruthOrDare;
-	public Statistics statistics;
+	public String currentGame;
+	public FSM fsm = new FSM();
 	public String username;
+	public Integer wins;
+	public Integer fails;
 
 	public Brain() {
-		statistics = new Statistics();
-		statistics.wins = 0;
-		statistics.fails = 0;
+		wins = 0;
+		fails = 0;
 		fsm.setState(this::startMessage);
 	}
+	
+	public int compareTo(Brain other) {
+        return wins.compareTo(other.wins);
+    }
 	
 	public BotAnswer startMessage(String input) {
 		fsm.setState(this::gameSelection);

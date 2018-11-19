@@ -55,8 +55,7 @@ public class Hangman {
 		if(count == resultArray.length) {
 			currentStateGame = StatesGame.Win;
 			life.lives = 10;
-			currentUser.statistics.wins = currentUser.statistics.wins + 1;
-			MakerOfStatistics.refreshUserStatistics(currentUser.statistics);
+			currentUser.wins = currentUser.wins + 1;
 			return Dialog.INSTANCE.getString("слово") + word + "\n" +
 				   Dialog.INSTANCE.getString("победа");
 		}
@@ -68,8 +67,7 @@ public class Hangman {
 		} else {
 			currentStateGame = StatesGame.Fail;
 			life.lives = 10;
-			currentUser.statistics.fails = currentUser.statistics.fails + 1;
-			MakerOfStatistics.refreshUserStatistics(currentUser.statistics);
+			currentUser.fails = currentUser.fails + 1;
 			return Dialog.INSTANCE.getString("проигрыш") +
 				   Dialog.INSTANCE.getString("слово") + word + "\n" +
 			       Dialog.INSTANCE.getString("еще");
