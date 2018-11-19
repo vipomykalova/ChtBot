@@ -1,4 +1,5 @@
 package src.main.java;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
@@ -8,7 +9,8 @@ public class MakerOfStatistics {
 	
 	public static String getStatistics() {	
 		String result = "";
-		List<Brain> statistics = (List<Brain>) UserRepository.users.values();
+		List<Brain> statistics = new ArrayList<Brain>();
+		UserRepository.users.values().forEach(val -> statistics.add(val));
 		Collections.sort(statistics, Collections.reverseOrder());
 		for (Brain user: statistics) {
 			if (user.wins != 0 || user.fails != 0)
