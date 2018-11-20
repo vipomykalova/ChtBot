@@ -150,7 +150,7 @@ public class Hangman {
 		}
 		return botAnswer;
 	}
-
+	
 	public BotAnswer wantMore(String input) {
 		BotAnswer botAnswer = new BotAnswer();
 		if (input.startsWith("да")) {
