@@ -22,5 +22,4 @@ public class MakerOfStatistics {
 		}
 		return result.equals("") ? "Никто еще не играл, увы..\n" : EmojiParser.parseToUnicode(result);
 	}
-
 }

@@ -1,5 +1,6 @@
 package src.main.java;
 
+import java.io.IOException;
 import java.util.ArrayList;
 
 import java.util.List;
@@ -20,16 +21,20 @@ import org.telegram.telegrambots.bots.TelegramLongPollingBot;
 import com.vdurmont.emoji.EmojiParser;
 
 import src.main.java.Brain;
+import src.main.java.Database;
 
 public class TelegramEntryPoint extends TelegramLongPollingBot{
 	
 	private String BOTS_TOKEN = System.getenv("BOTSTOKEN");
 	private String BOTS_NAME = System.getenv("BOTSNAME");
 	private Map<Long, Object> locks = new ConcurrentHashMap<Long, Object>();
+	private static Database database = new Database();
 	
-	public static void main(String[] args) {
-		ApiContextInitializer.init();
+	public static void main(String[] args) throws IOException {
+		ApiContextInitializer.init();				
 		TelegramBotsApi telegramBotsApi = new TelegramBotsApi();
+		database.initFirebase();
+		database.getDatafromDatabase();			
 		try {
 			telegramBotsApi.registerBot(new TelegramEntryPoint());
 		} catch (TelegramApiException e) {
@@ -71,9 +76,11 @@ public class TelegramEntryPoint extends TelegramLongPollingBot{
 		synchronized (locks.computeIfAbsent(message.getChatId(), k -> new Object())) 
 		{
 			if (message != null && message.hasText()) {
+				
 				sendMsg(message, UserRepository.users.computeIfAbsent(message.getChatId(),
 						k -> new Brain()).reply(message.getText().toLowerCase()));
 				refreshUsernames(message);
+                database.saveDataInDatabase();				
 			}
 		}
 	}
