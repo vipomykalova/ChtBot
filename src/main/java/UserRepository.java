@@ -81,7 +81,7 @@ public class UserRepository implements Database{
 			childReference.removeEventListener(eventListener);
 		}
 		
-        childReference = databaseReference.child("users").orderByChild("wins").limitToLast(2);    	
+        childReference = databaseReference.child("users").orderByChild("wins").limitToLast(3);    	
         eventListener = new ChildEventListener() {
 	    	       	    
             @Override

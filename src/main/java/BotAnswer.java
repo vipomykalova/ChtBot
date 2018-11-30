@@ -8,4 +8,3 @@ public class BotAnswer {
 	public List<String> buttons;
 
 }
-

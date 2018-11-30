@@ -7,6 +7,7 @@ import com.vdurmont.emoji.EmojiParser;
 public class MakerOfStatistics {
 	
 	public String getStatistics(ArrayList<Brain> topUsers) {	
+
 		String result = "";
 		for (Brain user: topUsers) {
 			if (user.wins != 0 || user.fails != 0)
