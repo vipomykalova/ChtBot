@@ -1,7 +1,12 @@
 package src.main.java;
 
-public class ConsoleEntryPoint {
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
+public class ConsoleEntryPoint {
+	
+	public static Map<String, Brain> users = new ConcurrentHashMap<String, Brain>();
+	
 	public static void main(String[] args) {
 		InOutConsole console = new InOutConsole();
 
@@ -9,9 +14,8 @@ public class ConsoleEntryPoint {
 			try {
 				String userInput = console.input();
 				String[] input = userInput.split(":");
-				String response = UserRepository.users.computeIfAbsent(Long.parseLong(input[0]),
+				String response = users.computeIfAbsent(input[0],
 						          k -> new Brain()).reply(input[1]).answer;
-				UserRepository.users.get(Long.parseLong(input[0])).username = input[0];
 				console.output(response);
 			}
 			catch (ArrayIndexOutOfBoundsException exp){

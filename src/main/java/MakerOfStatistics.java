@@ -1,18 +1,14 @@
 package src.main.java;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
 
+import java.util.ArrayList;
 import com.vdurmont.emoji.EmojiParser;
+
 
 public class MakerOfStatistics {
 	
-	public static String getStatistics() {	
+	public String getStatistics(ArrayList<Brain> topUsers) {	
 		String result = "";
-		List<Brain> statistics = new ArrayList<Brain>();
-		UserRepository.users.values().forEach(val -> statistics.add(val));
-		Collections.sort(statistics, Collections.reverseOrder());
-		for (Brain user: statistics) {
+		for (Brain user: topUsers) {
 			if (user.wins != 0 || user.fails != 0)
 			{
 				result = result + user.username + " :heavy_plus_sign::" +

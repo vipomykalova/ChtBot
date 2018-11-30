@@ -1,17 +1,26 @@
 package src.main.java;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 
+
 public class Hangman {
 
 	private Brain currentUser;
+	private MakerOfStatistics makerOfStatistics;
+	private UserRepository userRepository;
+	private Long chatId;
 	private TaskMaker taskMaker = new TaskMaker();
 	public LifeCounter life;
+	ArrayList<Brain> top;
 
-	public Hangman(Brain brain) {
+	public Hangman(Brain brain, UserRepository userRepo, Long id) {
 		currentUser = brain;
+		userRepository = userRepo;
+		chatId = id;
+		makerOfStatistics = new MakerOfStatistics();
 		life = new LifeCounter();
 	}
 
@@ -24,7 +33,8 @@ public class Hangman {
 	private Map<Character, ArrayList<Integer>> wordsLetters;
 	private char resultArray[] = new char[word.length()];
 
-	public String currentResult(String letter) {	
+	public String currentResult(String letter) {
+
 		if(letter.startsWith("стоп")) {
 			currentStateGame = StatesGame.Stop;
 			return Dialog.INSTANCE.getString("прощание");
@@ -32,7 +42,7 @@ public class Hangman {
 		
 		if(letter.startsWith("статистика")) {
 			currentStateGame = StatesGame.Statistics;
-			return MakerOfStatistics.getStatistics();
+			return makerOfStatistics.getStatistics(userRepository.statistics);
 		}
 
 		if(letter.startsWith("о себе")) {
@@ -56,6 +66,7 @@ public class Hangman {
 			currentStateGame = StatesGame.Win;
 			life.lives = 10;
 			currentUser.wins = currentUser.wins + 1;
+			userRepository.saveInDatabase(chatId);
 			return Dialog.INSTANCE.getString("слово") + word + "\n" +
 				   Dialog.INSTANCE.getString("победа");
 		}
@@ -67,7 +78,8 @@ public class Hangman {
 		} else {
 			currentStateGame = StatesGame.Fail;
 			life.lives = 10;
-			currentUser.fails = currentUser.fails + 1;
+			currentUser.fails = currentUser.fails + 1;			
+			userRepository.saveInDatabase(chatId);
 			return Dialog.INSTANCE.getString("проигрыш") +
 				   Dialog.INSTANCE.getString("слово") + word + "\n" +
 			       Dialog.INSTANCE.getString("еще");
@@ -169,7 +181,7 @@ public class Hangman {
                                               "НЕТ:hankey:",
                                               "статистика :heavy_check_mark:",
                                               "о себе :flushed:");
-			botAnswer.answer = MakerOfStatistics.getStatistics();
+			botAnswer.answer = makerOfStatistics.getStatistics(userRepository.statistics);
 		}
 		else if (input.startsWith("о себе")) {
 			currentUser.fsm.setState(this::wantMore);

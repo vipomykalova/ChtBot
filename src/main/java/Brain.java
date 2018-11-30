@@ -7,14 +7,24 @@ public class Brain implements Comparable<Brain>{
 	private Hangman currentHangman;
 	private TruthOrDare currentTruthOrDare;
 	public String currentGame;
+	private UserRepository userRepository;
 	public FSM fsm = new FSM();
 	public String username;
 	public Integer wins;
 	public Integer fails;
-
+	public Long chatId;
+	
 	public Brain() {
 		wins = 0;
 		fails = 0;
+		fsm.setState(this::startMessage);
+	}
+
+	public Brain(UserRepository userRepo, Long id) {
+		wins = 0;
+		fails = 0;
+		userRepository = userRepo;
+		chatId = id;
 		fsm.setState(this::startMessage);
 	}
 	
@@ -24,6 +34,7 @@ public class Brain implements Comparable<Brain>{
 	
 	public BotAnswer startMessage(String input) {
 		fsm.setState(this::gameSelection);
+		userRepository.getOrCreate(chatId);
 		BotAnswer botAnswer = new BotAnswer();
 		botAnswer.buttons = Arrays.asList("правда или действие :underage:",
 				                          "виселица :detective:",
@@ -64,7 +75,8 @@ public class Brain implements Comparable<Brain>{
 	}
 	
 	public BotAnswer hangmanWordGeneration(String input) {
-		currentHangman = new Hangman(this);
+		currentHangman = new Hangman(this, userRepository, chatId);
+		userRepository.getTopUsers();
 		BotAnswer botAnswer = new BotAnswer();
 		fsm.setState(currentHangman::hangmanGame);
 		botAnswer.buttons = Arrays.asList("о себе :flushed:",
@@ -96,6 +108,7 @@ public class Brain implements Comparable<Brain>{
 	}
 	
 	public BotAnswer reply(String input) {
+		
 		return fsm.update(input);
 	}
 

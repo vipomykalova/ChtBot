@@ -13,7 +13,7 @@ import src.main.java.Brain;
 
 public class HangmanTest { 
 
-	@Test 
+	@Test
 	void correctResultTest() { 
 		//тестим верные ответы пользователя: случай угаданной буквы и победу
 		Brain brain = new Brain();
@@ -21,7 +21,7 @@ public class HangmanTest {
 		game.word = "право"; 
 	    game.setWord(); 
 		assertEquals(game.currentResult("а"), Dialog.INSTANCE.getString("жизни") +
-				     game.life.lives + "\n" + game.currentWord() + "\n");
+				     "10\n__а__\n");
 		game.currentResult("п");
 		game.currentResult("р");
 		game.currentResult("в");
@@ -64,13 +64,9 @@ public class HangmanTest {
 		Hangman game = new Hangman(brain); 
 		String result = game.currentResult("статистика");
 		assertEquals(result, "Никто еще не играл, увы..\n");
-		game.word = "право"; 
+		game.word = "а"; 
 	    game.setWord();
-	    game.currentResult("п");
-	    game.currentResult("р");
 	    game.currentResult("а");
-	    game.currentResult("в");
-	    game.currentResult("о");
 	    result = game.wantMore("статистика").answer;
 	    assertEquals(result, EmojiParser.parseToUnicode("Вика :heavy_plus_sign::1 :heavy_minus_sign::0\n"));
 	}
