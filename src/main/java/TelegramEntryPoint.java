@@ -74,7 +74,6 @@ public class TelegramEntryPoint extends TelegramLongPollingBot{
 		synchronized (locks.computeIfAbsent(message.getChatId(), k -> new Object())) 
 		{
 			if (message != null && message.hasText()) {
-
 				userRepository.users.computeIfAbsent(message.getChatId(), k -> new Brain(userRepository, message.getChatId()));
 				refreshUsernames(message);
 				sendMsg(message, userRepository.users.get(message.getChatId()).reply(message.getText().toLowerCase()));

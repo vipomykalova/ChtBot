@@ -100,10 +100,15 @@ public class UserRepository implements Database{
 				}
 
 				@Override
-				public void onChildChanged(DataSnapshot snapshot, String previousChildName) {}
+				public void onChildChanged(DataSnapshot snapshot, String previousChildName) {
+					getTopUsers();
+				}
 
 				@Override
-				public void onChildRemoved(DataSnapshot snapshot) {}
+				public void onChildRemoved(DataSnapshot snapshot) {
+					 users.get(Long.parseLong(snapshot.getKey())).fails = 0;
+					 users.get(Long.parseLong(snapshot.getKey())).wins = 0;
+				}
 
 				@Override
 				public void onChildMoved(DataSnapshot snapshot, String previousChildName) {}

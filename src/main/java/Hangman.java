@@ -136,6 +136,7 @@ public class Hangman {
 		}
 		else if (this.currentStateGame == Hangman.StatesGame.Statistics) {
 			currentUser.fsm.setState(this::hangmanGame);
+			userRepository.getTopUsers();
 			botAnswer.buttons = Arrays.asList("о себе :flushed:",
 					                          "статистика :heavy_check_mark:",
                                               "стоп :no_entry:"); 
