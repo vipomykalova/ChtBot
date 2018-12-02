@@ -26,12 +26,12 @@ public class Brain {
 		chatId = id;
 		userRepository = userRepo;
 		isAdmin = adminRepository.checkAdmin(chatId);
-		userRepository.getOrCreate(chatId);
 		fsm.setState(this::startMessage);
 	}
 	
 	public BotAnswer startMessage(String input) {
 		fsm.setState(this::gameSelection);
+		userRepository.getOrCreate(chatId);
 		BotAnswer botAnswer = new BotAnswer();
 		if (isAdmin) {
 			botAnswer.buttons = Arrays.asList("правда или действие :underage:",
@@ -66,6 +66,7 @@ public class Brain {
 			fsm.setState(this::gameSelection);
 			botAnswer.buttons = Arrays.asList("правда или действие :underage:",
 					                          "виселица :detective:",
+					                          "редактировать :pencil2:",
 					                          "о себе :flushed:"); 
 			botAnswer.answer = Dialog.INSTANCE.getString("приветствие");
 		}
@@ -81,6 +82,7 @@ public class Brain {
 			fsm.setState(this::gameSelection);
 			botAnswer.buttons = Arrays.asList("правда или действие :underage:",
 					                          "виселица :detective:",
+					                          "редактировать :pencil2:",
 					                          "о себе :flushed:"); 
 			botAnswer.answer = Dialog.INSTANCE.getString("некорректный ввод");
 		}

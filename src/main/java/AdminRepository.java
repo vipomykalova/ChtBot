@@ -5,6 +5,7 @@ import java.io.File;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.io.PrintWriter;
 import java.nio.file.Files;
 import java.nio.file.StandardOpenOption;
 import java.util.ArrayList;
@@ -25,7 +26,7 @@ public class AdminRepository {
 		String[] listOfAdmins = System.getenv("ADMINS").split(":");
 		for (int i = 0; i < listOfAdmins.length; i++) {
 			if (listOfAdmins[i].equals(id.toString())) {
-				return true;
+				return true;				
 			}
 		}
 		return false;
@@ -39,11 +40,11 @@ public class AdminRepository {
 		{
 			String line;
 			while((line = br.readLine()) != null) {
-				if (line.contains(task)) {
+				if (task.equals(line)) {
 					return Dialog.INSTANCE.getString("задание уже есть");
 				}
 			}
-			Files.write(Paths.get(filename), task.getBytes(), StandardOpenOption.APPEND);
+			Files.write(Paths.get(filename), ("\n" + task).getBytes(), StandardOpenOption.APPEND);
 			taskMaker.addToListTask(nameArchive, task);
 			return Dialog.INSTANCE.getString("добавлено");
 		}
@@ -63,7 +64,7 @@ public class AdminRepository {
 		{
 			String line;
 			while((line = br.readLine()) != null) {
-				if (!line.contains(task)) {
+				if (!task.equals(line)) {
 					fileContents.add(line);
 				}
 			}
@@ -74,16 +75,18 @@ public class AdminRepository {
 		if (fileContents.size() == taskMaker.getSizeListTask(nameArchive)) {
 			return Dialog.INSTANCE.getString("задание отсутствует");
 		}
-		
 		File fold = new File(filename);
 		fold.delete();
 		File fnew = new File(filename);
 		
 		try {
-            FileWriter file = new FileWriter(fnew, false);
-            for (String line : fileContents) {
-            	file.append(line);
-            }
+			PrintWriter file = new PrintWriter(new FileWriter(fnew));
+            for (int line = 0; line < fileContents.size(); line++) {
+            	if (line != fileContents.size()- 1)
+            		file.println(fileContents.get(line));
+            	else
+            	   file.print(fileContents.get(line));
+            }                     
             file.close();
             taskMaker.removeFromListTask(nameArchive, task);
             return Dialog.INSTANCE.getString("удалено");
