@@ -28,6 +28,18 @@ public class Dialog extends ListResourceBundle{
 			{"что из", EmojiParser.parseToUnicode(", правда или действие? :blush: \n")},
 			{"пример ввода", EmojiParser.parseToUnicode("Некорректный ввод:thumbsdown: Примеры: \"Вика:виселица\","
 					+ " \"1:правда или действие\":thumbsup: + \n")},
+			{"что редактировать", EmojiParser.parseToUnicode("Какую игру будем редактировать?:sparkles:\n")},
+			{"виселица", EmojiParser.parseToUnicode("Что хочешь сделать: добавить слово в архив или удалить?:sparkles:\n")},
+			{"правда или действие", EmojiParser.parseToUnicode("Что будем редактировать: вопросы или задания?:sparkles:\n")},
+			{"удалить", EmojiParser.parseToUnicode("Введи задание, которое хочешь удалить:sparkles:\n")},
+			{"что удалить", EmojiParser.parseToUnicode("Правду или действие?:sparkles:\n")},
+			{"что добавить", EmojiParser.parseToUnicode("Правду или действие?:sparkles:\n")},
+			{"добавить", EmojiParser.parseToUnicode("Введи задание, которое хочешь добавить:sparkles:\n")},
+			{"задание уже есть", EmojiParser.parseToUnicode("Но такое задание уже есть:point_up:\n")},
+			{"добавлено", EmojiParser.parseToUnicode("Добавил:muscle:\n")},
+			{"ошибка", EmojiParser.parseToUnicode("Что-то пошло не так:sweat:\n")},
+			{"задание отсутствует", EmojiParser.parseToUnicode("Такого задания нет, че его удалять то:sheep:\n")},
+			{"удалено", EmojiParser.parseToUnicode("Всё, этого задания больше нет:muscle:\n")},
 	};
 	
 	public Object[][] getContents() {

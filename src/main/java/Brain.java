@@ -2,43 +2,48 @@ package src.main.java;
 
 import java.util.Arrays;
 
-public class Brain implements Comparable<Brain>{
+public class Brain {
 
+	private AdminRepository adminRepository = new AdminRepository(this);
 	private Hangman currentHangman;
 	private TruthOrDare currentTruthOrDare;
-	public String currentGame;
 	private UserRepository userRepository;
+	private Boolean isAdmin;
 	public FSM fsm = new FSM();
+	public String currentGame;
 	public String username;
 	public Integer wins;
 	public Integer fails;
 	public Long chatId;
 	
 	public Brain() {
-		wins = 0;
-		fails = 0;
 		fsm.setState(this::startMessage);
 	}
 
 	public Brain(UserRepository userRepo, Long id) {
 		wins = 0;
 		fails = 0;
-		userRepository = userRepo;
 		chatId = id;
+		userRepository = userRepo;
+		isAdmin = adminRepository.checkAdmin(chatId);
+		userRepository.getOrCreate(chatId);
 		fsm.setState(this::startMessage);
 	}
 	
-	public int compareTo(Brain other) {
-        return wins.compareTo(other.wins);
-    }
-	
 	public BotAnswer startMessage(String input) {
 		fsm.setState(this::gameSelection);
-		userRepository.getOrCreate(chatId);
 		BotAnswer botAnswer = new BotAnswer();
-		botAnswer.buttons = Arrays.asList("правда или действие :underage:",
-				                          "виселица :detective:",
-				                          "о себе :flushed:"); 
+		if (isAdmin) {
+			botAnswer.buttons = Arrays.asList("правда или действие :underage:",
+                                              "виселица :detective:",
+                                              "редактировать :pencil2:",
+                                              "о себе :flushed:");
+		}
+		else { 
+			botAnswer.buttons = Arrays.asList("правда или действие :underage:",
+					                          "виселица :detective:",
+                                              "о себе :flushed:"); 
+		}                       
 		botAnswer.answer = Dialog.INSTANCE.getString("приветствие");
 		return botAnswer;
 	}
@@ -63,6 +68,14 @@ public class Brain implements Comparable<Brain>{
 					                          "виселица :detective:",
 					                          "о себе :flushed:"); 
 			botAnswer.answer = Dialog.INSTANCE.getString("приветствие");
+		}
+		else if (isAdmin && input.startsWith("редактировать")) {
+			fsm.setState(adminRepository::whatGameEdit);
+			botAnswer.buttons = Arrays.asList("правда или действие :underage:",
+                                              "виселица :detective:",
+                                              "выход :door:",
+                                              "о себе :flushed:"); 
+            botAnswer.answer = Dialog.INSTANCE.getString("что редактировать");
 		}
 		else {
 			fsm.setState(this::gameSelection);

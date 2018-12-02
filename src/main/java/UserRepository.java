@@ -25,9 +25,10 @@ import com.google.firebase.database.ValueEventListener;;
 public class UserRepository implements Database{
 	
 	public final Map<Long, Brain> users = new ConcurrentHashMap<Long, Brain>();
+	public ArrayList<Brain> statistics = new ArrayList<Brain>();
+	
 	private FirebaseDatabase firebaseDatabase;
     private DatabaseReference databaseReference;
-    public ArrayList<Brain> statistics = new ArrayList<Brain>();
     private ChildEventListener eventListener;
     private Query childReference;
     

@@ -8,13 +8,13 @@ import java.util.Map;
 
 public class TaskMaker {
 	
-	private static Map<String, ArrayList<String>> archives;
+	private static Map<String, ArrayList<String>> tasks;
 	
 	public TaskMaker() {
-		archives = new ConcurrentHashMap<String, ArrayList<String>>();
-		archives.put("Hangman", makeTaskList(new ArrayList<String>(), "src/main/java/Archives/ArchiveHangman.txt"));
-		archives.put("Dare", makeTaskList(new ArrayList<String>(), "src/main/java/Archives/ArchiveDare.txt"));
-		archives.put("Truth", makeTaskList(new ArrayList<String>(), "src/main/java/Archives/ArchiveTruth.txt"));
+		tasks = new ConcurrentHashMap<String, ArrayList<String>>();
+		tasks.put("Hangman", makeTaskList(new ArrayList<String>(), "src/main/java/Archives/ArchiveHangman.txt"));
+		tasks.put("Dare", makeTaskList(new ArrayList<String>(), "src/main/java/Archives/ArchiveDare.txt"));
+		tasks.put("Truth", makeTaskList(new ArrayList<String>(), "src/main/java/Archives/ArchiveTruth.txt"));
 		
 	}
 	
@@ -35,10 +35,22 @@ public class TaskMaker {
 
 	public String newTask(String curArchive) {
 		Random rnd = new Random();
-		archives.computeIfAbsent(curArchive, k -> makeTaskList(new ArrayList<String>(),
+		tasks.computeIfAbsent(curArchive, k -> makeTaskList(new ArrayList<String>(),
 				             "src/main/java/Archives/Archive" + curArchive + ".txt"));
-		int thisTask = rnd.nextInt(archives.get(curArchive).size());
-		return archives.get(curArchive).get(thisTask);
+		int thisTask = rnd.nextInt(tasks.get(curArchive).size());
+		return tasks.get(curArchive).get(thisTask);
+	}
+	
+	public void addToListTask(String nameArchive, String task) {
+		tasks.get(nameArchive).add(task);
+	}
+	
+	public void removeFromListTask(String nameArchive, String task) {
+		tasks.get(nameArchive).remove(TaskMaker.tasks.get(nameArchive).indexOf(task));
+	}
+	
+	public int getSizeListTask(String nameArchive) {
+		return tasks.get(nameArchive).size();
 	}
 
 }
