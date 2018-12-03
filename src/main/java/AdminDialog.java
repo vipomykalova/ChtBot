@@ -1,101 +1,15 @@
 package src.main.java;
 
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileReader;
-import java.io.FileWriter;
-import java.io.IOException;
-import java.io.PrintWriter;
-import java.nio.file.Files;
-import java.nio.file.StandardOpenOption;
-import java.util.ArrayList;
 import java.util.Arrays;
-import java.nio.file.Paths;
 
 
-public class AdminRepository {
+public class AdminDialog {
 	
-	private TaskMaker taskMaker = new TaskMaker();
 	private Brain currentUser;
+	private ArchiveEditor archiveEditor = new ArchiveEditor();
 	
-	public AdminRepository(Brain brain) {
+	public AdminDialog(Brain brain) {
 		currentUser = brain;
-	}
-	
-	public Boolean checkAdmin(Long id) {
-		String[] listOfAdmins = System.getenv("ADMINS").split(":");
-		for (int i = 0; i < listOfAdmins.length; i++) {
-			if (listOfAdmins[i].equals(id.toString())) {
-				return true;				
-			}
-		}
-		return false;
-	}
-	
-	public String addToArchive(String nameArchive, String task) {
-		
-		String filename = "src/main/java/Archives/Archive" + nameArchive + ".txt";
-		
-		try(BufferedReader br = new BufferedReader(new FileReader(filename)))
-		{
-			String line;
-			while((line = br.readLine()) != null) {
-				if (task.equals(line)) {
-					return Dialog.INSTANCE.getString("задание уже есть");
-				}
-			}
-			Files.write(Paths.get(filename), ("\n" + task).getBytes(), StandardOpenOption.APPEND);
-			taskMaker.addToListTask(nameArchive, task);
-			return Dialog.INSTANCE.getString("добавлено");
-		}
-		catch(IOException ex) {
-			System.exit(1);
-		}
-		return Dialog.INSTANCE.getString("ошибка");
-		
-	}
-	
-	public String removeFromArchive(String nameArchive, String task) {
-		
-		String filename = "src/main/java/Archives/Archive" + nameArchive + ".txt";
-		ArrayList<String> fileContents = new ArrayList<String>();
-		
-		try(BufferedReader br = new BufferedReader(new FileReader(filename)))
-		{
-			String line;
-			while((line = br.readLine()) != null) {
-				if (!task.equals(line)) {
-					fileContents.add(line);
-				}
-			}
-		}
-		catch(IOException ex) {
-			System.exit(1);
-		}
-		if (fileContents.size() == taskMaker.getSizeListTask(nameArchive)) {
-			return Dialog.INSTANCE.getString("задание отсутствует");
-		}
-		File fold = new File(filename);
-		fold.delete();
-		File fnew = new File(filename);
-		
-		try {
-			PrintWriter file = new PrintWriter(new FileWriter(fnew));
-            for (int line = 0; line < fileContents.size(); line++) {
-            	if (line != fileContents.size()- 1)
-            		file.println(fileContents.get(line));
-            	else
-            	   file.print(fileContents.get(line));
-            }                     
-            file.close();
-            taskMaker.removeFromListTask(nameArchive, task);
-            return Dialog.INSTANCE.getString("удалено");
-            
-		} catch (IOException e) {
-			System.exit(1);
-        }
-		return Dialog.INSTANCE.getString("ошибка");
-		
 	}
 	
 	public BotAnswer whatGameEdit(String input) {
@@ -268,9 +182,9 @@ public class AdminRepository {
 	
 	public BotAnswer truthAdd(String input) {
 		BotAnswer botAnswer = new BotAnswer();
-		String result = addToArchive("Truth", input);
+		String result = archiveEditor.addToArchive("Truth", input);
 		currentUser.fsm.setState(this::editMore);
-		botAnswer.buttons = Arrays.asList("ещё :x:",
+		botAnswer.buttons = Arrays.asList("ещё :relieved:",
                                           "выход :door:",
                                           "о себе :no_entry:");
 		botAnswer.answer = result;
@@ -279,9 +193,9 @@ public class AdminRepository {
 	
 	public BotAnswer dareAdd(String input) {
 		BotAnswer botAnswer = new BotAnswer();
-		String result = addToArchive("Dare", input);
+		String result = archiveEditor.addToArchive("Dare", input);
 		currentUser.fsm.setState(this::editMore);
-		botAnswer.buttons = Arrays.asList("ещё :x:",
+		botAnswer.buttons = Arrays.asList("ещё :relieved:",
                                           "выход :door:",
                                           "о себе :no_entry:");
 		botAnswer.answer = result;
@@ -329,11 +243,11 @@ public class AdminRepository {
 	
 	public BotAnswer truthRemove(String input) {
 		BotAnswer botAnswer = new BotAnswer();
-		String result = removeFromArchive("Truth", input);
+		String result = archiveEditor.removeFromArchive("Truth", input);
 		currentUser.fsm.setState(this::editMore);
-		botAnswer.buttons = Arrays.asList("ещё :x:",
+		botAnswer.buttons = Arrays.asList("ещё :relieved:",
                                           "выход :door:",
-                                          "о себе :no_entry:");
+                                          "о себе :flushed:");
 		botAnswer.answer = result;
 		return botAnswer;
 		
@@ -341,33 +255,33 @@ public class AdminRepository {
 	
 	public BotAnswer dareRemove(String input) {
 		BotAnswer botAnswer = new BotAnswer();
-		String result = removeFromArchive("Dare", input);
+		String result = archiveEditor.removeFromArchive("Dare", input);
 		currentUser.fsm.setState(this::editMore);
-		botAnswer.buttons = Arrays.asList("ещё :x:",
+		botAnswer.buttons = Arrays.asList("ещё :relieved:",
                                           "выход :door:",
-                                          "о себе :no_entry:");
+                                          "о себе :flushed:");
 		botAnswer.answer = result;
 		return botAnswer;
 	}
 	
 	public BotAnswer hangmanRemove(String input) {
 		BotAnswer botAnswer = new BotAnswer();
-		String result = removeFromArchive("Hangman", input);
+		String result = archiveEditor.removeFromArchive("Hangman", input);
 		currentUser.fsm.setState(this::editMore);
-		botAnswer.buttons = Arrays.asList("ещё :x:",
+		botAnswer.buttons = Arrays.asList("ещё :relieved:",
                                           "выход :door:",
-                                          "о себе :no_entry:");
+                                          "о себе :flushed:");
 		botAnswer.answer = result;
 		return botAnswer;
 	}
 	
 	public BotAnswer hangmanAdd(String input) {
 		BotAnswer botAnswer = new BotAnswer();
-		String result = addToArchive("Hangman", input);
+		String result = archiveEditor.addToArchive("Hangman", input);
 		currentUser.fsm.setState(this::editMore);
-		botAnswer.buttons = Arrays.asList("ещё :x:",
+		botAnswer.buttons = Arrays.asList("ещё :relieved:",
                                           "выход :door:",
-                                          "о себе :no_entry:");
+                                          "о себе :flushed:");
 		botAnswer.answer = result;
 		return botAnswer;
 	}
@@ -392,19 +306,19 @@ public class AdminRepository {
 		}
 		else if (input.startsWith("о себе")) {
 			currentUser.fsm.setState(this::editMore);
-			botAnswer.buttons = Arrays.asList("ещё :x:",
+			botAnswer.buttons = Arrays.asList("ещё :relieved:",
                                               "выход :door:",
-                                              "о себе :no_entry:");
+                                              "о себе :flushed:");
 			botAnswer.answer = Dialog.INSTANCE.getString("расскажи");
 		}
 		else {
 			currentUser.fsm.setState(this::editMore);
-			botAnswer.buttons = Arrays.asList("ещё :x:",
+			botAnswer.buttons = Arrays.asList("ещё :relieved:",
                                               "выход :door:",
-                                              "о себе :no_entry:");
+                                              "о себе :flushed:");
 			botAnswer.answer = Dialog.INSTANCE.getString("некорректный ввод");
 		}
 		return botAnswer;
 	}
-	
+
 }

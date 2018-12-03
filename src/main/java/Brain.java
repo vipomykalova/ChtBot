@@ -4,7 +4,8 @@ import java.util.Arrays;
 
 public class Brain {
 
-	private AdminRepository adminRepository = new AdminRepository(this);
+	private AdminChecker adminChecker = new AdminChecker();
+	private AdminDialog adminDialog = new AdminDialog(this);
 	private Hangman currentHangman;
 	private TruthOrDare currentTruthOrDare;
 	private UserRepository userRepository;
@@ -25,7 +26,7 @@ public class Brain {
 		fails = 0;
 		chatId = id;
 		userRepository = userRepo;
-		isAdmin = adminRepository.checkAdmin(chatId);
+		isAdmin = adminChecker.checkAdmin(chatId);
 		fsm.setState(this::startMessage);
 	}
 	
@@ -71,7 +72,7 @@ public class Brain {
 			botAnswer.answer = Dialog.INSTANCE.getString("приветствие");
 		}
 		else if (isAdmin && input.startsWith("редактировать")) {
-			fsm.setState(adminRepository::whatGameEdit);
+			fsm.setState(adminDialog::whatGameEdit);
 			botAnswer.buttons = Arrays.asList("правда или действие :underage:",
                                               "виселица :detective:",
                                               "выход :door:",

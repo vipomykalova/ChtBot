@@ -52,5 +52,9 @@ public class TaskMaker {
 	public int getSizeListTask(String nameArchive) {
 		return tasks.get(nameArchive).size();
 	}
+	
+	public ArrayList<String> getListOfCurArchive(String nameArchive) {
+		return tasks.get(nameArchive);
+	}
 
 }
