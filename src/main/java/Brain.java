@@ -13,8 +13,6 @@ public class Brain {
 	public FSM fsm = new FSM();
 	public String currentGame;
 	public String username;
-	public Integer wins;
-	public Integer fails;
 	public Long chatId;
 	
 	public Brain() {
@@ -22,8 +20,6 @@ public class Brain {
 	}
 
 	public Brain(UserRepository userRepo, Long id) {
-		wins = 0;
-		fails = 0;
 		chatId = id;
 		userRepository = userRepo;
 		isAdmin = adminChecker.checkAdmin(chatId);
@@ -32,7 +28,7 @@ public class Brain {
 	
 	public BotAnswer startMessage(String input) {
 		fsm.setState(this::gameSelection);
-		userRepository.getOrCreate(chatId);
+		
 		BotAnswer botAnswer = new BotAnswer();
 		if (isAdmin) {
 			botAnswer.buttons = Arrays.asList("правда или действие :underage:",
@@ -92,7 +88,6 @@ public class Brain {
 	
 	public BotAnswer hangmanWordGeneration(String input) {
 		currentHangman = new Hangman(this, userRepository, chatId);
-		userRepository.getTopUsers();
 		BotAnswer botAnswer = new BotAnswer();
 		fsm.setState(currentHangman::hangmanGame);
 		botAnswer.buttons = Arrays.asList("о себе :flushed:",

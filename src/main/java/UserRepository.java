@@ -25,8 +25,6 @@ import com.google.firebase.database.ValueEventListener;;
 public class UserRepository implements Database{
 	
 	public final Map<Long, Brain> users = new ConcurrentHashMap<Long, Brain>();
-	public ArrayList<Brain> statistics = new ArrayList<Brain>();
-	
 	private FirebaseDatabase firebaseDatabase;
     private DatabaseReference databaseReference;
     private ChildEventListener eventListener;
@@ -50,32 +48,56 @@ public class UserRepository implements Database{
         }
     }
 	
-	public void getOrCreate(Long chatId) {
-		Brain currentUser = users.computeIfAbsent(chatId, k -> new Brain(this, chatId));
+	public ArrayList<Object> getOrCreate(Long chatId) {
 		DatabaseReference chatReference = databaseReference.child("users");
-		chatReference.addValueEventListener(new ValueEventListener() {
+		ArrayList<Object> data = new ArrayList<Object>();
+		Object event = new Object();
+		chatReference.addListenerForSingleValueEvent(new ValueEventListener() {
 			@Override
-			public void onCancelled(DatabaseError error) {}
+			public void onCancelled(DatabaseError error) {
+				event.notifyAll();
+			}
 
 			@Override
 			public void onDataChange(DataSnapshot snapshot) {
+				
 				if (snapshot.hasChild(chatId.toString())) {
-    	    		Object name = snapshot.child(chatId.toString()).child("username").getValue();
-        	        Object wins = snapshot.child(chatId.toString()).child("wins").getValue();
-        	        Object fails = snapshot.child(chatId.toString()).child("fails").getValue();
-        	        currentUser.username = name.toString();             
-        	        currentUser.wins = Integer.parseInt(wins.toString());
-        	        currentUser.fails = Integer.parseInt(fails.toString()); 
+					String childs = snapshot.child(chatId.toString()).getValue().toString();
+					String[] dataAboutUser = childs.substring(1, childs.length()-1).split(", ");
+    	    		Object name = dataAboutUser[2].split("=")[1];
+        	        Object wins = dataAboutUser[0].split("=")[1];
+        	        Object fails = dataAboutUser[1].split("=")[1];
+        	        data.add(name.toString());
+        	        data.add(Integer.parseInt(wins.toString()));
+        	        data.add(Integer.parseInt(fails.toString()));
     	    	}
 				else {
-					saveInDatabase(chatId);
-				}				
-			}			
+					data.add(users.get(chatId).username);
+					data.add(0);
+					data.add(0);
+					saveInDatabase(chatId, data);
+				}	
+				synchronized(event)
+				{
+				event.notify();
+				}
+			}							
 		});
+		try {
+		    synchronized(event)
+			{
+			    event.wait();
+			}
+		}
+		catch (InterruptedException e) {
+		    e.printStackTrace();
+	    }     		
+		return data;
 	}
 	
-	public void getTopUsers() {
-		statistics.clear();
+	public ArrayList<ArrayList<Object>> getTopUsers() {
+		ArrayList<ArrayList<Object>> statistics = new ArrayList<ArrayList<Object>>();
+		Object event = new Object();
 		
 		if (childReference != null && eventListener != null)
 		{
@@ -86,67 +108,65 @@ public class UserRepository implements Database{
         eventListener = new ChildEventListener() {
 	    	       	    
             @Override
-            public void onCancelled(DatabaseError databaseError) {}
+            public void onCancelled(DatabaseError databaseError) {
+            	event.notifyAll();
+            }
 
 			@Override
 			public void onChildAdded(DataSnapshot dataSnapshot, String previousChildName) {
-				Object name = dataSnapshot.child("username").getValue();
-                Object wins = dataSnapshot.child("wins").getValue();
-                Object fails = dataSnapshot.child("fails").getValue();
-                Brain bot = new Brain();
-                bot.username = name.toString();             
-                bot.wins = Integer.parseInt(wins.toString());
-                bot.fails = Integer.parseInt(fails.toString());
-                statistics.add(0, bot);  
-				}
+				String childs = dataSnapshot.getValue().toString();
+				String[] dataAboutUser = childs.substring(1, childs.length()-1).split(", ");
+	    		Object name = dataAboutUser[2].split("=")[1];
+    	        Object wins = dataAboutUser[0].split("=")[1];
+    	        Object fails = dataAboutUser[1].split("=")[1];
+                ArrayList<Object> dataUser = new ArrayList<Object>();
+                dataUser.add(name.toString());
+                dataUser.add(Integer.parseInt(wins.toString()));
+                dataUser.add(Integer.parseInt(fails.toString()));
+                statistics.add(0, dataUser);
+				}		    
 
 				@Override
 				public void onChildChanged(DataSnapshot snapshot, String previousChildName) {
-					getTopUsers();
+					synchronized(event)
+	        		{
+	                	event.notify();
+	        		}
 				}
 
 				@Override
-				public void onChildRemoved(DataSnapshot snapshot) {
-					 users.get(Long.parseLong(snapshot.getKey())).fails = 0;
-					 users.get(Long.parseLong(snapshot.getKey())).wins = 0;
-				}
+				public void onChildRemoved(DataSnapshot snapshot) {}
 
 				@Override
-				public void onChildMoved(DataSnapshot snapshot, String previousChildName) {}
+				public void onChildMoved(DataSnapshot snapshot, String previousChildName) {}							
 	    	};
-            childReference.addChildEventListener(eventListener);     	
+	    	
+            try {
+            	synchronized(event) {
+				    childReference.addChildEventListener(eventListener);
+				    event.wait(1000);
+            	}
+			} catch (InterruptedException e) {
+				e.printStackTrace();
+			}     	
+            return statistics;
 	}
 	
-    public void saveInDatabase(Long freshChatId) {
-        databaseReference.addChildEventListener(new ChildEventListener () {
+    public void saveInDatabase(Long freshChatId, ArrayList<Object> data) {
+    	databaseReference.addListenerForSingleValueEvent(new ValueEventListener () {
 
 			@Override
 			public void onCancelled(DatabaseError error) {}
 
 			@Override
-			public void onChildAdded(DataSnapshot snapshot, String previousChildName) {
-	  		    Brain freshUser = users.get(freshChatId);
-	  		    DatabaseReference childReference = databaseReference.child("users");
+			public void onDataChange(DataSnapshot snapshot) {
+				DatabaseReference childReference = databaseReference.child("users");
 	  		    Map<String, Object> hopperUpdates = new HashMap<>();
-	  		    String username = freshUser.username;
-	  		    Integer wins = freshUser.wins;
-	  		    Integer fails = freshUser.fails;
-	  		    hopperUpdates.put("username", username);
-	  		    hopperUpdates.put("wins", wins);
-	  		    hopperUpdates.put("fails", fails);    	  
-	  		    childReference.child(freshChatId.toString()).updateChildrenAsync(hopperUpdates);
+	  		    hopperUpdates.put("username", data.get(0));
+	  		    hopperUpdates.put("wins", data.get(1));
+	  		    hopperUpdates.put("fails", data.get(2));    	  
+	  		    childReference.child(freshChatId.toString()).updateChildrenAsync(hopperUpdates);		
 			}
-
-			@Override
-			public void onChildChanged(DataSnapshot snapshot, String previousChildName) {
-				getTopUsers();			
-			}
-
-			@Override
-			public void onChildRemoved(DataSnapshot snapshot) {}
-
-			@Override
-			public void onChildMoved(DataSnapshot snapshot, String previousChildName) {}
-    	});
+    	}); 		
     }  
 }

@@ -42,7 +42,7 @@ public class Hangman {
 		
 		if(letter.startsWith("статистика")) {
 			currentStateGame = StatesGame.Statistics;
-			return makerOfStatistics.getStatistics(userRepository.statistics);
+			return makerOfStatistics.getStatistics(userRepository.getTopUsers());
 		}
 
 		if(letter.startsWith("о себе")) {
@@ -65,8 +65,11 @@ public class Hangman {
 		if(count == resultArray.length) {
 			currentStateGame = StatesGame.Win;
 			life.lives = 10;
-			currentUser.wins = currentUser.wins + 1;
-			userRepository.saveInDatabase(chatId);
+			ArrayList<Object> data = userRepository.getOrCreate(chatId);		
+			int wins = (int) data.get(1);
+			wins = wins + 1;
+			data.set(1, wins);
+			userRepository.saveInDatabase(chatId, data);
 			return Dialog.INSTANCE.getString("слово") + word + "\n" +
 				   Dialog.INSTANCE.getString("победа");
 		}
@@ -78,8 +81,11 @@ public class Hangman {
 		} else {
 			currentStateGame = StatesGame.Fail;
 			life.lives = 10;
-			currentUser.fails = currentUser.fails + 1;			
-			userRepository.saveInDatabase(chatId);
+			ArrayList<Object> data = userRepository.getOrCreate(chatId);
+			int fails = (int) data.get(2);
+			fails = fails + 1;
+			data.set(2, fails);
+			userRepository.saveInDatabase(chatId, data);
 			return Dialog.INSTANCE.getString("проигрыш") +
 				   Dialog.INSTANCE.getString("слово") + word + "\n" +
 			       Dialog.INSTANCE.getString("еще");
@@ -136,7 +142,7 @@ public class Hangman {
 		}
 		else if (this.currentStateGame == Hangman.StatesGame.Statistics) {
 			currentUser.fsm.setState(this::hangmanGame);
-			userRepository.getTopUsers();
+			//userRepository.getTopUsers();
 			botAnswer.buttons = Arrays.asList("о себе :flushed:",
 					                          "статистика :heavy_check_mark:",
                                               "стоп :no_entry:"); 
@@ -182,7 +188,7 @@ public class Hangman {
                                               "НЕТ:hankey:",
                                               "статистика :heavy_check_mark:",
                                               "о себе :flushed:");
-			botAnswer.answer = makerOfStatistics.getStatistics(userRepository.statistics);
+			botAnswer.answer = makerOfStatistics.getStatistics(userRepository.getTopUsers());
 		}
 		else if (input.startsWith("о себе")) {
 			currentUser.fsm.setState(this::wantMore);
