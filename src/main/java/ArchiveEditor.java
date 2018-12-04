@@ -118,7 +118,6 @@ public class ArchiveEditor {
 				System.out.println(tasks);
 				if (tasks.length() == (task.length() - i)) {
 					result.add(tasks);
-					System.out.println("sdss");
 				}
 			
 			}
