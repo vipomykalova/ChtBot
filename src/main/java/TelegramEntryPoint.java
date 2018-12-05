@@ -27,7 +27,8 @@ public class TelegramEntryPoint extends TelegramLongPollingBot{
 	private String BOTS_NAME = System.getenv("BOTSNAME");
 	private Map<Long, Object> locks = new ConcurrentHashMap<Long, Object>();
 	private static final UserRepository userRepository = new UserRepository();
-	
+	public static Map<String, Long> groups = new ConcurrentHashMap<String, Long>();
+	public static Map<Long, GroupsBrain> groupsChat = new ConcurrentHashMap<Long, GroupsBrain>();
 	
 	public static void main(String[] args) throws IOException {
 		ApiContextInitializer.init();				
@@ -71,12 +72,25 @@ public class TelegramEntryPoint extends TelegramLongPollingBot{
 	@Override
 	public void onUpdateReceived(Update update) {
 		Message message = update.getMessage();
+		//message.getChat().getUserName()
 		synchronized (locks.computeIfAbsent(message.getChatId(), k -> new Object())) 
 		{
 			if (message != null && message.hasText()) {
-				userRepository.users.computeIfAbsent(message.getChatId(), k -> new Brain(userRepository, message.getChatId()));
-				refreshUsernames(message);
-				sendMsg(message, userRepository.users.get(message.getChatId()).reply(message.getText().toLowerCase()));
+				if (message.getChat().isGroupChat())
+				{
+					System.out.println(message.getChat().getTitle());
+					System.out.println(message.getChat().getId());
+					groups.computeIfAbsent(message.getChat().getTitle().toLowerCase(),k -> message.getChat().getId());
+					groupsChat.computeIfAbsent(message.getChat().getId(), k -> new GroupsBrain());
+					sendMsg(message, groupsChat.get(message.getChat().getId()).reply(message.getText().toLowerCase()));
+				}
+				else {
+				    userRepository.users.computeIfAbsent(message.getChatId(),
+				    		k -> new UsersBrain(userRepository, message.getChatId()));
+				    refreshUsernames(message);
+				    sendMsg(message, userRepository.users.get(
+							message.getChatId()).reply(message.getText().toLowerCase()));
+				}
 			}
 		}
 	}
@@ -93,26 +107,30 @@ public class TelegramEntryPoint extends TelegramLongPollingBot{
 	}
  
 	private void sendMsg(Message message, BotAnswer botReply) {
-		List<String> buttons = botReply.buttons;
-		ReplyKeyboardRemove keyboardMurkup = new ReplyKeyboardRemove();
-		SendMessage sendMessage = new SendMessage();
-		sendMessage.enableMarkdown(true);
-		sendMessage.setChatId(message.getChatId().toString());
-		sendMessage.setText(botReply.answer);
-		try {
-			if (!buttons.isEmpty()) {
-				setButtons(sendMessage, buttons);
-				execute(sendMessage);
+		if (botReply != null) {
+			List<String> buttons = botReply.buttons;
+			ReplyKeyboardRemove keyboardMurkup = new ReplyKeyboardRemove();
+			SendMessage sendMessage = new SendMessage();
+			sendMessage.enableMarkdown(true);
+			sendMessage.setChatId(message.getChatId().toString());
+			sendMessage.setText(botReply.answer);
+			try {
+				if (!buttons.isEmpty() && botReply != null) {
+					setButtons(sendMessage, buttons);
+					execute(sendMessage);
+				}
+				else if (botReply != null) {
+					execute(sendMessage.setReplyMarkup(keyboardMurkup));
+				}
+			} catch (TelegramApiException e) {
+				e.printStackTrace();
 			}
-			else {
-				execute(sendMessage.setReplyMarkup(keyboardMurkup));
-			}
-		} catch (TelegramApiException e) {
-			e.printStackTrace();
 		}
+
 	}
 
 	private String parseButton(String text) {
 		return EmojiParser.parseToUnicode(text);
 	}
 }
+

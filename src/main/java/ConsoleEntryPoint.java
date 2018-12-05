@@ -5,7 +5,7 @@ import java.util.concurrent.ConcurrentHashMap;
 
 public class ConsoleEntryPoint {
 	
-	public static Map<String, Brain> users = new ConcurrentHashMap<String, Brain>();
+	public static Map<String, UsersBrain> users = new ConcurrentHashMap<String, UsersBrain>();
 	
 	public static void main(String[] args) {
 		InOutConsole console = new InOutConsole();
@@ -15,7 +15,7 @@ public class ConsoleEntryPoint {
 				String userInput = console.input();
 				String[] input = userInput.split(":");
 				String response = users.computeIfAbsent(input[0],
-						          k -> new Brain()).reply(input[1]).answer;
+						          k -> new UsersBrain()).reply(input[1]).answer;
 				console.output(response);
 			}
 			catch (ArrayIndexOutOfBoundsException exp){

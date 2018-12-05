@@ -8,15 +8,20 @@ import java.util.Map;
 
 public class Hangman {
 
-	private Brain currentUser;
+	private UsersBrain currentUser;
+	private Boolean isGroup = false;
 	private MakerOfStatistics makerOfStatistics;
 	private UserRepository userRepository;
 	private Long chatId;
 	private TaskMaker taskMaker = new TaskMaker();
 	public LifeCounter life;
-	ArrayList<Brain> top;
+	
+	public Hangman() {
+		isGroup = true;
+		life = new LifeCounter();
+	}
 
-	public Hangman(Brain brain, UserRepository userRepo, Long id) {
+	public Hangman(UsersBrain brain, UserRepository userRepo, Long id) {
 		currentUser = brain;
 		userRepository = userRepo;
 		chatId = id;
@@ -65,13 +70,14 @@ public class Hangman {
 		if(count == resultArray.length) {
 			currentStateGame = StatesGame.Win;
 			life.lives = 10;
-			ArrayList<Object> data = userRepository.getOrCreate(chatId);		
-			int wins = (int) data.get(1);
-			wins = wins + 1;
-			data.set(1, wins);
-			userRepository.saveInDatabase(chatId, data);
-			return Dialog.INSTANCE.getString("слово") + word + "\n" +
-				   Dialog.INSTANCE.getString("победа");
+			if (!isGroup) {
+				ArrayList<Object> data = userRepository.getOrCreate(chatId);		
+				int wins = (int) data.get(1);
+				wins = wins + 1;
+				data.set(1, wins);
+				userRepository.saveInDatabase(chatId, data);
+			}
+			return Dialog.INSTANCE.getString("слово") + word + "\n";
 		}
 
 		if(life.lives > 0) {
@@ -81,14 +87,14 @@ public class Hangman {
 		} else {
 			currentStateGame = StatesGame.Fail;
 			life.lives = 10;
-			ArrayList<Object> data = userRepository.getOrCreate(chatId);
-			int fails = (int) data.get(2);
-			fails = fails + 1;
-			data.set(2, fails);
-			userRepository.saveInDatabase(chatId, data);
-			return Dialog.INSTANCE.getString("проигрыш") +
-				   Dialog.INSTANCE.getString("слово") + word + "\n" +
-			       Dialog.INSTANCE.getString("еще");
+			if (!isGroup) {
+				ArrayList<Object> data = userRepository.getOrCreate(chatId);
+				int fails = (int) data.get(2);
+				fails = fails + 1;
+				data.set(2, fails);
+				userRepository.saveInDatabase(chatId, data);
+			}
+			return Dialog.INSTANCE.getString("слово") + word + "\n";
 		}
 	}
 
@@ -130,7 +136,7 @@ public class Hangman {
 					                          "НЕТ:hankey:",
 					                          "статистика :heavy_check_mark:",
 					                          "о себе :flushed:"); 
-			botAnswer.answer = result;
+			botAnswer.answer = result + Dialog.INSTANCE.getString("победа");
 		}
 		else if (this.currentStateGame == Hangman.StatesGame.Fail) {
 			currentUser.fsm.setState(this::wantMore);
@@ -138,11 +144,11 @@ public class Hangman {
 					                          "НЕТ:hankey:",
 					                          "статистика :heavy_check_mark:",
 					                          "о себе :flushed:"); 
-			botAnswer.answer = result;
+			botAnswer.answer = Dialog.INSTANCE.getString("проигрыш") + result +
+					           Dialog.INSTANCE.getString("еще");
 		}
 		else if (this.currentStateGame == Hangman.StatesGame.Statistics) {
 			currentUser.fsm.setState(this::hangmanGame);
-			//userRepository.getTopUsers();
 			botAnswer.buttons = Arrays.asList("о себе :flushed:",
 					                          "статистика :heavy_check_mark:",
                                               "стоп :no_entry:"); 

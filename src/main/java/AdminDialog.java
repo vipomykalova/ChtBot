@@ -5,10 +5,10 @@ import java.util.Arrays;
 
 public class AdminDialog {
 	
-	private Brain currentUser;
+	private UsersBrain currentUser;
 	private ArchiveEditor archiveEditor = new ArchiveEditor();
 	
-	public AdminDialog(Brain brain) {
+	public AdminDialog(UsersBrain brain) {
 		currentUser = brain;
 	}
 	
@@ -35,7 +35,8 @@ public class AdminDialog {
 			botAnswer.buttons = Arrays.asList("правда или действие :underage:",
                                               "виселица :detective:",
                                               "редактировать :pencil2:",
-                                              "о себе :flushed:");
+                                              "о себе :flushed:",
+                                              "главное меню :door:");
 			botAnswer.answer = Dialog.INSTANCE.getString("приветствие");
 		}
 		else if (input.startsWith("о себе")) {
@@ -51,7 +52,8 @@ public class AdminDialog {
 			botAnswer.buttons = Arrays.asList("правда или действие :underage:",
                                               "виселица :detective:",
                                               "редактировать :pencil2:",
-                                              "о себе :flushed:"); 
+                                              "о себе :flushed:",
+                                              "главное меню :door:"); 
 			botAnswer.answer = Dialog.INSTANCE.getString("некорректный ввод");
 		}
 		return botAnswer;
@@ -80,7 +82,8 @@ public class AdminDialog {
 			botAnswer.buttons = Arrays.asList("правда или действие :underage:",
                                               "виселица :detective:",
                                               "редактировать :pencil2:",
-                                              "о себе :flushed:");
+                                              "о себе :flushed:",
+                                              "главное меню :door:");
 			botAnswer.answer = Dialog.INSTANCE.getString("приветствие");
 		}
 		else if (input.startsWith("о себе")) {
@@ -119,7 +122,8 @@ public class AdminDialog {
 			botAnswer.buttons = Arrays.asList("правда или действие :underage:",
                                               "виселица :detective:",
                                               "редактировать :pencil2:",
-                                              "о себе :flushed:");
+                                              "о себе :flushed:",
+                                              "главное меню :door:");
 			botAnswer.answer = Dialog.INSTANCE.getString("приветствие");
 		}
 		else if (input.startsWith("о себе")) {
@@ -158,7 +162,8 @@ public class AdminDialog {
 			botAnswer.buttons = Arrays.asList("правда или действие :underage:",
                                               "виселица :detective:",
                                               "редактировать :pencil2:",
-                                              "о себе :flushed:");
+                                              "о себе :flushed:",
+                                              "главное меню :door:");
 			botAnswer.answer = Dialog.INSTANCE.getString("приветствие");
 		}
 		else if (input.startsWith("о себе")) {
@@ -186,7 +191,7 @@ public class AdminDialog {
 		currentUser.fsm.setState(this::editMore);
 		botAnswer.buttons = Arrays.asList("ещё :relieved:",
                                           "выход :door:",
-                                          "о себе :no_entry:");
+                                          "о себе :flushed:");
 		botAnswer.answer = result;
 		return botAnswer;
 	}
@@ -197,7 +202,7 @@ public class AdminDialog {
 		currentUser.fsm.setState(this::editMore);
 		botAnswer.buttons = Arrays.asList("ещё :relieved:",
                                           "выход :door:",
-                                          "о себе :no_entry:");
+                                          "о себе :flushed:");
 		botAnswer.answer = result;
 		return botAnswer;
 	}
@@ -219,7 +224,8 @@ public class AdminDialog {
 			botAnswer.buttons = Arrays.asList("правда или действие :underage:",
                                               "виселица :detective:",
                                               "редактировать :pencil2:",
-                                              "о себе :flushed:");
+                                              "о себе :flushed:",
+                                              "главное меню :door:");
 			botAnswer.answer = Dialog.INSTANCE.getString("приветствие");
 		}
 		else if (input.startsWith("о себе")) {
@@ -301,7 +307,8 @@ public class AdminDialog {
 			botAnswer.buttons = Arrays.asList("правда или действие :underage:",
                                               "виселица :detective:",
                                               "редактировать :pencil2:",
-                                              "о себе :flushed:");
+                                              "о себе :flushed:",
+                                              "главное меню :door:");
 			botAnswer.answer = Dialog.INSTANCE.getString("приветствие");			
 		}
 		else if (input.startsWith("о себе")) {
