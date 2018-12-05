@@ -115,7 +115,6 @@ public class ArchiveEditor {
 		
 		for (int i = 0; i < task.length(); i++) {
 			for (String tasks: similarTasks) {
-				System.out.println(tasks);
 				if (tasks.length() == (task.length() - i)) {
 					result.add(tasks);
 				}

@@ -26,14 +26,18 @@ public class TelegramEntryPoint extends TelegramLongPollingBot{
 	private String BOTS_TOKEN = System.getenv("BOTSTOKEN");
 	private String BOTS_NAME = System.getenv("BOTSNAME");
 	private Map<Long, Object> locks = new ConcurrentHashMap<Long, Object>();
-	private static final UserRepository userRepository = new UserRepository();
-	public static Map<String, Long> groups = new ConcurrentHashMap<String, Long>();
-	public static Map<Long, GroupsBrain> groupsChat = new ConcurrentHashMap<Long, GroupsBrain>();
+	private static UserRepository userRepository;
+	private static final Initialization initializer = new Initialization();
+	private static GroupRepository groupRepository;
+	//public static Map<String, Long> groups = new ConcurrentHashMap<String, Long>();
+	
 	
 	public static void main(String[] args) throws IOException {
 		ApiContextInitializer.init();				
 		TelegramBotsApi telegramBotsApi = new TelegramBotsApi();
-		userRepository.initDatabase();		
+		initializer.initDatabase();		
+		userRepository = new UserRepository(initializer);
+		groupRepository = new GroupRepository(initializer);
 		try {
 			telegramBotsApi.registerBot(new TelegramEntryPoint());
 		} catch (TelegramApiException e) {
@@ -72,27 +76,25 @@ public class TelegramEntryPoint extends TelegramLongPollingBot{
 	@Override
 	public void onUpdateReceived(Update update) {
 		Message message = update.getMessage();
-		//message.getChat().getUserName()
 		synchronized (locks.computeIfAbsent(message.getChatId(), k -> new Object())) 
 		{
 			if (message != null && message.hasText()) {
 				if (message.getChat().isGroupChat())
 				{
-					System.out.println(message.getChat().getTitle());
-					System.out.println(message.getChat().getId());
-					groups.computeIfAbsent(message.getChat().getTitle().toLowerCase(),k -> message.getChat().getId());
-					groupsChat.computeIfAbsent(message.getChat().getId(), k -> new GroupsBrain());
-					sendMsg(message, groupsChat.get(message.getChat().getId()).reply(message.getText().toLowerCase()));
+					groupRepository.saveInDatabase(message.getChat().getTitle().toLowerCase(), message.getChat().getId());
+					groupRepository.groupsChat.computeIfAbsent(message.getChat().getId(), k -> new GroupsBrain());
+					sendMsg(message, groupRepository.groupsChat.get(message.getChat().getId()).reply(message.getText().toLowerCase()));
 				}
 				else {
 				    userRepository.users.computeIfAbsent(message.getChatId(),
-				    		k -> new UsersBrain(userRepository, message.getChatId()));
+				    		k -> new UsersBrain(userRepository, message.getChatId(), groupRepository));
 				    refreshUsernames(message);
 				    sendMsg(message, userRepository.users.get(
 							message.getChatId()).reply(message.getText().toLowerCase()));
 				}
 			}
 		}
+		
 	}
 	
 	private void refreshUsernames(Message currentMessage) {
@@ -133,4 +135,3 @@ public class TelegramEntryPoint extends TelegramLongPollingBot{
 		return EmojiParser.parseToUnicode(text);
 	}
 }
-

@@ -32,10 +32,8 @@ public class GroupsBrain {
 		if (!words.isEmpty() && !input.startsWith("стоп")) {
 			fsm.setState(this::hangmanGame);
 			BotAnswer botAnswer = new BotAnswer();
-			System.out.println(words);
 			String word = words.get(0);
 			words.remove(0);
-			System.out.println(words);
 			currentHangman.word = word;
 			botAnswer.buttons = Arrays.asList();
 			botAnswer.answer = currentHangman.setWord();			
@@ -92,5 +90,4 @@ public class GroupsBrain {
     	
 		return fsm.update(input);
 	}
-
 }

@@ -6,11 +6,13 @@ public class UserAboutGroupDialog {
 	
 	UsersBrain currentUser;
 	String nameChat;
+	private GroupRepository groupRepository;
 	
-	public UserAboutGroupDialog(UsersBrain brain) {
+	public UserAboutGroupDialog(UsersBrain brain, GroupRepository groupRepo) {
 		currentUser = brain;
+		groupRepository = groupRepo;
 	}
-
+ 
 	public BotAnswer check(String input)
 	{
 		BotAnswer botAnswer = new BotAnswer();
@@ -22,7 +24,7 @@ public class UserAboutGroupDialog {
 			botAnswer.answer = Dialog.INSTANCE.getString("приветствие");
 		}
 		else {
-			if (!TelegramEntryPoint.groups.containsKey(input))
+			if (!groupRepository.isChatExist(input))
 			{
 				currentUser.fsm.setState(this::whatsNext);
 				botAnswer.answer = Dialog.INSTANCE.getString("нет чата");
@@ -36,8 +38,7 @@ public class UserAboutGroupDialog {
 				botAnswer.buttons = Arrays.asList();
 				currentUser.fsm.setState(this::addWordInGroup);
 			}
-		}
-		
+		}	
 		return botAnswer;
 	}
 	
@@ -67,8 +68,8 @@ public class UserAboutGroupDialog {
 	public BotAnswer addWordInGroup(String input)
 	{
 		BotAnswer botAnswer = new BotAnswer();
-		Long id = TelegramEntryPoint.groups.get(nameChat);
-		GroupsBrain chat = TelegramEntryPoint.groupsChat.get(id);
+		Long id = groupRepository.getData(nameChat);
+		GroupsBrain chat = groupRepository.groupsChat.get(id);
 	    chat.words.add(input);
 	    currentUser.fsm.setState(this::wantMore);
 	    botAnswer.answer = Dialog.INSTANCE.getString("есть слово в чат");

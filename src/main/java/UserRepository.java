@@ -1,55 +1,30 @@
 package src.main.java;
 
-import java.io.ByteArrayInputStream;
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.io.InputStream;
-import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
-
-import com.google.auth.oauth2.GoogleCredentials;
-import com.google.firebase.FirebaseApp;
-import com.google.firebase.FirebaseOptions;
 import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;;
 
 
-public class UserRepository implements Database{
+public class UserRepository{
 	
 	public final Map<Long, UsersBrain> users = new ConcurrentHashMap<Long, UsersBrain>();
-	private FirebaseDatabase firebaseDatabase;
-    private DatabaseReference databaseReference;
     private ChildEventListener eventListener;
     private Query childReference;
+    private Initialization initializer;
     
-	
-	public void initDatabase() throws IOException {
-    	try {   
-        	String serviceAccountJson = System.getenv("FIREBASE_CONFIG");
-        	InputStream serviceAccount = new ByteArrayInputStream(serviceAccountJson.getBytes(StandardCharsets.UTF_8));
-        	FirebaseOptions options = new FirebaseOptions.Builder()
-        	    .setCredentials(GoogleCredentials.fromStream(serviceAccount))
-        	    .setDatabaseUrl("https://picklebottelegram.firebaseio.com//")
-        	    .build();
-        	FirebaseApp.initializeApp(options);
-        	firebaseDatabase = FirebaseDatabase.getInstance();
-            databaseReference = firebaseDatabase.getReference("/");
-       
-        } catch (FileNotFoundException ex) {
-            ex.printStackTrace();
-        }
-    }
+	public UserRepository(Initialization initializer) {
+		this.initializer = initializer;
+	}
 	
 	public ArrayList<Object> getOrCreate(Long chatId) {
-		DatabaseReference chatReference = databaseReference.child("users");
+		DatabaseReference chatReference = initializer.databaseReference.child("users");
 		ArrayList<Object> data = new ArrayList<Object>();
 		Object event = new Object();
 		chatReference.addListenerForSingleValueEvent(new ValueEventListener() {
@@ -104,7 +79,7 @@ public class UserRepository implements Database{
 			childReference.removeEventListener(eventListener);
 		}
 		
-        childReference = databaseReference.child("users").orderByChild("wins").limitToLast(3);    	
+        childReference = initializer.databaseReference.child("users").orderByChild("wins").limitToLast(3);    	
         eventListener = new ChildEventListener() {
 	    	       	    
             @Override
@@ -153,14 +128,14 @@ public class UserRepository implements Database{
 	}
 	
     public void saveInDatabase(Long freshChatId, ArrayList<Object> data) {
-    	databaseReference.addListenerForSingleValueEvent(new ValueEventListener () {
+    	initializer.databaseReference.addListenerForSingleValueEvent(new ValueEventListener () {
 
 			@Override
 			public void onCancelled(DatabaseError error) {}
 
 			@Override
 			public void onDataChange(DataSnapshot snapshot) {
-				DatabaseReference childReference = databaseReference.child("users");
+				DatabaseReference childReference = initializer.databaseReference.child("users");
 	  		    Map<String, Object> hopperUpdates = new HashMap<>();
 	  		    hopperUpdates.put("username", data.get(0));
 	  		    hopperUpdates.put("wins", data.get(1));

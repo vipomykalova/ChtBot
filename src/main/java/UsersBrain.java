@@ -9,6 +9,7 @@ public class UsersBrain {
 	private Hangman currentHangman;
 	private TruthOrDare currentTruthOrDare;
 	private UserRepository userRepository;
+	private GroupRepository groupRepository;
 	private Boolean isAdmin;
 	public FSM fsm = new FSM();
 	public String currentGame;
@@ -19,9 +20,10 @@ public class UsersBrain {
 		fsm.setState(this::startMessage);
 	}
 
-	public UsersBrain(UserRepository userRepo, Long id) {
+	public UsersBrain(UserRepository userRepo, Long id, GroupRepository groupRepo) {
 		chatId = id;
 		userRepository = userRepo;
+		groupRepository = groupRepo;
 		isAdmin = adminChecker.checkAdmin(chatId);
 		fsm.setState(this::startMessage);
 	}
@@ -60,7 +62,7 @@ public class UsersBrain {
 	    else if (input.startsWith("групповой"))
 	    {    	
 	    	botAnswer.answer = Dialog.INSTANCE.getString("группа");
-	    	UserAboutGroupDialog chat = new UserAboutGroupDialog(this);
+	    	UserAboutGroupDialog chat = new UserAboutGroupDialog(this, groupRepository);
 	    	botAnswer.buttons = Arrays.asList("главное меню :door:");
 	    	fsm.setState(chat::check);
 	    }
