@@ -49,8 +49,9 @@ public class GroupRepository {
 		try {
 		    synchronized(event)
 			{
-			    event.wait(500);
+			    event.wait();
 			}
+		    
 		}
 		catch (InterruptedException e) {
 		    e.printStackTrace();
@@ -84,7 +85,7 @@ public class GroupRepository {
 		try {
 		    synchronized(event)
 			{
-			    event.wait(600);
+			    event.wait();
 			}
 		}
 		catch (InterruptedException e) {

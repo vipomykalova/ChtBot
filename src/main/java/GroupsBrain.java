@@ -29,6 +29,7 @@ public class GroupsBrain {
 	}
 	
 	public BotAnswer hangmanWordGeneration(String input) {
+		currentHangman = new Hangman();
 		if (!words.isEmpty() && !input.startsWith("стоп")) {
 			fsm.setState(this::hangmanGame);
 			BotAnswer botAnswer = new BotAnswer();
