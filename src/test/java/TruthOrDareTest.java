@@ -5,14 +5,14 @@ import org.junit.jupiter.api.Test;
 
 import src.main.java.Dialog;
 import src.main.java.TruthOrDare;
-import src.main.java.UsersBrain;
+import src.main.java.Brain;
 
 class TruthOrDareTest { 
 
 	@Test 
 	void askPlayerTest() { 
         //тестим то, что бот ответит после ввода игроков и нажатия "стоп"
-		UsersBrain brain = new UsersBrain();
+		Brain brain = new Brain();
 		TruthOrDare game = new TruthOrDare(brain); 
 		game.gamers = new String[]{"Вика"}; 
 		assertEquals(game.askPlayer(), game.gamers[0] + Dialog.INSTANCE.getString("что из"));
@@ -23,7 +23,7 @@ class TruthOrDareTest {
 	@Test
 	void getTaskFromArchivesTest() {
 		//тестим то, что после выбора правды или действия будут даны именно они
-		UsersBrain brain = new UsersBrain();
+		Brain brain = new Brain();
 		TruthOrDare game = new TruthOrDare(brain); 
 		game.nameArchive.put("правда", "TruthTest");
 		game.nameArchive.put("действие", "DareTest");
@@ -35,7 +35,7 @@ class TruthOrDareTest {
 	@Test
 	void checkAskPlayers() {
 		//тестим то, что всех участников игры бот спросит
-		UsersBrain brain = new UsersBrain();
+		Brain brain = new Brain();
 		TruthOrDare game = new TruthOrDare(brain);
 		game.gamers = new String[]{"Вика", "Оксана"};
 		String nameGamer1 = "";

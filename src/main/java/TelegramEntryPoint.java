@@ -29,7 +29,6 @@ public class TelegramEntryPoint extends TelegramLongPollingBot{
 	private static UserRepository userRepository;
 	private static final Initialization initializer = new Initialization();
 	private static GroupRepository groupRepository;
-	//public static Map<String, Long> groups = new ConcurrentHashMap<String, Long>();
 	
 	
 	public static void main(String[] args) throws IOException {
@@ -87,7 +86,7 @@ public class TelegramEntryPoint extends TelegramLongPollingBot{
 				}
 				else {
 				    userRepository.users.computeIfAbsent(message.getChatId(),
-				    		k -> new UsersBrain(userRepository, message.getChatId(), groupRepository));
+				    		k -> new Brain(userRepository, message.getChatId(), groupRepository));
 				    refreshUsernames(message);
 				    sendMsg(message, userRepository.users.get(
 							message.getChatId()).reply(message.getText().toLowerCase()));
