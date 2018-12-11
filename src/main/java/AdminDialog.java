@@ -5,10 +5,10 @@ import java.util.Arrays;
 
 public class AdminDialog {
 	
-	private UsersBrain currentUser;
+	private Brain currentUser;
 	private ArchiveEditor archiveEditor = new ArchiveEditor();
 	
-	public AdminDialog(UsersBrain brain) {
+	public AdminDialog(Brain brain) {
 		currentUser = brain;
 	}
 	

@@ -9,14 +9,14 @@ public class TruthOrDare {
 		Correct, Incorrect, About, Stop
 	}
 
-	private UsersBrain currentUser;
+	private Brain currentUser;
 	private TaskMaker taskMaker;
 	private Random rnd = new Random();
 	public StatesGame currentStateGame;
 	public HashMap<String, String> nameArchive;
 	public String[] gamers;
 	
-	public TruthOrDare(UsersBrain brain) {
+	public TruthOrDare(Brain brain) {
 		currentUser = brain;
 		taskMaker = new TaskMaker();
 		nameArchive = new HashMap<>();

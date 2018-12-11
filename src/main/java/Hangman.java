@@ -8,7 +8,7 @@ import java.util.Map;
 
 public class Hangman {
 
-	private UsersBrain currentUser;
+	private Brain currentUser;
 	private Boolean isGroup = false;
 	private MakerOfStatistics makerOfStatistics;
 	private UserRepository userRepository;
@@ -21,7 +21,7 @@ public class Hangman {
 		life = new LifeCounter();
 	}
 
-	public Hangman(UsersBrain brain, UserRepository userRepo, Long id) {
+	public Hangman(Brain brain, UserRepository userRepo, Long id) {
 		currentUser = brain;
 		userRepository = userRepo;
 		chatId = id;

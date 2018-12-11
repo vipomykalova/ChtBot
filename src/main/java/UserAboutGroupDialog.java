@@ -4,11 +4,11 @@ import java.util.Arrays;
 
 public class UserAboutGroupDialog {
 	
-	UsersBrain currentUser;
+	Brain currentUser;
 	String nameChat;
 	private GroupRepository groupRepository;
 	
-	public UserAboutGroupDialog(UsersBrain brain, GroupRepository groupRepo) {
+	public UserAboutGroupDialog(Brain brain, GroupRepository groupRepo) {
 		currentUser = brain;
 		groupRepository = groupRepo;
 	}
