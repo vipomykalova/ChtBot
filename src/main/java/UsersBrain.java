@@ -9,7 +9,6 @@ public class UsersBrain {
 	private Hangman currentHangman;
 	private TruthOrDare currentTruthOrDare;
 	private UserRepository userRepository;
-	private GroupRepository groupRepository;
 	private Boolean isAdmin;
 	public FSM fsm = new FSM();
 	public String currentGame;
@@ -20,67 +19,28 @@ public class UsersBrain {
 		fsm.setState(this::startMessage);
 	}
 
-	public UsersBrain(UserRepository userRepo, Long id, GroupRepository groupRepo) {
+	public UsersBrain(UserRepository userRepo, Long id) {
 		chatId = id;
 		userRepository = userRepo;
-		groupRepository = groupRepo;
 		isAdmin = adminChecker.checkAdmin(chatId);
 		fsm.setState(this::startMessage);
 	}
 	
 	public BotAnswer startMessage(String input) {
-		fsm.setState(this::modeSelection);		
+		fsm.setState(this::gameSelection);
 		BotAnswer botAnswer = new BotAnswer();
-		botAnswer.buttons = Arrays.asList("одиночный :walking:",
-                                          "групповой :family:",
-                                          "о себе :flushed:");                   
+		if (isAdmin) {
+		    botAnswer.buttons = Arrays.asList("правда или действие :underage:",
+                                              "виселица :detective:",
+                                              "редактировать :pencil2:",
+                                              "о себе :flushed:");
+	    }
+	    else { 
+		    botAnswer.buttons = Arrays.asList("правда или действие :underage:",
+				                              "виселица :detective:",
+				                              "о себе :flushed:"); 
+	    }                  
 		botAnswer.answer = Dialog.INSTANCE.getString("приветствие");
-		return botAnswer;
-	}
-	
-	public BotAnswer modeSelection(String input)
-	{   BotAnswer botAnswer = new BotAnswer();
-	
-	    if (input.startsWith("одиночный"))
-	    {
-		    fsm.setState(this::gameSelection);
-		    if (isAdmin) {
-			    botAnswer.buttons = Arrays.asList("правда или действие :underage:",
-                                                  "виселица :detective:",
-                                                  "редактировать :pencil2:",
-                                                  "о себе :flushed:",
-                                                  "главное меню :door:");
-		    }
-		    else { 
-			    botAnswer.buttons = Arrays.asList("правда или действие :underage:",
-					                              "виселица :detective:",
-					                              "о себе :flushed:",
-                                                  "главное меню :door:"); 
-		    } 
-		    botAnswer.answer = Dialog.INSTANCE.getString("играем");
-	    }
-	    else if (input.startsWith("групповой"))
-	    {    	
-	    	botAnswer.answer = Dialog.INSTANCE.getString("группа");
-	    	UserAboutGroupDialog chat = new UserAboutGroupDialog(this, groupRepository);
-	    	botAnswer.buttons = Arrays.asList("главное меню :door:");
-	    	fsm.setState(chat::check);
-	    }
-	    else if (input.startsWith("о себе")) {
-			fsm.setState(this::modeSelection);
-			botAnswer.buttons = Arrays.asList("одиночный :walking:",
-                                              "групповой :family:",
-                                              "о себе :flushed:"); 
-			botAnswer.answer = Dialog.INSTANCE.getString("приветствие");
-		}
-	    else {
-			fsm.setState(this::modeSelection);
-			botAnswer.buttons = Arrays.asList("одиночный :walking:",
-                                              "групповой :family:",
-                                              "о себе :flushed:"); 
-			botAnswer.answer = Dialog.INSTANCE.getString("некорректный ввод");
-		}
-	   
 		return botAnswer;
 	}
 	
@@ -105,28 +65,19 @@ public class UsersBrain {
                                               "выход :door:",
                                               "о себе :flushed:"); 
             botAnswer.answer = Dialog.INSTANCE.getString("что редактировать");
-		}
-		else if (input.startsWith("главное меню")) {
-			fsm.setState(this::modeSelection);		
-			botAnswer.buttons = Arrays.asList("одиночный :walking:",
-	                                          "групповой :family:",
-	                                          "о себе :flushed:");                   
-			botAnswer.answer = Dialog.INSTANCE.getString("приветствие");
-		}
+		}		
 		else if (input.startsWith("о себе")) {
 			fsm.setState(this::gameSelection);
 			if (isAdmin) {
 				botAnswer.buttons = Arrays.asList("правда или действие :underage:",
                                                   "виселица :detective:",
                                                   "редактировать :pencil2:",
-                                                  "о себе :flushed:",
-                                                  "главное меню :door:"); 
+                                                  "о себе :flushed:"); 
 			}
 			else {
 				botAnswer.buttons = Arrays.asList("правда или действие :underage:",
                                                   "виселица :detective:",
-                                                  "о себе :flushed:",
-                                                  "главное меню :door:"); 
+                                                  "о себе :flushed:"); 
 			}
 			
 			botAnswer.answer = Dialog.INSTANCE.getString("приветствие");
@@ -135,8 +86,7 @@ public class UsersBrain {
 			fsm.setState(this::gameSelection);
 			botAnswer.buttons = Arrays.asList("правда или действие :underage:",
 					                          "виселица :detective:",
-					                          "редактировать :pencil2:",
-					                          "главное меню :door:"); 
+					                          "редактировать :pencil2:"); 
 			botAnswer.answer = Dialog.INSTANCE.getString("некорректный ввод");
 		}
 		return botAnswer;
@@ -178,5 +128,4 @@ public class UsersBrain {
 		
 		return fsm.update(input);
 	}
-
 }

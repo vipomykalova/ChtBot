@@ -23,9 +23,9 @@ public class UserRepository{
 		this.initializer = initializer;
 	}
 	
-	public ArrayList<Object> getOrCreate(Long chatId) {
+	public User getOrCreate(Long chatId) {
+		ArrayList<User> list = new ArrayList<User>();
 		DatabaseReference chatReference = initializer.databaseReference.child("users");
-		ArrayList<Object> data = new ArrayList<Object>();
 		Object event = new Object();
 		chatReference.addListenerForSingleValueEvent(new ValueEventListener() {
 			@Override
@@ -36,22 +36,15 @@ public class UserRepository{
 			@Override
 			public void onDataChange(DataSnapshot snapshot) {
 				
-				if (snapshot.hasChild(chatId.toString())) {
-					String childs = snapshot.child(chatId.toString()).getValue().toString();
-					String[] dataAboutUser = childs.substring(1, childs.length()-1).split(", ");
-    	    		Object name = dataAboutUser[2].split("=")[1];
-        	        Object wins = dataAboutUser[0].split("=")[1];
-        	        Object fails = dataAboutUser[1].split("=")[1];
-        	        data.add(name.toString());
-        	        data.add(Integer.parseInt(wins.toString()));
-        	        data.add(Integer.parseInt(fails.toString()));
+				if (snapshot.hasChild(chatId.toString())) {			
+					User user = snapshot.child(chatId.toString()).getValue(User.class);
+					list.add(user);
     	    	}
 				else {
-					data.add(users.get(chatId).username);
-					data.add(0);
-					data.add(0);
-					saveInDatabase(chatId, data);
-				}	
+					User user = new User(users.get(chatId).username);
+					saveInDatabase(chatId, user);
+					list.add(user);
+				}				
 				synchronized(event)
 				{
 				event.notify();
@@ -67,11 +60,11 @@ public class UserRepository{
 		catch (InterruptedException e) {
 		    e.printStackTrace();
 	    }     		
-		return data;
+		return list.get(0);
 	}
 	
-	public ArrayList<ArrayList<Object>> getTopUsers() {
-		ArrayList<ArrayList<Object>> statistics = new ArrayList<ArrayList<Object>>();
+	public ArrayList<User> getTopUsers() {
+		ArrayList<User> statistics = new ArrayList<User>();
 		Object event = new Object();
 		
 		if (childReference != null && eventListener != null)
@@ -88,17 +81,9 @@ public class UserRepository{
             }
 
 			@Override
-			public void onChildAdded(DataSnapshot dataSnapshot, String previousChildName) {
-				String childs = dataSnapshot.getValue().toString();
-				String[] dataAboutUser = childs.substring(1, childs.length()-1).split(", ");
-	    		Object name = dataAboutUser[2].split("=")[1];
-    	        Object wins = dataAboutUser[0].split("=")[1];
-    	        Object fails = dataAboutUser[1].split("=")[1];
-                ArrayList<Object> dataUser = new ArrayList<Object>();
-                dataUser.add(name.toString());
-                dataUser.add(Integer.parseInt(wins.toString()));
-                dataUser.add(Integer.parseInt(fails.toString()));
-                statistics.add(0, dataUser);
+			public void onChildAdded(DataSnapshot dataSnapshot, String previousChildName) {				
+				User user = dataSnapshot.getValue(User.class);
+                statistics.add(0, user);
 				}		    
 
 				@Override
@@ -127,21 +112,13 @@ public class UserRepository{
             return statistics;
 	}
 	
-    public void saveInDatabase(Long freshChatId, ArrayList<Object> data) {
-    	initializer.databaseReference.addListenerForSingleValueEvent(new ValueEventListener () {
-
-			@Override
-			public void onCancelled(DatabaseError error) {}
-
-			@Override
-			public void onDataChange(DataSnapshot snapshot) {
-				DatabaseReference childReference = initializer.databaseReference.child("users");
-	  		    Map<String, Object> hopperUpdates = new HashMap<>();
-	  		    hopperUpdates.put("username", data.get(0));
-	  		    hopperUpdates.put("wins", data.get(1));
-	  		    hopperUpdates.put("fails", data.get(2));    	  
-	  		    childReference.child(freshChatId.toString()).updateChildrenAsync(hopperUpdates);		
-			}
-    	}); 		
+    public void saveInDatabase(Long freshChatId, User user) {
+    	
+    	DatabaseReference childReference = initializer.databaseReference.child("users");
+		Map<String, Object> hopperUpdates = new HashMap<>();
+		hopperUpdates.put("username", user.username);
+		hopperUpdates.put("wins", user.wins);
+		hopperUpdates.put("fails", user.fails);    	  
+		childReference.child(freshChatId.toString()).updateChildrenAsync(hopperUpdates);			
     }  
 }

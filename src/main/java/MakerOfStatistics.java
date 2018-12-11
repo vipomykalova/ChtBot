@@ -6,12 +6,12 @@ import com.vdurmont.emoji.EmojiParser;
 
 public class MakerOfStatistics {
 	
-	public String getStatistics(ArrayList<ArrayList<Object>> topUsers) {	
+	public String getStatistics(ArrayList<User> topUsers) {	
 		String result = "";
-		for (ArrayList<Object> user: topUsers) {
-			String name = user.get(0).toString();
-			int wins = (int) user.get(1);
-			int fails = (int) user.get(2);
+		for (User user: topUsers) {
+			String name = user.username;
+			int wins = user.wins;
+			int fails = user.fails;
 			if (wins != 0 || fails != 0)
 			{
 				result = result + name + " :heavy_plus_sign::" +

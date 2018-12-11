@@ -26,18 +26,16 @@ public class TelegramEntryPoint extends TelegramLongPollingBot{
 	private String BOTS_TOKEN = System.getenv("BOTSTOKEN");
 	private String BOTS_NAME = System.getenv("BOTSNAME");
 	private Map<Long, Object> locks = new ConcurrentHashMap<Long, Object>();
+	private Map<Long, GroupsBrain> groupsChat = new ConcurrentHashMap<Long, GroupsBrain>();
 	private static UserRepository userRepository;
-	private static final Initialization initializer = new Initialization();
-	private static GroupRepository groupRepository;
-	//public static Map<String, Long> groups = new ConcurrentHashMap<String, Long>();
 	
+	private static final Initialization initializer = new Initialization();
 	
 	public static void main(String[] args) throws IOException {
 		ApiContextInitializer.init();				
 		TelegramBotsApi telegramBotsApi = new TelegramBotsApi();
 		initializer.initDatabase();		
 		userRepository = new UserRepository(initializer);
-		groupRepository = new GroupRepository(initializer);
 		try {
 			telegramBotsApi.registerBot(new TelegramEntryPoint());
 		} catch (TelegramApiException e) {
@@ -79,22 +77,23 @@ public class TelegramEntryPoint extends TelegramLongPollingBot{
 		synchronized (locks.computeIfAbsent(message.getChatId(), k -> new Object())) 
 		{
 			if (message != null && message.hasText()) {
+				System.out.println(message.getChat().getId());
 				if (message.getChat().isGroupChat())
-				{
-					groupRepository.saveInDatabase(message.getChat().getTitle().toLowerCase(), message.getChat().getId());
-					groupRepository.groupsChat.computeIfAbsent(message.getChat().getId(), k -> new GroupsBrain());
-					sendMsg(message, groupRepository.groupsChat.get(message.getChat().getId()).reply(message.getText().toLowerCase()));
+				{		
+					System.out.println("groups");
+					groupsChat.computeIfAbsent(message.getChat().getId(), k -> new GroupsBrain());
+					sendMsg(message, groupsChat.get(message.getChat().getId()).reply(message.getText().toLowerCase()));
 				}
 				else {
+					System.out.println("users");
 				    userRepository.users.computeIfAbsent(message.getChatId(),
-				    		k -> new UsersBrain(userRepository, message.getChatId(), groupRepository));
+				    		k -> new UsersBrain(userRepository, message.getChatId()));
 				    refreshUsernames(message);
 				    sendMsg(message, userRepository.users.get(
 							message.getChatId()).reply(message.getText().toLowerCase()));
 				}
 			}
 		}
-		
 	}
 	
 	private void refreshUsernames(Message currentMessage) {

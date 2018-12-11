@@ -71,11 +71,9 @@ public class Hangman {
 			currentStateGame = StatesGame.Win;
 			life.lives = 10;
 			if (!isGroup) {
-				ArrayList<Object> data = userRepository.getOrCreate(chatId);		
-				int wins = (int) data.get(1);
-				wins = wins + 1;
-				data.set(1, wins);
-				userRepository.saveInDatabase(chatId, data);
+				User user = userRepository.getOrCreate(chatId);
+				user.wins += 1;			
+				userRepository.saveInDatabase(chatId, user);
 			}
 			return Dialog.INSTANCE.getString("слово") + word + "\n";
 		}
@@ -88,11 +86,9 @@ public class Hangman {
 			currentStateGame = StatesGame.Fail;
 			life.lives = 10;
 			if (!isGroup) {
-				ArrayList<Object> data = userRepository.getOrCreate(chatId);
-				int fails = (int) data.get(2);
-				fails = fails + 1;
-				data.set(2, fails);
-				userRepository.saveInDatabase(chatId, data);
+				User user = userRepository.getOrCreate(chatId);
+				user.fails += 1;				
+				userRepository.saveInDatabase(chatId, user);
 			}
 			return Dialog.INSTANCE.getString("слово") + word + "\n";
 		}

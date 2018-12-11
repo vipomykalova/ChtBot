@@ -1,9 +1,6 @@
 package src.main.java;
 
 
-import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
-
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -11,7 +8,6 @@ import com.google.firebase.database.ValueEventListener;
 
 public class GroupRepository {
 	
-	public final Map<Long, GroupsBrain> groupsChat = new ConcurrentHashMap<Long, GroupsBrain>();
     private Initialization initializer;
     private boolean chatExist;
     private Long chatId;
