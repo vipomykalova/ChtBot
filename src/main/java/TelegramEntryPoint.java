@@ -33,7 +33,7 @@ public class TelegramEntryPoint extends TelegramLongPollingBot{
 	private Map<Long, GroupsBrain> groupsChat = new ConcurrentHashMap<Long, GroupsBrain>();
 	private static UserRepository userRepository;
 	private Update previousMessage = new Update();
-	WorkerWithListGroups worker = new WorkerWithListGroups();
+	WorkerWithGroupsList worker = new WorkerWithGroupsList();
 	
 	private static final Initialization initializer = new Initialization();
 	

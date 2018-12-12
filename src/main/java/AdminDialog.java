@@ -35,8 +35,7 @@ public class AdminDialog {
 			botAnswer.buttons = Arrays.asList("правда или действие :underage:",
                                               "виселица :detective:",
                                               "редактировать :pencil2:",
-                                              "о себе :flushed:",
-                                              "главное меню :door:");
+                                              "о себе :flushed:");
 			botAnswer.answer = Dialog.INSTANCE.getString("приветствие");
 		}
 		else if (input.startsWith("о себе")) {
@@ -52,8 +51,7 @@ public class AdminDialog {
 			botAnswer.buttons = Arrays.asList("правда или действие :underage:",
                                               "виселица :detective:",
                                               "редактировать :pencil2:",
-                                              "о себе :flushed:",
-                                              "главное меню :door:"); 
+                                              "о себе :flushed:"); 
 			botAnswer.answer = Dialog.INSTANCE.getString("некорректный ввод");
 		}
 		return botAnswer;
@@ -82,8 +80,7 @@ public class AdminDialog {
 			botAnswer.buttons = Arrays.asList("правда или действие :underage:",
                                               "виселица :detective:",
                                               "редактировать :pencil2:",
-                                              "о себе :flushed:",
-                                              "главное меню :door:");
+                                              "о себе :flushed:");
 			botAnswer.answer = Dialog.INSTANCE.getString("приветствие");
 		}
 		else if (input.startsWith("о себе")) {
@@ -122,8 +119,7 @@ public class AdminDialog {
 			botAnswer.buttons = Arrays.asList("правда или действие :underage:",
                                               "виселица :detective:",
                                               "редактировать :pencil2:",
-                                              "о себе :flushed:",
-                                              "главное меню :door:");
+                                              "о себе :flushed:");
 			botAnswer.answer = Dialog.INSTANCE.getString("приветствие");
 		}
 		else if (input.startsWith("о себе")) {
@@ -162,8 +158,7 @@ public class AdminDialog {
 			botAnswer.buttons = Arrays.asList("правда или действие :underage:",
                                               "виселица :detective:",
                                               "редактировать :pencil2:",
-                                              "о себе :flushed:",
-                                              "главное меню :door:");
+                                              "о себе :flushed:");
 			botAnswer.answer = Dialog.INSTANCE.getString("приветствие");
 		}
 		else if (input.startsWith("о себе")) {
@@ -189,7 +184,7 @@ public class AdminDialog {
 		BotAnswer botAnswer = new BotAnswer();
 		String result = archiveEditor.addToArchive("Truth", input);
 		currentUser.fsm.setState(this::editMore);
-		botAnswer.buttons = Arrays.asList("ещё :relieved:",
+		botAnswer.buttons = Arrays.asList("другие действия :relieved:",
                                           "выход :door:",
                                           "о себе :flushed:");
 		botAnswer.answer = result;
@@ -200,7 +195,7 @@ public class AdminDialog {
 		BotAnswer botAnswer = new BotAnswer();
 		String result = archiveEditor.addToArchive("Dare", input);
 		currentUser.fsm.setState(this::editMore);
-		botAnswer.buttons = Arrays.asList("ещё :relieved:",
+		botAnswer.buttons = Arrays.asList("другие действия :relieved:",
                                           "выход :door:",
                                           "о себе :flushed:");
 		botAnswer.answer = result;
@@ -224,8 +219,7 @@ public class AdminDialog {
 			botAnswer.buttons = Arrays.asList("правда или действие :underage:",
                                               "виселица :detective:",
                                               "редактировать :pencil2:",
-                                              "о себе :flushed:",
-                                              "главное меню :door:");
+                                              "о себе :flushed:");
 			botAnswer.answer = Dialog.INSTANCE.getString("приветствие");
 		}
 		else if (input.startsWith("о себе")) {
@@ -250,10 +244,16 @@ public class AdminDialog {
 	public BotAnswer truthRemove(String input) {
 		BotAnswer botAnswer = new BotAnswer();
 		String result = archiveEditor.removeFromArchive("Truth", input);
-		currentUser.fsm.setState(this::editMore);
-		botAnswer.buttons = Arrays.asList("ещё :relieved:",
-                                          "выход :door:",
-                                          "о себе :flushed:");
+		if (archiveEditor.isSimilarTask) {
+			currentUser.fsm.setState(this::truthRemove);
+			botAnswer.buttons = Arrays.asList();
+		}
+		else {
+			currentUser.fsm.setState(this::editMore);
+			botAnswer.buttons = Arrays.asList("другие действия :relieved:",
+                                              "выход :door:",
+                                              "о себе :flushed:");
+		}
 		botAnswer.answer = result;
 		return botAnswer;
 		
@@ -262,10 +262,16 @@ public class AdminDialog {
 	public BotAnswer dareRemove(String input) {
 		BotAnswer botAnswer = new BotAnswer();
 		String result = archiveEditor.removeFromArchive("Dare", input);
-		currentUser.fsm.setState(this::editMore);
-		botAnswer.buttons = Arrays.asList("ещё :relieved:",
-                                          "выход :door:",
-                                          "о себе :flushed:");
+		if (archiveEditor.isSimilarTask) {
+			currentUser.fsm.setState(this::dareRemove);
+			botAnswer.buttons = Arrays.asList();
+		}
+		else {
+			currentUser.fsm.setState(this::editMore);
+			botAnswer.buttons = Arrays.asList("другие действия :relieved:",
+                                              "выход :door:",
+                                              "о себе :flushed:");
+		}
 		botAnswer.answer = result;
 		return botAnswer;
 	}
@@ -273,10 +279,16 @@ public class AdminDialog {
 	public BotAnswer hangmanRemove(String input) {
 		BotAnswer botAnswer = new BotAnswer();
 		String result = archiveEditor.removeFromArchive("Hangman", input);
-		currentUser.fsm.setState(this::editMore);
-		botAnswer.buttons = Arrays.asList("ещё :relieved:",
-                                          "выход :door:",
-                                          "о себе :flushed:");
+		if (archiveEditor.isSimilarTask) {
+			currentUser.fsm.setState(this::hangmanRemove);
+			botAnswer.buttons = Arrays.asList();
+		}
+		else {
+			currentUser.fsm.setState(this::editMore);
+			botAnswer.buttons = Arrays.asList("другие действия :relieved:",
+                                              "выход :door:",
+                                              "о себе :flushed:");
+		}
 		botAnswer.answer = result;
 		return botAnswer;
 	}
@@ -285,7 +297,7 @@ public class AdminDialog {
 		BotAnswer botAnswer = new BotAnswer();
 		String result = archiveEditor.addToArchive("Hangman", input);
 		currentUser.fsm.setState(this::editMore);
-		botAnswer.buttons = Arrays.asList("ещё :relieved:",
+		botAnswer.buttons = Arrays.asList("другие действия :relieved:",
                                           "выход :door:",
                                           "о себе :flushed:");
 		botAnswer.answer = result;
@@ -294,7 +306,7 @@ public class AdminDialog {
 	
 	public BotAnswer editMore(String input) {
 		BotAnswer botAnswer = new BotAnswer();
-		if (input.startsWith("ещё")) {
+		if (input.startsWith("другие действия")) {
 			currentUser.fsm.setState(this::whatGameEdit);
 			botAnswer.buttons = Arrays.asList("правда или действие :underage:",
                                               "виселица :detective:",
@@ -307,20 +319,19 @@ public class AdminDialog {
 			botAnswer.buttons = Arrays.asList("правда или действие :underage:",
                                               "виселица :detective:",
                                               "редактировать :pencil2:",
-                                              "о себе :flushed:",
-                                              "главное меню :door:");
+                                              "о себе :flushed:");
 			botAnswer.answer = Dialog.INSTANCE.getString("приветствие");			
 		}
 		else if (input.startsWith("о себе")) {
 			currentUser.fsm.setState(this::editMore);
-			botAnswer.buttons = Arrays.asList("ещё :relieved:",
+			botAnswer.buttons = Arrays.asList("другие действия :relieved:",
                                               "выход :door:",
                                               "о себе :flushed:");
 			botAnswer.answer = Dialog.INSTANCE.getString("расскажи");
 		}
 		else {
 			currentUser.fsm.setState(this::editMore);
-			botAnswer.buttons = Arrays.asList("ещё :relieved:",
+			botAnswer.buttons = Arrays.asList("другие действия :relieved:",
                                               "выход :door:",
                                               "о себе :flushed:");
 			botAnswer.answer = Dialog.INSTANCE.getString("некорректный ввод");

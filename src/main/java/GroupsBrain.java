@@ -9,11 +9,11 @@ public class GroupsBrain {
 	private FSM fsm = new FSM();
 	private Hangman currentHangman = new Hangman();
 	private TaskMaker taskMaker = new TaskMaker();
-	private WorkerWithListGroups worker;
+	private WorkerWithGroupsList worker;
 	
-	public GroupsBrain(WorkerWithListGroups worker) {
-		words = new ArrayList<String>();
+	public GroupsBrain(WorkerWithGroupsList worker) {
 		fsm.setState(this::hangmanWordGeneration);
+		words = new ArrayList<String>();
 		this.worker = worker;
 	}
 	
@@ -23,9 +23,7 @@ public class GroupsBrain {
 		currentHangman = new Hangman();
 		BotAnswer botAnswer = new BotAnswer();
 		if (words.isEmpty()) {
-			System.out.println("ss");
 			currentHangman.word = taskMaker.newTask("Hangman");
-			System.out.println(currentHangman.word);
 		}
 		else {
 			currentHangman.word = worker.getWord(words);

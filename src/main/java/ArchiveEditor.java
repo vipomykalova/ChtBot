@@ -17,6 +17,7 @@ import java.util.Map;
 public class ArchiveEditor {
 	
 	private TaskMaker taskMaker = new TaskMaker();
+	public Boolean isSimilarTask = false;
 	
     public String addToArchive(String nameArchive, String task) {
 		
@@ -42,7 +43,6 @@ public class ArchiveEditor {
 	}
 	
 	public String removeFromArchive(String nameArchive, String task) {
-		
 		String filename = "src/main/java/Archives/Archive" + nameArchive + ".txt";
 		ArrayList<String> fileContents = new ArrayList<String>();
 		
@@ -59,6 +59,7 @@ public class ArchiveEditor {
 			System.exit(1);
 		}
 		if (fileContents.size() == taskMaker.getSizeListTask(nameArchive)) {
+			isSimilarTask = true;
 			if (nameArchive.equals("Hangman")) {
 				return Dialog.INSTANCE.getString("задание отсутствует") +
 						getStrFromSimilarTasksList(getSimilarTasksHangman(nameArchive, task));
@@ -82,11 +83,13 @@ public class ArchiveEditor {
             }                     
             file.close();
             taskMaker.removeFromListTask(nameArchive, task);
+            isSimilarTask = false;
             return Dialog.INSTANCE.getString("удалено");
             
 		} catch (IOException e) {
 			System.exit(1);
         }
+		isSimilarTask = false;
 		return Dialog.INSTANCE.getString("ошибка");
 		
 	}
@@ -98,7 +101,6 @@ public class ArchiveEditor {
 			taskOccurrenceStat.put(taskFromArchive, 0);
 		}
 		for (int i = 0; i < task.length(); i++) {
-			System.out.println(task.substring(i, i+1));
 			for (String taskFromArchive: taskMaker.getListOfCurArchive(nameArchive)) {
 				if (taskFromArchive.contains(task.substring(i, i+1))) {
 					int count = taskOccurrenceStat.get(taskFromArchive);
@@ -132,7 +134,6 @@ public class ArchiveEditor {
 			taskOccurrenceStat.put(taskFromArchive, 0);
 		}
 		for (int i = 0; i < task.length(); i++) {
-			System.out.println(task.substring(i, i+1));
 			for (String taskFromArchive: taskMaker.getListOfCurArchive(nameArchive)) {
 				if (taskFromArchive.toLowerCase().contains(task.substring(0, i+1))) {
 					int count = taskOccurrenceStat.get(taskFromArchive);

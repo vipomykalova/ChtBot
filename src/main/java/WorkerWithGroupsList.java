@@ -2,7 +2,7 @@ package src.main.java;
 
 import java.util.ArrayList;
 
-public class WorkerWithListGroups {
+public class WorkerWithGroupsList {
 		
 	public void addWord(GroupsBrain groupsBrain, String word)
 	{
