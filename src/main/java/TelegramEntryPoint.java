@@ -33,7 +33,7 @@ public class TelegramEntryPoint extends TelegramLongPollingBot{
 	private Map<Long, GroupsBrain> groupsChat = new ConcurrentHashMap<Long, GroupsBrain>();
 	private static UserRepository userRepository;
 	private Update previousMessage = new Update();
-	WorkerWithGroupsList worker = new WorkerWithGroupsList();
+	private WorkerWithGroupsList worker = new WorkerWithGroupsList();
 	
 	private static final Initialization initializer = new Initialization();
 	
@@ -76,13 +76,25 @@ public class TelegramEntryPoint extends TelegramLongPollingBot{
         }
         replyKeyboardMarkup.setKeyboard(keyboard);
     }
+ 
+	@Override
+	public void onUpdateReceived(Update update) {
+		synchronized (locks.computeIfAbsent(update.getUpdateId(), k -> new Object())) {
+			if (update.hasInlineQuery()) {
+				InlineQuery inlineQuery = update.getInlineQuery();
+				processInlineQuery(inlineQuery, update);
+			}
+			else if (update.hasMessage()) {
+				Message message = update.getMessage();
+				processMessage(message);
+		   }
+		}
+	}
 	
-	public AnswerInlineQuery convertResultToResponse(InlineQuery inlineQuery)
+	public AnswerInlineQuery getAnswerInlineQuery(InlineQuery inlineQuery)
 	{
-		System.out.println("begin");
 		AnswerInlineQuery answerInlineQuery = new AnswerInlineQuery();
 		answerInlineQuery.setInlineQueryId(inlineQuery.getId());
-		//answerInlineQuery.setCacheTime(5000);
 		InputTextMessageContent messageContent = new InputTextMessageContent();
 		messageContent.disableWebPagePreview();
 		messageContent.enableMarkdown(true);
@@ -95,51 +107,42 @@ public class TelegramEntryPoint extends TelegramLongPollingBot{
 		return answerInlineQuery;
 	}
 	
- 
-	@Override
-	public void onUpdateReceived(Update update) {
-		synchronized (locks.computeIfAbsent(update.getUpdateId(), k -> new Object())) {
-			if (update.hasInlineQuery()) {
-				InlineQuery inlineQuery = update.getInlineQuery();
-				String query = inlineQuery.getQuery();
-				System.out.println(query);
-				if (!query.isEmpty()) {
-					try {
-						System.out.println("end");
-						previousMessage = update;
-						execute(convertResultToResponse(inlineQuery));
-					} catch (TelegramApiException e) {
-						e.printStackTrace();
-					}
+	public void processMessage(Message message)
+	{		
+		if (message != null && message.hasText()) {
+			if (message.getChat().isGroupChat())
+			{
+				groupsChat.computeIfAbsent(message.getChat().getId(), k -> new GroupsBrain(worker));
+				if (previousMessage.hasInlineQuery()) {							
+					worker.addWord(groupsChat.get(message.getChat().getId()), previousMessage.getInlineQuery().getQuery());
+					previousMessage = new Update();
+				}
+				else {
+					sendMsg(message, groupsChat.get(message.getChat().getId()).reply(message.getText().toLowerCase()));
 				}
 			}
-			else if (update.hasMessage()) {
-				Message message = update.getMessage();
-				if (message != null && message.hasText()) {
-					System.out.println(message);
-					if (message.getChat().isGroupChat())
-					{
-						groupsChat.computeIfAbsent(message.getChat().getId(), k -> new GroupsBrain(worker));
-						if (previousMessage.hasInlineQuery()) {
-							System.out.println("добавили в словарь: " + previousMessage.getInlineQuery().getQuery());							
-							worker.addWord(groupsChat.get(message.getChat().getId()), previousMessage.getInlineQuery().getQuery());
-							previousMessage = new Update();
-						}
-						else {
-							sendMsg(message, groupsChat.get(message.getChat().getId()).reply(message.getText().toLowerCase()));
-						}
-					}
-					else {
-					    userRepository.users.computeIfAbsent(message.getChatId(),
-					    		k -> new Brain(userRepository, message.getChatId()));
-					    refreshUsernames(message);
-					    sendMsg(message, userRepository.users.get(
-								message.getChatId()).reply(message.getText().toLowerCase()));
-					}
-			   }
-		   }
-		}
+			else {
+			    userRepository.users.computeIfAbsent(message.getChatId(),
+			    		k -> new Brain(userRepository, message.getChatId()));
+			    refreshUsernames(message);
+			    sendMsg(message, userRepository.users.get(
+						message.getChatId()).reply(message.getText().toLowerCase()));
+			}
+	   }
 	}
+	
+	public void processInlineQuery(InlineQuery inlineQuery, Update update)
+	{	
+	    String query = inlineQuery.getQuery();
+		if (!query.isEmpty()) {
+			try {
+				previousMessage = update;
+				execute(getAnswerInlineQuery(inlineQuery));
+			} catch (TelegramApiException e) {
+				e.printStackTrace();
+			}
+		}
+	}	
 	
 	private void refreshUsernames(Message currentMessage) {
 		if (currentMessage.getFrom().getUserName() != null) {
@@ -172,7 +175,6 @@ public class TelegramEntryPoint extends TelegramLongPollingBot{
 				e.printStackTrace();
 			}
 		}
-
 	}
 
 	private String parseButton(String text) {
