@@ -14,7 +14,7 @@ import com.google.firebase.database.ValueEventListener;;
 
 public class UserRepository{
 	
-	public final Map<Long, UsersBrain> users = new ConcurrentHashMap<Long, UsersBrain>();
+	public final Map<Long, Brain> users = new ConcurrentHashMap<Long, Brain>();
     private ChildEventListener eventListener;
     private Query childReference;
     private Initialization initializer;

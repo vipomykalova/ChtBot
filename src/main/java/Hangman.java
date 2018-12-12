@@ -36,7 +36,7 @@ public class Hangman {
 	public StatesGame currentStateGame;
 	public String word = taskMaker.newTask("Hangman");
 	private Map<Character, ArrayList<Integer>> wordsLetters;
-	private char resultArray[] = new char[word.length()];
+	private char resultArray[];
 
 	public String currentResult(String letter) {
 
@@ -109,6 +109,7 @@ public class Hangman {
 
 	public String setWord() {
 		wordsLetters = wordToDict(word);
+		resultArray = new char[word.length()];
 		for(int i = 0; i < word.length(); i++) {
 			resultArray[i] = '-';
 		}

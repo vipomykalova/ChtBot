@@ -2,7 +2,7 @@ package src.main.java;
 
 import java.util.Arrays;
 
-public class UsersBrain {
+public class Brain {
 
 	private AdminChecker adminChecker = new AdminChecker();
 	private AdminDialog adminDialog = new AdminDialog(this);
@@ -15,11 +15,11 @@ public class UsersBrain {
 	public String username;
 	public Long chatId;
 	
-	public UsersBrain() {
+	public Brain() {
 		fsm.setState(this::startMessage);
 	}
 
-	public UsersBrain(UserRepository userRepo, Long id) {
+	public Brain(UserRepository userRepo, Long id) {
 		chatId = id;
 		userRepository = userRepo;
 		isAdmin = adminChecker.checkAdmin(chatId);
